@@ -1,0 +1,5 @@
+= OLSRv2 Simulation Project =
+
+== Useful links ==
+
+[http://tools.ietf.org/html/draft-ietf-manet-olsrv2-10 OLSRv2 RFC draft]
