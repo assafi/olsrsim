@@ -1,0 +1,37 @@
+/**
+ * OLSRv2
+ * 
+ * Team members: Assaf Israel, Eli Nazarov, Asi Bross
+ *
+ * File: SimLabels.java
+ * Author: Assaf
+ * Date: 13/11/2009
+ *
+ */
+package data;
+
+/**
+ * @author Assaf
+ * Defines the Column headings in the CSV file.
+ * i.e. type of data to log to file
+ */
+public enum SimLabels {
+	VIRTUAL_TIME, NODE_ID, EVENT_TYPE, 
+	GLOBAL_SOURCE, LOCAL_SOURCE, LOCAL_TARGET, GLOBAL_TARGET,
+	X_COOR, Y_COOR, RANGE, LOST;
+
+	/**
+	 * @return Array of the SimLabels names 
+	 */
+	public static String[] stringify() {
+		
+		SimLabels[] simLabels = SimLabels.values();
+		int numLabels = simLabels.length;
+		String[] labels = new String[numLabels];
+		
+		for (int i = 0; i < numLabels; i++){
+			labels[i] = simLabels[i].name();
+		}
+		return labels;
+	}
+}
