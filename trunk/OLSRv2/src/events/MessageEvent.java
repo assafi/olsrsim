@@ -1,18 +1,20 @@
 package events;
 
+import protocol.Address;
+
 /**
  * @author olsr1
  *
  */
 public abstract class MessageEvent extends Event {
 
-	private long eventSource;
+	private Address eventSource;
 	
 	/**
 	 * @param src The originator of the current Message event
 	 * @param time The Message timestamp
 	 */
-	public MessageEvent(long src, long time){
+	public MessageEvent(Address src, long time){
 		super(time);
 		this.eventSource = src;
 	}
@@ -20,7 +22,7 @@ public abstract class MessageEvent extends Event {
 	/**
 	 * @return The originator of the current Message event
 	 */
-	public long getSource() {
+	public Address getSource() {
 		return eventSource;
 	}
 }
