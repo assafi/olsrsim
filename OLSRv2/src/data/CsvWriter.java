@@ -18,7 +18,7 @@ import java.util.Map;
 
 /**
  * @author Assaf
- * 
+ *  
  */
 public class CsvWriter implements DataWriter {
 
