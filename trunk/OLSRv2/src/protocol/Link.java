@@ -16,12 +16,12 @@ package protocol;
  */
 public class Link {
 	private long quality;
-	private String valideTime;
+	private int valideTime;
 	/**
 	 * @param quality
 	 * @param valideTime
 	 */
-	public Link(long quality, String valideTime) {
+	public Link(long quality, int valideTime) {
 		this.quality = quality;
 		this.valideTime = valideTime;
 	}
@@ -41,13 +41,13 @@ public class Link {
 	/**
 	 * @return the valideTime
 	 */
-	public String getValideTime() {
+	public int getValideTime() {
 		return valideTime;
 	}
 	/**
 	 * @param valideTime the valideTime to set
 	 */
-	public void setValideTime(String valideTime) {
+	public void setValideTime(int valideTime) {
 		this.valideTime = valideTime;
 	}
 	
