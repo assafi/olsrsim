@@ -38,6 +38,8 @@ public class InterfaceInformationBase {
 	public static synchronized InterfaceInformationBase getInstance(){
 		if (null == instance){
 			instance = new InterfaceInformationBase();
+			instance.linkSet = new HashMap<Address, Link>();
+			instance.secondHopNeighbors = new HashMap<Address, Vector<Address>>();
 		}
 		
 		return instance;

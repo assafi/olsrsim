@@ -40,6 +40,8 @@ public class NeighborInformationBase {
 	public static synchronized NeighborInformationBase getInstance(){
 		if (null == instance){
 			instance = new NeighborInformationBase();
+			instance.lostNeighborSet = new HashMap<Address, String>();
+			instance.neighborSet = new HashMap<Address, NeighborProperty>();
 		}
 		
 		return instance;
