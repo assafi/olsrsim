@@ -27,6 +27,7 @@ public class LocalInformationBase {
 	public static synchronized LocalInformationBase getInstance(){
 		if (null == instance){
 			instance = new LocalInformationBase();
+			instance.localActiveInterfaces = new HashMap<String, Address>();
 		}
 		
 		return instance;
@@ -34,12 +35,19 @@ public class LocalInformationBase {
 	
 	public void addInterfaceAddress(String iface, Address addr) throws ProtocolException{
 		
-		//TODO see if one iface can hace more then one address
+		//TODO see if one iface can have more then one address
 		if (localActiveInterfaces.containsKey(iface)){
 			throw new ProtocolException("Local Interface already exists");
 		}
 		
 		localActiveInterfaces.put(iface, addr);
+	}
+	
+	public void removeInterface(String iface) throws ProtocolException{
+		
+		//TODO see if one iface can have more then one address
+		
+		localActiveInterfaces.remove(iface);
 	}
 	
 	public Address getInterfaceAddress(String iface) throws ProtocolException{
@@ -57,4 +65,9 @@ public class LocalInformationBase {
 	public HashMap<String, Address> getAllLocalInterfaces() {
 		return localActiveInterfaces;
 	}
+	
+	public boolean isInterfaceExists(String iface){	
+		return localActiveInterfaces.containsKey(iface);
+	}
 }
+
