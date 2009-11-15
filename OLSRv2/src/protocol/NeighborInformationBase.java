@@ -32,7 +32,7 @@ public class NeighborInformationBase {
 	 * Maps the address of the 1-hop neighbor address that was lost and time
 	 * when this entry should be deleted.
 	 */
-	private HashMap<Address, String> lostNeighborSet = null;
+	private HashMap<Address, Integer> lostNeighborSet = null;
 	
 	private NeighborInformationBase(){
 	}
@@ -40,7 +40,7 @@ public class NeighborInformationBase {
 	public static synchronized NeighborInformationBase getInstance(){
 		if (null == instance){
 			instance = new NeighborInformationBase();
-			instance.lostNeighborSet = new HashMap<Address, String>();
+			instance.lostNeighborSet = new HashMap<Address, Integer>();
 			instance.neighborSet = new HashMap<Address, NeighborProperty>();
 		}
 		
@@ -55,7 +55,7 @@ public class NeighborInformationBase {
 		return neighborSet.get(adrr);
 	}
 
-	public void addToLostNeighbors(Address neighbor, String time) {
+	public void addToLostNeighbors(Address neighbor, int time) {
 		lostNeighborSet.put(neighbor, time);
 	}
 	
@@ -66,12 +66,12 @@ public class NeighborInformationBase {
 	 * @param time
 	 * @return the lostNeighborSet
 	 */
-	public void removeInvalidLostNeighbors(String time) {
+	public void removeInvalidLostNeighbors(int time) {
 		Set<Address> elements = lostNeighborSet.keySet();
 		Iterator<Address> it = elements.iterator();
 		Address key = it.next();
 		while (it.hasNext()){
-			String entryTime = lostNeighborSet.get(key);
+			int entryTime = lostNeighborSet.get(key);
 			if (entryTime > time){ //TODO think how to compare times- made create an abstraction of time
 				lostNeighborSet.remove(key);
 			}
@@ -87,7 +87,7 @@ public class NeighborInformationBase {
 	/**
 	 * @return the lostNeighborSet
 	 */
-	public HashMap<Address, String> getAllLostNeighborSet() {
+	public HashMap<Address, Integer> getAllLostNeighborSet() {
 		return lostNeighborSet;
 	}
 	
