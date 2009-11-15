@@ -1,7 +1,17 @@
+/**
+ * OLSRv2
+ * 
+ * Team members: Assaf Israel, Eli Nazarov, Asi Bross
+ *
+ * File: EventGenerator.java
+ * Author: Assaf
+ * Date: Nov 15, 2009
+ *
+ */
 package events;
 
 /**
- * @author olsr1
+ * @author Assaf
  *
  */
 public abstract class Event {
