@@ -35,4 +35,9 @@ public interface IStation {
 	 */
 	IOLSRv2Protocol getOLSRv2Protocol();
 	
+	/**
+	 * @param radius A station reception radius
+	 */
+	void setStationReceptionRadius(double radius);
+	
 }
