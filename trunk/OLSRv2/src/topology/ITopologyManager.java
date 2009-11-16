@@ -52,9 +52,9 @@ public interface ITopologyManager {
 
 	/**
 	 * @param radius
-	 *            The reception radius of each station.
+	 *            A default reception radius for a station.
 	 */
-	void setStationsReceptionRadius(int radius);
+	void setStationsDefaultReceptionRadius(double radius);
 
 	/**
 	 * @param stationID
