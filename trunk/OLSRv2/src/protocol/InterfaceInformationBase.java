@@ -19,8 +19,6 @@ import java.util.Vector;
  */
 public class InterfaceInformationBase {
 	
-	private static InterfaceInformationBase instance = null;
-	
 	/**
 	 * Maps the address of the 1-hop neighbor interface to its link property
 	 */
@@ -33,17 +31,10 @@ public class InterfaceInformationBase {
 	private HashMap<Address, Vector<Address>> secondHopNeighbors = null;
 	
 	private InterfaceInformationBase(){
+		linkSet = new HashMap<Address, Link>();
+		secondHopNeighbors = new HashMap<Address, Vector<Address>>();
 	}
 	
-	public static synchronized InterfaceInformationBase getInstance(){
-		if (null == instance){
-			instance = new InterfaceInformationBase();
-			instance.linkSet = new HashMap<Address, Link>();
-			instance.secondHopNeighbors = new HashMap<Address, Vector<Address>>();
-		}
-		
-		return instance;
-	}
 	
 	public Link getNeighborsLink(Address addr){
 		return linkSet.get(addr);
