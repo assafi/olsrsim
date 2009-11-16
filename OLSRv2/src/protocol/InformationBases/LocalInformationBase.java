@@ -8,9 +8,13 @@
  * Date: Nov 14, 2009
  *
  */
-package protocol;
+package protocol.InformationBases;
 
 import java.util.HashMap;
+import java.util.Map;
+
+import protocol.Address;
+import protocol.ProtocolException;
 
 /**
  * @author Eli Nazarov
@@ -19,10 +23,10 @@ import java.util.HashMap;
 public class LocalInformationBase {
 	
 	//TODO add the removed database
-	private HashMap<String, Address> localActiveInterfaces = null;
+	private Map<String, Address> localActiveInterfaces = null;
 	
 	
-	private LocalInformationBase(){
+	public LocalInformationBase(){
 		localActiveInterfaces = new HashMap<String, Address>();
 	}
 	
@@ -55,7 +59,7 @@ public class LocalInformationBase {
 	/**
 	 * @return all local Active Interfaces
 	 */
-	public HashMap<String, Address> getAllLocalInterfaces() {
+	public Map<String, Address> getAllLocalInterfaces() {
 		return localActiveInterfaces;
 	}
 	

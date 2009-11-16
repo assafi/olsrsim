@@ -11,7 +11,9 @@
 package protocol;
 
 import events.DataMessage;
+import events.Event;
 import events.HelloMessage;
+import events.MessageEvent;
 import events.TCMessage;
 
 /**
@@ -21,24 +23,39 @@ import events.TCMessage;
 public class OLSRv2Protocol implements IOLSRv2Protocol {
 
 	/* (non-Javadoc)
-	 * @see protocol.IOLSRv2Protocol#reciveDataMessage(events.DataMessage)
+	 * @see protocol.IOLSRv2Protocol#helloIntervalTriger(events.Event)
 	 */
 	@Override
-	public void reciveDataMessage(DataMessage dataMsg) {
+	public void helloIntervalTriger() {
 	}
 
 	/* (non-Javadoc)
-	 * @see protocol.IOLSRv2Protocol#reciveHelloMessage(events.HelloMessage)
+	 * @see protocol.IOLSRv2Protocol#reciveDataMessage(events.MessageEvent)
 	 */
 	@Override
-	public void reciveHelloMessage(HelloMessage helloMsg) {
+	public void reciveDataMessage(MessageEvent dataMsg) {
 	}
 
 	/* (non-Javadoc)
-	 * @see protocol.IOLSRv2Protocol#reciveTCMessage(events.TCMessage)
+	 * @see protocol.IOLSRv2Protocol#reciveHelloMessage(events.MessageEvent)
 	 */
 	@Override
-	public void reciveTCMessage(TCMessage tcMsg) {
+	public void reciveHelloMessage(MessageEvent helloMsg) {
 	}
+
+	/* (non-Javadoc)
+	 * @see protocol.IOLSRv2Protocol#reciveTCMessage(events.MessageEvent)
+	 */
+	@Override
+	public void reciveTCMessage(MessageEvent tcMsg) {
+	}
+
+	/* (non-Javadoc)
+	 * @see protocol.IOLSRv2Protocol#tcIntervalTriger(events.Event)
+	 */
+	@Override
+	public void tcIntervalTriger() {
+	}
+
 
 }
