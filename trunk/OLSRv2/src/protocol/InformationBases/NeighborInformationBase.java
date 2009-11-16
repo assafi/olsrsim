@@ -8,12 +8,15 @@
  * Date: Nov 14, 2009
  *
  */
-package protocol;
+package protocol.InformationBases;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
+
+import protocol.Address;
 
 /**
  * @author Eli Nazarov
@@ -24,15 +27,15 @@ public class NeighborInformationBase {
 	/**
 	 * Maps the address of the 1-hop neighbor interface to its property
 	 */
-	private HashMap<Address, NeighborProperty> neighborSet = null;
+	private Map<Address, NeighborProperty> neighborSet = null;
 	
 	/**
 	 * Maps the address of the 1-hop neighbor address that was lost and time
 	 * when this entry should be deleted.
 	 */
-	private HashMap<Address, Integer> lostNeighborSet = null;
+	private Map<Address, Integer> lostNeighborSet = null;
 	
-	private NeighborInformationBase(){
+	public NeighborInformationBase(){
 		lostNeighborSet = new HashMap<Address, Integer>();
 		neighborSet = new HashMap<Address, NeighborProperty>();
 	}
@@ -70,14 +73,14 @@ public class NeighborInformationBase {
 	/**
 	 * @return the neighborSet
 	 */
-	public HashMap<Address, NeighborProperty> getAllNeighbors() {
+	public Map<Address, NeighborProperty> getAllNeighbors() {
 		return neighborSet;
 	}
 
 	/**
 	 * @return the lostNeighborSet
 	 */
-	public HashMap<Address, Integer> getAllLostNeighborSet() {
+	public Map<Address, Integer> getAllLostNeighborSet() {
 		return lostNeighborSet;
 	}
 	

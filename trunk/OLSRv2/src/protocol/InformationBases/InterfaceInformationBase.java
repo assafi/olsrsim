@@ -8,10 +8,14 @@
  * Date: Nov 14, 2009
  *
  */
-package protocol;
+package protocol.InformationBases;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Vector;
+import java.util.List;
+import java.util.Map;
+
+import protocol.Address;
 
 /**
  * @author Eli Nazarov
@@ -20,19 +24,19 @@ import java.util.Vector;
 public class InterfaceInformationBase {
 	
 	/**
-	 * Maps the address of the 1-hop neighbor interface to its link property
+	 * Maps the address of the 1-hop neighbor to its link property
 	 */
-	private HashMap<Address, Link> linkSet = null;
+	private Map<Address, Link> linkSet = null;
 	
 	/**
-	 * Maps the address of the 2-hop neighbor interface to the set of 1-hop neighbors 
+	 * Maps the address of the 2-hop neighbor to the set of 1-hop neighbors 
 	 * that it is reachable from.
 	 */
-	private HashMap<Address, Vector<Address>> secondHopNeighbors = null;
+	private Map<Address, List<Address>> secondHopNeighbors = null;
 	
-	private InterfaceInformationBase(){
+	public InterfaceInformationBase(){
 		linkSet = new HashMap<Address, Link>();
-		secondHopNeighbors = new HashMap<Address, Vector<Address>>();
+		secondHopNeighbors = new HashMap<Address, List<Address>>();
 	}
 	
 	
@@ -47,7 +51,7 @@ public class InterfaceInformationBase {
 		linkSet.put(oneHopAddr, link);
 	}
 
-	public Vector<Address> get2HopReachAddresses(Address secondHopAddr){
+	public List<Address> get2HopReachAddresses(Address secondHopAddr){
 		return secondHopNeighbors.get(secondHopAddr);
 	}
 	
@@ -65,7 +69,7 @@ public class InterfaceInformationBase {
 			secondHopNeighbors.get(secondHopAddr).add(firstHopReach);
 		}
 		else {
-			Vector<Address> oneHops = new Vector<Address>();
+			List<Address> oneHops = new ArrayList<Address>();
 			oneHops.add(firstHopReach);
 			secondHopNeighbors.put(secondHopAddr, oneHops);
 		}
