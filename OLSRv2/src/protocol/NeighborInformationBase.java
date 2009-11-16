@@ -21,8 +21,6 @@ import java.util.Vector;
  */
 public class NeighborInformationBase {
 	
-	private static NeighborInformationBase instance = null;
-	
 	/**
 	 * Maps the address of the 1-hop neighbor interface to its property
 	 */
@@ -35,16 +33,8 @@ public class NeighborInformationBase {
 	private HashMap<Address, Integer> lostNeighborSet = null;
 	
 	private NeighborInformationBase(){
-	}
-	
-	public static synchronized NeighborInformationBase getInstance(){
-		if (null == instance){
-			instance = new NeighborInformationBase();
-			instance.lostNeighborSet = new HashMap<Address, Integer>();
-			instance.neighborSet = new HashMap<Address, NeighborProperty>();
-		}
-		
-		return instance;
+		lostNeighborSet = new HashMap<Address, Integer>();
+		neighborSet = new HashMap<Address, NeighborProperty>();
 	}
 	
 	public void addNeighbor(Address neighbor, NeighborProperty property) {

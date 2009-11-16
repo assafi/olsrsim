@@ -1,5 +1,5 @@
 /**
- * This Interface exposes the funcunality
+ * This Interface exposes the functionality
  */
 package protocol;
 

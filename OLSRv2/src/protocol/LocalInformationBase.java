@@ -17,20 +17,13 @@ import java.util.HashMap;
  *
  */
 public class LocalInformationBase {
+	
+	//TODO add the removed database
 	private HashMap<String, Address> localActiveInterfaces = null;
 	
-	private static LocalInformationBase instance = null;
 	
 	private LocalInformationBase(){
-	}
-	
-	public static synchronized LocalInformationBase getInstance(){
-		if (null == instance){
-			instance = new LocalInformationBase();
-			instance.localActiveInterfaces = new HashMap<String, Address>();
-		}
-		
-		return instance;
+		localActiveInterfaces = new HashMap<String, Address>();
 	}
 	
 	public void addInterfaceAddress(String iface, Address addr) throws ProtocolException{

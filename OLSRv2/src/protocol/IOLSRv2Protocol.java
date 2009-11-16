@@ -10,10 +10,14 @@
  */
 package protocol;
 
+import events.*;
+
 /**
  * @author Asi
  *
  */
 public interface IOLSRv2Protocol {
-
+	public void reciveHelloMessage(HelloMessage helloMsg);
+	public void reciveTCMessage(TCMessage tcMsg);
+	public void reciveDataMessage(DataMessage dataMsg);
 }
