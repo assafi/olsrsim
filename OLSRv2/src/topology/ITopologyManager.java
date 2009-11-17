@@ -21,54 +21,55 @@ public interface ITopologyManager {
 
 	/**
 	 * @param stationID
-	 *            Unique identifier.
 	 * @param stationLocation
-	 *            Physical location of the station, represented as a Point
-	 *            object.
 	 * @return An object that represents a station.
+	 * @throws Exception
 	 */
-	IStation createNewStation(String stationID, Point stationLocation);
-
+	IStation createNewStation(String stationID, Point stationLocation) throws Exception;
+	
 	/**
 	 * @param stationID
 	 *            Unique identifier.
+	 * @param stationLocation
+	 *            Physical location of the station, represented as a Point
+	 *            object.
+	 * @param radius 
+	 * @return An object that represents a station.
+	 * @throws Exception 
 	 */
-	void removeStation(String stationID);
+	IStation createNewStation(String stationID, Point stationLocation, double radius) throws Exception;
+
+	/**
+	 * @param location
+	 *            A physical location, represented as a Point object.
+	 * @param radius 
+	 * @return A list of objects that represent a station.
+	 */
+	List<IStation> getNeighborsInReceptionArea(Point location, double radius);
+	
+	/**
+	 * @param stationID
+	 *            Unique identifier.
+	 * @throws Exception 
+	 */
+	void removeStation(String stationID) throws Exception;
 
 	/**
 	 * @param stationLocation
 	 *            Physical location of the station, represented as a Point
 	 *            object.
+	 * @throws Exception 
 	 */
-	void removeStation(Point stationLocation);
+	void removeStation(Point stationLocation) throws Exception;
 
 	/**
 	 * @param stationID
 	 *            Unique identifier.
 	 * @param newPosition
 	 *            New position of the station, represented as a Point object.
+	 * @throws Exception 
 	 */
-	void changeStationPosition(String stationID, Point newPosition);
-
-	/**
-	 * @param radius
-	 *            A default reception radius for a station.
-	 */
-	void setStationsDefaultReceptionRadius(double radius);
-
-	/**
-	 * @param stationID
-	 *            Unique identifier.
-	 * @return A list of objects that represent a station.
-	 */
-	List<IStation> getStationNeighbors(String stationID);
-
-	/**
-	 * @param location
-	 *            A physical location, represented as a Point object.
-	 * @return A list of objects that represent a station.
-	 */
-	List<IStation> getNeighborsInReceptionArea(Point location);
+	void changeStationPosition(String stationID, Point newPosition) throws Exception;
 
 	/**
 	 * @param stationID
@@ -85,4 +86,13 @@ public interface ITopologyManager {
 	 */
 	boolean doesStationExist(Point stationLocation);
 
+	/**
+	 * @param stationID
+	 *            Unique identifier.
+	 * @return A list of objects that represent a station.
+	 * @throws Exception 
+	 */
+	List<IStation> getStationNeighbors(String stationID) throws Exception;
 }
+
+
