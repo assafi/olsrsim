@@ -10,11 +10,9 @@
  */
 package protocol;
 
-import events.DataMessage;
-import events.Event;
-import events.HelloMessage;
+import protocol.InformationBases.LocalInformationBase;
+import protocol.InformationBases.NeighborInformationBase;
 import events.MessageEvent;
-import events.TCMessage;
 
 /**
  * @author Eli Nazarov
@@ -22,8 +20,28 @@ import events.TCMessage;
  */
 public class OLSRv2Protocol implements IOLSRv2Protocol {
 
+	private String stationID;
+	
+	/** Protocol information bases **/
+	private LocalInformationBase localInfo = null;
+	private NeighborInformationBase neighborInfo = null;
+	
+	/** Protocol layers **/
+	private IOLSRv2Layer olsrLayer = null;
+	private INHDPLayer nhdpLayer = null;	
+	
+	public OLSRv2Protocol(String stationID){
+		this.stationID = stationID;
+		this.localInfo = new LocalInformationBase();
+		this.neighborInfo = new NeighborInformationBase();
+		
+		//TODO OLSR layer should receive more bases.
+		this.olsrLayer = new OLSRv2Layer(localInfo, neighborInfo);
+		this.nhdpLayer = new NHDPLayer(stationID, localInfo, neighborInfo);
+	}
+	
 	/* (non-Javadoc)
-	 * @see protocol.IOLSRv2Protocol#helloIntervalTriger(events.Event)
+	 * @see protocol.IOLSRv2Protocol#helloIntervalTriger()
 	 */
 	@Override
 	public void helloIntervalTriger() {
@@ -51,11 +69,10 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 	}
 
 	/* (non-Javadoc)
-	 * @see protocol.IOLSRv2Protocol#tcIntervalTriger(events.Event)
+	 * @see protocol.IOLSRv2Protocol#tcIntervalTriger()
 	 */
 	@Override
 	public void tcIntervalTriger() {
 	}
-
 
 }
