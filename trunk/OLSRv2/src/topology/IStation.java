@@ -23,12 +23,18 @@ public interface IStation {
 	/**
 	 * @return  Unique identification of a station
 	 */
-	String getStationID();
+	String getID();
 	
 	/**
 	 * @return  Physical location of the station
 	 */
-	Point getStationLocation();
+	Point getLocation();
+	
+	/**
+	 * @param location
+	 * @throws Exception
+	 */
+	void setLocation(Point location) throws Exception;
 	
 	/**
 	 * @return  OLSRv2 protocol layer of the station as defined in IOLSRv2Protocol interface
@@ -38,6 +44,16 @@ public interface IStation {
 	/**
 	 * @param radius A station reception radius
 	 */
-	void setStationReceptionRadius(double radius);
+	void setReceptionRadius(double radius);
 	
+	/**
+	 * @return The station reception radius
+	 */
+	double getReceptionRadius();
+
+	/**
+	 * @param newStation
+	 * @return Returns true if newStation is in the radius of the station
+	 */
+	boolean isInRange(IStation newStation);
 }
