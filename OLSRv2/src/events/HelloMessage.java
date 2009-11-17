@@ -13,8 +13,6 @@ package events;
 import java.util.HashMap;
 import java.util.Map;
 
-import protocol.Address;
-import protocol.InformationBases.Link;
 import protocol.InformationBases.NeighborProperty;
 
 /**
@@ -22,39 +20,29 @@ import protocol.InformationBases.NeighborProperty;
  *
  */
 public class HelloMessage extends MessageEvent {
-
-	private Map<Address, Link> linkSet = null;
-	private Map<Address, NeighborProperty> neighborSet = null;
-	private Map<Address, Integer> lostNeighborSet = null;
 	
-	public HelloMessage(Address src, long time, 
-						Map<Address, Link> linkSet, 
-						Map<Address, NeighborProperty> neighborSet,
-						Map<Address, Integer> lostNeighborSet) {
+	private Map<String, NeighborProperty> neighborSet = null;
+	private Map<String, Integer> lostNeighborSet = null;
+	
+	public HelloMessage(String src, long time,  
+						Map<String, NeighborProperty> neighborSet,
+						Map<String, Integer> lostNeighborSet) {
 		super(src, time);
-		this.linkSet = linkSet;
 		this.neighborSet = neighborSet;
 		this.lostNeighborSet = lostNeighborSet;
 	}
 
 	/**
-	 * @return the linkSet
-	 */
-	public Map<Address, Link> getLinkSet() {
-		return linkSet;
-	}
-
-	/**
 	 * @return the neighborSet
 	 */
-	public Map<Address, NeighborProperty> getNeighborSet() {
+	public Map<String, NeighborProperty> getNeighborSet() {
 		return neighborSet;
 	}
 
 	/**
 	 * @return the lostNeighborSet
 	 */
-	public Map<Address, Integer> getLostNeighborSet() {
+	public Map<String, Integer> getLostNeighborSet() {
 		return lostNeighborSet;
 	}
 	

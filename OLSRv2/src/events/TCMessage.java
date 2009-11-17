@@ -10,7 +10,6 @@
  */
 package events;
 
-import protocol.Address;
 
 
 /**
@@ -23,7 +22,7 @@ public class TCMessage extends MessageEvent {
 	 * @param src
 	 * @param time
 	 */
-	public TCMessage(Address src, long time) {
+	public TCMessage(String src, long time) {
 		super(src, time);
 	}
 

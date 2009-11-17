@@ -10,8 +10,6 @@
  */
 package events;
 
-import protocol.Address;
-
 /**
  * @author Eli Nazarov
  *
@@ -22,7 +20,7 @@ public class DataMessage extends MessageEvent {
 	 * @param src
 	 * @param time
 	 */
-	public DataMessage(Address src, long time) {
+	public DataMessage(String src, long time) {
 		super(src, time);
 	}
 
