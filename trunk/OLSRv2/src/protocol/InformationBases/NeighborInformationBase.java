@@ -10,15 +10,19 @@
  */
 package protocol.InformationBases;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
-import protocol.Address;
-
 /**
+ * This Class contains the Neighbor Information Base and Interface Information Base
+ * as described in the RFC due to the fact that we simulate that each
+ * station have only single interface and single data. 
+ * 
  * @author Eli Nazarov
  *
  */
@@ -27,28 +31,42 @@ public class NeighborInformationBase {
 	/**
 	 * Maps the address of the 1-hop neighbor interface to its property
 	 */
-	private Map<Address, NeighborProperty> neighborSet = null;
+	private Map<String, NeighborProperty> neighborSet = null;
 	
 	/**
 	 * Maps the address of the 1-hop neighbor address that was lost and time
 	 * when this entry should be deleted.
 	 */
-	private Map<Address, Integer> lostNeighborSet = null;
+	private Map<String, Integer> lostNeighborSet = null;
+	
+	/**
+	 * Maps the address of the 2-hop neighbor to the set of 1-hop neighbors 
+	 * that it is reachable from.
+	 */
+	private Map<String, List<String>> secondHopNeighbors = null;
 	
 	public NeighborInformationBase(){
-		lostNeighborSet = new HashMap<Address, Integer>();
-		neighborSet = new HashMap<Address, NeighborProperty>();
+		lostNeighborSet = new HashMap<String, Integer>();
+		neighborSet = new HashMap<String, NeighborProperty>();
 	}
 	
-	public void addNeighbor(Address neighbor, NeighborProperty property) {
+	public boolean isNeighbor(String neighbor) {
+		return neighborSet.containsKey(neighbor);
+	}
+
+	public boolean isLostNeighbor(String neighbor) {
+		return lostNeighborSet.containsKey(neighbor);
+	}
+	
+	public void addNeighbor(String neighbor, NeighborProperty property) {
 		neighborSet.put(neighbor, property);
 	}
 
-	public NeighborProperty getNeighborPrperty(Address adrr) {
+	public NeighborProperty getNeighborPrperty(String adrr) {
 		return neighborSet.get(adrr);
 	}
 
-	public void addToLostNeighbors(Address neighbor, int time) {
+	public void addToLostNeighbors(String neighbor, int time) {
 		lostNeighborSet.put(neighbor, time);
 	}
 	
@@ -60,9 +78,9 @@ public class NeighborInformationBase {
 	 * @return the lostNeighborSet
 	 */
 	public void removeInvalidLostNeighbors(int time) {
-		Set<Address> elements = lostNeighborSet.keySet();
-		Iterator<Address> it = elements.iterator();
-		Address key = it.next();
+		Set<String> elements = lostNeighborSet.keySet();
+		Iterator<String> it = elements.iterator();
+		String key = it.next();
 		while (it.hasNext()){
 			int entryTime = lostNeighborSet.get(key);
 			if (entryTime > time){ //TODO think how to compare times- made create an abstraction of time
@@ -73,16 +91,38 @@ public class NeighborInformationBase {
 	/**
 	 * @return the neighborSet
 	 */
-	public Map<Address, NeighborProperty> getAllNeighbors() {
+	public Map<String, NeighborProperty> getAllNeighbors() {
 		return neighborSet;
 	}
 
 	/**
 	 * @return the lostNeighborSet
 	 */
-	public Map<Address, Integer> getAllLostNeighborSet() {
+	public Map<String, Integer> getAllLostNeighborSet() {
 		return lostNeighborSet;
 	}
 	
+	public List<String> get2HopReachAddresses(String secondHopAddr){
+		return secondHopNeighbors.get(secondHopAddr);
+	}
 	
+	/**
+	 * Adds 2-hop neighbor to the set.
+	 * 
+	 * This function can be used to add a 1-hop neighbor from 
+	 * which the 2-hop neighbor can be reached
+	 * 
+	 * @param secondHopAddr
+	 * @param firstHopReach
+	 */
+	public void add2HopNeighbor(String secondHopAddr, String firstHopReach){
+		if (secondHopNeighbors.containsKey(secondHopAddr)){
+			secondHopNeighbors.get(secondHopAddr).add(firstHopReach);
+		}
+		else {
+			List<String> oneHops = new ArrayList<String>();
+			oneHops.add(firstHopReach);
+			secondHopNeighbors.put(secondHopAddr, oneHops);
+		}
+	}
 }

@@ -10,6 +10,8 @@
  */
 package protocol;
 
+import protocol.InformationBases.LocalInformationBase;
+import protocol.InformationBases.NeighborInformationBase;
 import events.HelloMessage;
 
 /**
@@ -18,12 +20,30 @@ import events.HelloMessage;
  */
 public class NHDPLayer implements INHDPLayer {
 
+	/** NHDP Protocol information bases **/
+	private LocalInformationBase localInfo = null;
+	private NeighborInformationBase neighborInfo = null;
+	
+	public NHDPLayer(String stationID, 
+					 LocalInformationBase localInfo,
+					 NeighborInformationBase neighborInfo){
+		this.localInfo = localInfo;
+		this.neighborInfo = neighborInfo;
+		
+	}
+	
 	/* (non-Javadoc)
 	 * @see protocol.INHDPLayer#receiveHelloMessage(events.HelloMessage)
 	 */
 	@Override
-	public void receiveHelloMessage(HelloMessage helloMsg) {
+	public void receiveHelloMessage(HelloMessage helloMsg) throws ProtocolException {
+		if (null == helloMsg){
+			throw new ProtocolException("Wrong message!");
+		}
 		
+		String msgSrc = helloMsg.getSource();
+		
+		if (neighborInfo)
 	}
 
 }

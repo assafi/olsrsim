@@ -13,10 +13,13 @@ package protocol;
 import static org.junit.Assert.*;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import protocol.InformationBases.LocalInformationBase;
 
 /**
  * @author Eli Nazarov
@@ -33,7 +36,7 @@ public class LocalInfoBaseTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		base = LocalInformationBase.getInstance();
+		base = new LocalInformationBase();
 	}
 
 	/**
@@ -45,7 +48,7 @@ public class LocalInfoBaseTest {
 	}
 
 	/**
-	 * Test method for {@link protocol.LocalInformationBase#addInterfaceAddress(java.lang.String, protocol.Address)}.
+	 * Test method for {@link protocol.InformationBases.LocalInformationBase#addInterfaceAddress(java.lang.String, protocol.Address)}.
 	 */
 	@Test
 	public void testAddInterfaceAddress() {
@@ -78,7 +81,7 @@ public class LocalInfoBaseTest {
 	}
 
 	/**
-	 * Test method for {@link protocol.LocalInformationBase#getInterfaceAddress(java.lang.String)}.
+	 * Test method for {@link protocol.InformationBases.LocalInformationBase#getInterfaceAddress(java.lang.String)}.
 	 */
 	@Test
 	public void testGetInterfaceAddress() {
@@ -99,11 +102,11 @@ public class LocalInfoBaseTest {
 	}
 
 	/**
-	 * Test method for {@link protocol.LocalInformationBase#getAllLocalInterfaces()}.
+	 * Test method for {@link protocol.InformationBases.LocalInformationBase#getAllLocalInterfaces()}.
 	 */
 	@Test
 	public void testGetAllLocalInterfaces() {
-		HashMap<String, Address> map =  base.getAllLocalInterfaces();
+		Map<String, Address> map =  base.getAllLocalInterfaces();
 		System.out.println(map.get("eth0").getAddress());
 		System.out.println(map.get("eth1").getAddress());
 	}

@@ -17,7 +17,35 @@ package protocol.InformationBases;
 public class NeighborProperty {
 	//TODO add fields used in the OLSRv2 layer
 	private boolean symetricLink;
+	private long quality;
+	private int valideTime;
 
+	/**
+	 * @return the quality
+	 */
+	public long getQuality() {
+		return quality;
+	}
+	/**
+	 * @param quality the quality to set
+	 */
+	public void setQuality(long quality) {
+		this.quality = quality;
+	}
+	
+	/**
+	 * @return the valideTime
+	 */
+	public int getValideTime() {
+		return valideTime;
+	}
+	/**
+	 * @param valideTime the valideTime to set
+	 */
+	public void setValideTime(int valideTime) {
+		this.valideTime = valideTime;
+	}
+	
 	/**
 	 * @return the symetricLink
 	 */

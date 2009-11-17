@@ -13,7 +13,6 @@ package protocol.InformationBases;
 import java.util.HashMap;
 import java.util.Map;
 
-import protocol.Address;
 import protocol.ProtocolException;
 
 /**
@@ -23,14 +22,14 @@ import protocol.ProtocolException;
 public class LocalInformationBase {
 	
 	//TODO add the removed database
-	private Map<String, Address> localActiveInterfaces = null;
+	private Map<String, String> localActiveInterfaces = null;
 	
 	
 	public LocalInformationBase(){
-		localActiveInterfaces = new HashMap<String, Address>();
+		localActiveInterfaces = new HashMap<String, String>();
 	}
 	
-	public void addInterfaceAddress(String iface, Address addr) throws ProtocolException{
+	public void addInterfaceAddress(String iface, String addr) throws ProtocolException{
 		
 		//TODO see if one iface can have more then one address
 		if (localActiveInterfaces.containsKey(iface)){
@@ -47,7 +46,7 @@ public class LocalInformationBase {
 		localActiveInterfaces.remove(iface);
 	}
 	
-	public Address getInterfaceAddress(String iface) throws ProtocolException{
+	public String getInterfaceAddress(String iface) throws ProtocolException{
 		
 		if (!localActiveInterfaces.containsKey(iface)){
 			throw new ProtocolException("Local Interface dosn't exist");
@@ -59,7 +58,7 @@ public class LocalInformationBase {
 	/**
 	 * @return all local Active Interfaces
 	 */
-	public Map<String, Address> getAllLocalInterfaces() {
+	public Map<String, String> getAllLocalInterfaces() {
 		return localActiveInterfaces;
 	}
 	

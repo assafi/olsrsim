@@ -10,5 +10,5 @@ import events.HelloMessage;
  *
  */
 public interface INHDPLayer {
-	public void receiveHelloMessage(HelloMessage helloMsg);
+	public void receiveHelloMessage(HelloMessage helloMsg) throws ProtocolException;
 }
