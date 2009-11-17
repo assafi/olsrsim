@@ -22,11 +22,11 @@ import protocol.InformationBases.NeighborProperty;
 public class HelloMessage extends MessageEvent {
 	
 	private Map<String, NeighborProperty> neighborSet = null;
-	private Map<String, Integer> lostNeighborSet = null;
+	private Map<String, Long> lostNeighborSet = null;
 	
 	public HelloMessage(String src, long time,  
 						Map<String, NeighborProperty> neighborSet,
-						Map<String, Integer> lostNeighborSet) {
+						Map<String, Long> lostNeighborSet) {
 		super(src, time);
 		this.neighborSet = neighborSet;
 		this.lostNeighborSet = lostNeighborSet;
@@ -42,7 +42,7 @@ public class HelloMessage extends MessageEvent {
 	/**
 	 * @return the lostNeighborSet
 	 */
-	public Map<String, Integer> getLostNeighborSet() {
+	public Map<String, Long> getLostNeighborSet() {
 		return lostNeighborSet;
 	}
 	
