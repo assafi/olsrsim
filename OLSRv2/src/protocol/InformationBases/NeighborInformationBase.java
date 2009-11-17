@@ -37,7 +37,7 @@ public class NeighborInformationBase {
 	 * Maps the address of the 1-hop neighbor address that was lost and time
 	 * when this entry should be deleted.
 	 */
-	private Map<String, Integer> lostNeighborSet = null;
+	private Map<String, Long> lostNeighborSet = null;
 	
 	/**
 	 * Maps the address of the 2-hop neighbor to the set of 1-hop neighbors 
@@ -46,7 +46,7 @@ public class NeighborInformationBase {
 	private Map<String, List<String>> secondHopNeighbors = null;
 	
 	public NeighborInformationBase(){
-		lostNeighborSet = new HashMap<String, Integer>();
+		lostNeighborSet = new HashMap<String, Long>();
 		neighborSet = new HashMap<String, NeighborProperty>();
 	}
 	
@@ -58,6 +58,10 @@ public class NeighborInformationBase {
 		return lostNeighborSet.containsKey(neighbor);
 	}
 	
+	public boolean is2HopNeighbor(String neighbor) {
+		return secondHopNeighbors.containsKey(neighbor);
+	}
+	
 	public void addNeighbor(String neighbor, NeighborProperty property) {
 		neighborSet.put(neighbor, property);
 	}
@@ -66,7 +70,7 @@ public class NeighborInformationBase {
 		return neighborSet.get(adrr);
 	}
 
-	public void addToLostNeighbors(String neighbor, int time) {
+	public void addToLostNeighbors(String neighbor, long time) {
 		lostNeighborSet.put(neighbor, time);
 	}
 	
@@ -82,7 +86,7 @@ public class NeighborInformationBase {
 		Iterator<String> it = elements.iterator();
 		String key = it.next();
 		while (it.hasNext()){
-			int entryTime = lostNeighborSet.get(key);
+			long entryTime = lostNeighborSet.get(key);
 			if (entryTime > time){ //TODO think how to compare times- made create an abstraction of time
 				lostNeighborSet.remove(key);
 			}
@@ -98,7 +102,7 @@ public class NeighborInformationBase {
 	/**
 	 * @return the lostNeighborSet
 	 */
-	public Map<String, Integer> getAllLostNeighborSet() {
+	public Map<String, Long> getAllLostNeighborSet() {
 		return lostNeighborSet;
 	}
 	
@@ -124,5 +128,16 @@ public class NeighborInformationBase {
 			oneHops.add(firstHopReach);
 			secondHopNeighbors.put(secondHopAddr, oneHops);
 		}
+	}
+	
+	public void removeNeighbor(String neighbor){
+		neighborSet.remove(neighbor);
+	}
+	
+	public void removeLostNeighbor(String neighbor){
+		lostNeighborSet.remove(neighbor);
+	}
+	public void remove2hoptNeighbor(String neighbor){
+		secondHopNeighbors.remove(neighbor);
 	}
 }

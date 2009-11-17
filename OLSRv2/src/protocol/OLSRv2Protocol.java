@@ -21,6 +21,7 @@ import events.MessageEvent;
 public class OLSRv2Protocol implements IOLSRv2Protocol {
 
 	private String stationID;
+	private int symTime;
 	
 	/** Protocol information bases **/
 	private LocalInformationBase localInfo = null;
@@ -36,8 +37,10 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		this.neighborInfo = new NeighborInformationBase();
 		
 		//TODO OLSR layer should receive more bases.
-		this.olsrLayer = new OLSRv2Layer(localInfo, neighborInfo);
-		this.nhdpLayer = new NHDPLayer(stationID, localInfo, neighborInfo);
+		this.olsrLayer = new OLSRv2Layer(stationID, localInfo, neighborInfo, symTime);
+		this.nhdpLayer = new NHDPLayer(stationID, localInfo, neighborInfo, symTime);
+		
+		symTime = 0; //TODO see if need to make it better time;
 	}
 	
 	/* (non-Javadoc)
