@@ -10,8 +10,8 @@
  */
 package protocol.InformationBases;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Vector;
 
 /**
  * @author Eli Nazarov
@@ -22,23 +22,48 @@ public class TopologyInformationBase {
 	 * Maps the address of the station that transmits TC messages
 	 * to sequence number and validity time
 	 */
-	private Map<String,/* TODO add seq number and vailidity time*/> advertisingRemoteRouterSet = null;
+	private Map<String, TopologyCommonData> advertisingRemoteRouterSet = null;
+	
+	/**
+	 * Maps the address of the station in the MANET
+	 * to its list of all stations that could be reached from it 
+	 * in 1-hop
+	 */
+	private Map<String, TopologySetData> topologySet = null;
 	
 	/**
 	 * Maps the address of the destination station 
-	 * to its last hop station, sequence number and validity time
+	 * to its next hop station and number of hops.
 	 */
-	//TODO learn more about this set
-	private Map<String, /* TODO ... */> topologySet = null;
+	private Map<String, RoutingSetData> routingSet = null;
+	
+	public TopologyInformationBase(){
+		advertisingRemoteRouterSet = new HashMap<String, TopologyCommonData>();
+		topologySet = new HashMap<String, TopologySetData>();
+		routingSet = new HashMap<String, RoutingSetData>();
+	}
 	
 	/**
-	 * Maps the address of the destination station 
-	 * to its next hop station, sequence number and validity time
+	 * @return the advertisingRemoteRouterSet
 	 */
-	//TODO learn more about this set
-	private Map<String, /* TODO ... */> Routing Set = null;
+	public Map<String, TopologyCommonData> getAdvertisingRemoteRouterSet() {
+		return advertisingRemoteRouterSet;
+	}
 
+	/**
+	 * @return the topologySet
+	 */
+	public Map<String, TopologySetData> getTopologySet() {
+		return topologySet;
+	}
 
+	/**
+	 * @return the routingSet
+	 */
+	public Map<String, RoutingSetData> getRoutingSet() {
+		return routingSet;
+	}
 	
-
+	
+	
 }
