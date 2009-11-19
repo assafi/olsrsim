@@ -10,6 +10,15 @@
  */
 package eventGen;
 
+import java.awt.Point;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+import java.util.UUID;
+
+import topology.IStation;
+import topology.ITopologyManager;
+
 import dispatch.Dispatcher;
 
 /**
@@ -19,9 +28,20 @@ import dispatch.Dispatcher;
 public class EventGenerator {
 
 	private float factor;
+	private static final float MAX_DELAY = 10; 
 	private long nextEventTime;
 	private Dispatcher dispatcher = null;
 	private static EventGenerator instance = null;
+	
+	/*
+	 * This map of nodes will be updated before the Topology
+	 * Manager will be updated. so we'll avoid situations where
+	 * we call for an event which relates to a state which will no 
+	 * longer be relevant when the event reaches the front of the 
+	 * priority queue. 
+	 */
+	private ITopologyManager topologyManager = null;
+	
 	
 	/**
 	 * 
@@ -30,6 +50,8 @@ public class EventGenerator {
 		this.factor = factor;
 		this.dispatcher = Dispatcher.getInstance();
 		this.nextEventTime = 0;
+		this.nodes = new TopologyManager();
+		//TODO this.topologyManager = new TopologyManager();
 	}
 	
 	/**
@@ -55,7 +77,11 @@ public class EventGenerator {
 	public void tick(){
 		if (dispatcher.getCurrentVirtualTime() == this.nextEventTime){
 			generateEvent();
-			nextEventTime();
+			
+			/*
+			 * Update the time in which the next event will be created 
+			 */
+			this.nextEventTime += getExpDelay(factor);
 		}
 	}
 
@@ -65,37 +91,19 @@ public class EventGenerator {
 	public void generateEvent() {
 		
 		if (this.nextEventTime == 0){
-			createNode();
+			
+			String stationID = UUID.randomUUID().toString();
+			//TODO Point position = new Point(//...)
+			this.topologyManager.createNewStation(stationID, stationLocation);
 			return;
 		}
 		
 		// TODO ...
 	}
 	
-	private void nextEventTime(){
-		int timeUntilNextEvent = 1;
-		
-		/*
-		 * We've found that the most natural way to schedule events based on a user's
-		 * input is to use the Poisson probability. 
-		 * Unfortunately there's no easy way calculate the time which the the Pr > 0.5
-		 * since the equation is not solvable: t*e^(-factor*t) > 1/(2*factor) in an easy way.
-		 */
-		
-		//TODO Check if this can be solved in an easy way. I think that Marios talked about it in Numerical Analysis !!!
-		// Maybe Gamma distribution is a more correct way to solve this.
-		for (;poisson(1,factor,timeUntilNextEvent) > 0.5; timeUntilNextEvent++);
-		
-		this.nextEventTime += timeUntilNextEvent;
-	}
-	
-	private float poisson(int k, float gamma, int t){
-		
-		/*
-		 * We'll be using Math.exp which is fine as long as gamma*t is not a large
-		 * negative number. (which is not suppose to be the case here anyway)
-		 */
-		return (float) ((gamma*t)/Math.exp(gamma*t));
+	private float getExpDelay(float factor){
+		float u = (new Random().nextFloat())/(MAX_DELAY);
+		return (float) ((-1/factor)*Math.log(1-u));
 	}
 	
 }

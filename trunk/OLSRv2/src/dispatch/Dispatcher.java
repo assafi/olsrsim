@@ -105,14 +105,19 @@ public class Dispatcher implements IDispatcher {
 		 */
 		this.eventGen.generateEvent();
 		
-		while (!tasksQueue.isEmpty()){
+		while (true){
+			
+			while (tasksQueue.isEmpty()){
+				this.currentVirtualTime++;
+				this.eventGen.tick();
+			}
 			
 			Event currentEvent = tasksQueue.poll();
 			if (currentEvent.getClass().equals(StopEvent.class)){
 				break;
 			}
 			
-			handleEvent(currentEvent);
+			currentEvent.execute(this.nodes);
 		}
 	}
 }
