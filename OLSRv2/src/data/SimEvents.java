@@ -8,7 +8,7 @@
  * Date: 13/11/2009
  *
  */
-package log;
+package data;
 
 /**
  * @author Assaf

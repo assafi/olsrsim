@@ -10,6 +10,10 @@
  */
 package events;
 
+import java.util.Map;
+
+import topology.IStation;
+
 /**
  * @author Assaf
  *
@@ -30,5 +34,10 @@ public abstract class Event {
 	public long getTime() {
 		return time;
 	}
+
+	/**
+	 * @param nodes The nodes map
+	 */
+	public abstract void execute(Map<String, IStation> nodes);
 }
  

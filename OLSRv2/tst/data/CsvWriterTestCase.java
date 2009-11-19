@@ -16,7 +16,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
-import log.SimEvents;
 
 import org.junit.After;
 import org.junit.AfterClass;

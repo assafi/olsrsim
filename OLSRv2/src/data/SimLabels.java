@@ -11,9 +11,9 @@
 package data;
 
 /**
- * @author Assaf
  * Defines the Column headings in the CSV file.
  * i.e. type of data to log to file
+ * @author Assaf
  */
 public enum SimLabels {
 	VIRTUAL_TIME, NODE_ID, EVENT_TYPE, 
