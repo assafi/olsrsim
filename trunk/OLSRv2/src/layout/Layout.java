@@ -10,7 +10,7 @@
  */
 package layout;
 
-import java.awt.Point;
+import java.awt.geom.Point2D;
 
 /**
  * @author Assaf
@@ -18,11 +18,13 @@ import java.awt.Point;
  */
 public abstract class Layout {
 	
-	protected static double xBoundry;
-	protected static double yBoundry;
+	protected double xBoundry;
+	protected double yBoundry;
 	
 	/**
 	 * @return return a random point within the simulation boundaries.
+	 * @throws LayoutException Is thrown if the Layout object cannot
+	 * calculate a point with in it's current state. 
 	 */
-	public abstract Point getRandomPoint();
+	public abstract Point2D.Double getRandomPoint() throws LayoutException;
 }
