@@ -24,8 +24,8 @@ public class TopologySetData extends TopologyCommonData {
 	 * @param sequenceNumber
 	 * @param time
 	 */
-	public TopologySetData(long sequenceNumber, long time) {
-		super(sequenceNumber, time);
+	public TopologySetData(long timeToLeave) {
+		super(timeToLeave);
 		toAddresses = new ArrayList<String>();
 	}
 	

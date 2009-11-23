@@ -23,8 +23,8 @@ public class ReceivedSetData extends TopologyCommonData {
 	 * @param sequenceNumber
 	 * @param time
 	 */
-	public ReceivedSetData(MessegeTypes type, int msgHashCode, long sequenceNumber, long time) {
-		super(sequenceNumber, time);
+	public ReceivedSetData(MessegeTypes type, int msgHashCode, long timeToLeave) {
+		super(timeToLeave);
 		this.type = type;
 		this.msgHashCode = msgHashCode;
 	}

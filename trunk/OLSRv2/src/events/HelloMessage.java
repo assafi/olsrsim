@@ -24,6 +24,10 @@ public class HelloMessage extends MessageEvent {
 	private Map<String, NeighborProperty> neighborSet = null;
 	private Map<String, Long> lostNeighborSet = null;
 	
+	/* Willingness parameter of the Hello Message must be set by OLSRv2 layer
+	 * before message transmission*/
+	private int willingnes;
+	
 	public HelloMessage(String src, long time,  
 						Map<String, NeighborProperty> neighborSet,
 						Map<String, Long> lostNeighborSet) {
@@ -45,6 +49,21 @@ public class HelloMessage extends MessageEvent {
 	public Map<String, Long> getLostNeighborSet() {
 		return lostNeighborSet;
 	}
+
+	/**
+	 * @return the willingnes
+	 */
+	public int getWillingnes() {
+		return willingnes;
+	}
+
+	/**
+	 * @param willingnes the willingnes to set
+	 */
+	public void setWillingnes(int willingnes) {
+		this.willingnes = willingnes;
+	}
+	
 	
 	
 

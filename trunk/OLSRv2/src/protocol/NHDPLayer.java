@@ -14,9 +14,12 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import dispatch.Dispatcher;
+
 import protocol.InformationBases.LocalInformationBase;
 import protocol.InformationBases.NeighborInformationBase;
 import protocol.InformationBases.NeighborProperty;
+import protocol.InformationBases.ProtocolDefinitions;
 import events.HelloMessage;
 
 /**
@@ -25,13 +28,11 @@ import events.HelloMessage;
  */
 public class NHDPLayer implements INHDPLayer {
 
+	//TODO see how to remove all records with TTL expires
+	//TODO see how to pass the Hello message to OLSRv2 to be modified maybe receive OLSRv2 object or return a indication that hello message should be transmitted
+		
 	private String stationID;
-	private long symTime;
-	
-	/**
-	 * The validity period of the entry in the table 
-	 */
-	static final int EntryValidPeriod = 10;
+	//private long symTime;
 	
 	/** NHDP Protocol information bases **/
 	//TODO See if this base is really needed
@@ -40,14 +41,13 @@ public class NHDPLayer implements INHDPLayer {
 	
 	public NHDPLayer(String stationID, 
 					 LocalInformationBase localInfo,
-					 NeighborInformationBase neighborInfo,
-					 int symTime){
+					 NeighborInformationBase neighborInfo){
+		Dispatcher dispatcher = Dispatcher.getInstance();
 		this.stationID = stationID;
 		this.localInfo = localInfo;
 		this.neighborInfo = neighborInfo;
-		this.symTime = symTime;
-		
-		//TODO generate first hello message
+
+		dispatcher.pushEvent(generateHelloMessage(dispatcher.getCurrentVirtualTime()));		
 	}
 	
 	/* (non-Javadoc)
@@ -59,13 +59,10 @@ public class NHDPLayer implements INHDPLayer {
 			throw new ProtocolException("Wrong message!");
 		}
 		
-		//Update the protocol time to be the current time according to the 
-		// Hello message
-		if (symTime < helloMsg.getTime()){
-			symTime = helloMsg.getTime();
-		}
-	
+		Dispatcher dispatcher = Dispatcher.getInstance();
+		
 		String msgSrc = helloMsg.getSource();
+		long simTime = helloMsg.getTime();
 		
 		/* Update the neighbor set */
 		NeighborProperty property = new NeighborProperty();
@@ -74,13 +71,15 @@ public class NHDPLayer implements INHDPLayer {
 			if (helloMsg.getNeighborSet().containsKey(stationID)){
 				property.setQuality(helloMsg.getNeighborSet().get(stationID).getQuality());
 				property.setSymetricLink(true);
-				property.setValideTime(symTime + EntryValidPeriod); //TODO insert event that the validity time has passed or check in other ways
+				property.setValideTime(simTime + ProtocolDefinitions.EntryValidPeriod); 
+				//insert event that the validity time has passed or check in other ways
+				//dispatcher.pushEvent(new );
 				neighborInfo.addNeighbor(msgSrc, property);
 			}
 			else{
 				property.setQuality(1);/*TODO calculate the quality*/
 				property.setSymetricLink(true);
-				property.setValideTime(symTime + EntryValidPeriod);
+				property.setValideTime(simTime + ProtocolDefinitions.EntryValidPeriod);
 				neighborInfo.addNeighbor(msgSrc, property);
 				//TODO insert event that the validity time has passed or check in other ways
 			}
@@ -95,20 +94,30 @@ public class NHDPLayer implements INHDPLayer {
 		/* Update the lost neighbor set */
 		Set<String> lostHelloNeigbors = helloMsg.getLostNeighborSet().keySet();
 		Iterator<String> it = lostHelloNeigbors.iterator();
-		String lostNeighbor = it.next();
+		boolean sendHelloMsg = false;
 		while (it.hasNext()){
+			String lostNeighbor = it.next();
 			if (neighborInfo.isNeighbor(lostNeighbor)){
-				neighborInfo.addToLostNeighbors(lostNeighbor, symTime + EntryValidPeriod);
+				neighborInfo.addToLostNeighbors(lostNeighbor, simTime + ProtocolDefinitions.EntryValidPeriod);
 				neighborInfo.removeNeighbor(lostNeighbor);
-				//TODO if this was a symmetric neighbor must sent HELLO message
+				//if this was a symmetric neighbor must sent HELLO message
+				NeighborProperty lostNeighborProp = neighborInfo.getNeighborProperty(lostNeighbor);
+				if (lostNeighborProp.isSymetricLink()){
+					sendHelloMsg = true;
+				}
 			}
+		}
+		
+		//if this was a symmetric neighbor must sent HELLO message
+		if (sendHelloMsg){
+			generateHelloMessage(simTime);
 		}
 		
 		/* Update the 2-hop neighbor set */
 		Set<String> helloNeigbors = helloMsg.getNeighborSet().keySet();
-		it = lostHelloNeigbors.iterator();
-		String secondHopNeighbor = it.next();
+		it = helloNeigbors.iterator();
 		while (it.hasNext()){
+			String secondHopNeighbor = it.next();
 			if (!neighborInfo.isNeighbor(secondHopNeighbor)){
 				// If this neighbor already is in 2-hop set the 1-hop neighbor
 				// that we got the Hello message from will be added to the
@@ -122,9 +131,8 @@ public class NHDPLayer implements INHDPLayer {
 	 * @see protocol.INHDPLayer#generateHelloMessage()
 	 */
 	@Override
-	public HelloMessage generateHelloMessage() {
-		//TODO see if the time is ok
-		HelloMessage msg = new HelloMessage(stationID, symTime + 100 /*TODO change*/, neighborInfo.getAllNeighbors(), neighborInfo.getAllLostNeighborSet());
+	public HelloMessage generateHelloMessage(long currentSimTime) {
+		HelloMessage msg = new HelloMessage(stationID, currentSimTime + HelloInterval, neighborInfo.getAllNeighbors(), neighborInfo.getAllLostNeighborSet());
 		return msg;
 	}
 

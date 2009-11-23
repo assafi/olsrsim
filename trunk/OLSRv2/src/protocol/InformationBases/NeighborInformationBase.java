@@ -66,7 +66,7 @@ public class NeighborInformationBase {
 		neighborSet.put(neighbor, property);
 	}
 
-	public NeighborProperty getNeighborPrperty(String adrr) {
+	public NeighborProperty getNeighborProperty(String adrr) {
 		return neighborSet.get(adrr);
 	}
 
