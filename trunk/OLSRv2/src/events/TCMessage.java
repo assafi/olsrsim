@@ -18,6 +18,7 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import protocol.InformationBases.NeighborProperty;
+import topology.IStation;
 
 
 
@@ -58,6 +59,14 @@ public class TCMessage extends MessageEvent {
 	 */
 	public Map<String, NeighborProperty> getMprSelectors() {
 		return mprSelectors;
+	}
+
+	/* (non-Javadoc)
+	 * @see events.Event#execute(java.util.Map)
+	 */
+	@Override
+	public void execute(Map<String, IStation> nodes) {
+		//TODO implement
 	}
 
 

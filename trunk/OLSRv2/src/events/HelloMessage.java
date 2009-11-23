@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import protocol.InformationBases.NeighborProperty;
+import topology.IStation;
 
 /**
  * @author Eli Nazarov
@@ -62,6 +63,14 @@ public class HelloMessage extends MessageEvent {
 	 */
 	public void setWillingnes(int willingnes) {
 		this.willingnes = willingnes;
+	}
+
+	/* (non-Javadoc)
+	 * @see events.Event#execute(java.util.Map)
+	 */
+	@Override
+	public void execute(Map<String, IStation> nodes) {
+		//TODO implement
 	}
 	
 	

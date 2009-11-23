@@ -10,6 +10,10 @@
  */
 package events;
 
+import java.util.Map;
+
+import topology.IStation;
+
 /**
  * This event simulates that the TC Interval is passed
  * and the station should transmit another TC message.
@@ -26,6 +30,14 @@ public class GenerateTCMsg extends Event {
 	 */
 	public GenerateTCMsg(long time) {
 		super(time);
+	}
+
+	/* (non-Javadoc)
+	 * @see events.Event#execute(java.util.Map)
+	 */
+	@Override
+	public void execute(Map<String, IStation> nodes) {
+		//TODO implement
 	}
 
 }
