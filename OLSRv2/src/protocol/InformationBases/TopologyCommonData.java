@@ -15,41 +15,42 @@ package protocol.InformationBases;
  *
  */
 public class TopologyCommonData {
-	private long sequenceNumber;
-	private long time;
+	//TODO see if we need to use sequence numbers in TC messages
+	/*private long sequenceNumber;*/
+	private long timeToLeave;
 	
-	public TopologyCommonData(long sequenceNumber, long time){
-		this.sequenceNumber = sequenceNumber;
-		this.time = time;
+	public TopologyCommonData(/*long sequenceNumber,*/ long timeToLeave){
+		//this.sequenceNumber = sequenceNumber;
+		this.timeToLeave = timeToLeave;
 	}
 
 	/**
 	 * @return the sequenceNumber
 	 */
-	public long getSequenceNumber() {
+	/*public long getSequenceNumber() {
 		return sequenceNumber;
-	}
+	}*/
 
 	/**
 	 * @param sequenceNumber the sequenceNumber to set
 	 */
-	public void setSequenceNumber(long sequenceNumber) {
+	/*public void setSequenceNumber(long sequenceNumber) {
 		this.sequenceNumber = sequenceNumber;
-	}
+	}*/
 	
 
 	/**
 	 * @return the time
 	 */
 	public long getTime() {
-		return time;
+		return timeToLeave;
 	}
 
 	/**
 	 * @param time the time to set
 	 */
-	public void setTime(long time) {
-		this.time = time;
+	public void setTTL(long timeToLeave) {
+		this.timeToLeave = timeToLeave;
 	}
 	
 	

@@ -24,11 +24,11 @@ public class RoutingSetData extends TopologyCommonData {
 	 * @param sequenceNumber
 	 * @param time
 	 */
-	public RoutingSetData(long sequenceNumber, long time, 
+	public RoutingSetData(long timeToLeave, 
 						  String destination,
 						  String nextHop,
 						  long hopsNumber) {
-		super(sequenceNumber, time);
+		super(timeToLeave);
 		this.destination = destination;
 		this.nextHop = nextHop;
 		this.hopsNumber = hopsNumber;

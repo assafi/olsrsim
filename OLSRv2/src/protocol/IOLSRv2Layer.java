@@ -10,6 +10,7 @@
  */
 package protocol;
 
+import events.HelloMessage;
 import events.TCMessage;;
 
 /**
@@ -25,4 +26,6 @@ public interface IOLSRv2Layer {
 	
 	public void receiveTCMessage(TCMessage tcMsg) throws ProtocolException;
 	public TCMessage generateTCMessage();
+	public void processHelloMessage(HelloMessage helloMsg);
+	public HelloMessage helloMessageModification(HelloMessage helloMsg);
 }

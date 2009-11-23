@@ -13,6 +13,8 @@ package protocol.InformationBases;
 import java.util.HashMap;
 import java.util.Map;
 
+import events.TCMessage;
+
 /**
  * @author Eli Nazarov
  *
@@ -41,6 +43,16 @@ public class TopologyInformationBase {
 		advertisingRemoteRouterSet = new HashMap<String, TopologyCommonData>();
 		topologySet = new HashMap<String, TopologySetData>();
 		routingSet = new HashMap<String, RoutingSetData>();
+	}
+	
+	
+	public void addTCTransmitingStation(String station, long TTL){
+		TopologyCommonData data = new TopologyCommonData(TTL);
+		advertisingRemoteRouterSet.put(station, data);
+	}
+	
+	public boolean isStationTCTransmiting(String station){
+		return advertisingRemoteRouterSet.containsKey(station);
 	}
 	
 	/**

@@ -10,6 +10,15 @@
  */
 package events;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
+
+import protocol.InformationBases.NeighborProperty;
+
 
 
 /**
@@ -19,11 +28,36 @@ package events;
 public class TCMessage extends MessageEvent {
 
 	/**
+	 * This list contains all the stations that selected 
+	 * the source station as MPR 
+	 */
+	private Map<String, NeighborProperty> mprSelectors = null;
+	
+	/**
 	 * @param src
 	 * @param time
 	 */
-	public TCMessage(String src, long time) {
+	public TCMessage(String src, long time,
+					 Map<String, NeighborProperty> neighborSet){
 		super(src, time);
+		
+		mprSelectors = new HashMap<String, NeighborProperty>();
+		
+		// go over the neighbor set and for each neighbor
+		// that selected this station as a MPR ad to mprSelectors
+		Set<Entry<String, NeighborProperty>> neighbors = neighborSet.entrySet();
+		for (Entry<String, NeighborProperty> entry : neighbors) {
+			if (entry.getValue().isMpr_selector()){
+				mprSelectors.put(entry.getKey(), entry.getValue());
+			}
+		}
+	}
+
+	/**
+	 * @return the mprSelectors
+	 */
+	public Map<String, NeighborProperty> getMprSelectors() {
+		return mprSelectors;
 	}
 
 
