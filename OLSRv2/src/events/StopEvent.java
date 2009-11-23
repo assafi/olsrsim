@@ -10,6 +10,10 @@
  */
 package events;
 
+import java.util.Map;
+
+import topology.IStation;
+
 /**
  * @author Assaf
  *
@@ -28,5 +32,13 @@ public class StopEvent extends Event {
 	 */
 	public StopEvent(long time) {
 		super(time);
+	}
+
+	/* (non-Javadoc)
+	 * @see events.Event#execute(java.util.Map)
+	 */
+	@Override
+	public void execute(Map<String, IStation> nodes) {
+		//TODO implement
 	}
 }
