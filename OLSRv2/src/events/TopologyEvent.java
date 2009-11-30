@@ -20,17 +20,20 @@ import topology.IStation;
  */
 public class TopologyEvent extends Event {
 
-	private enum TopologyEventType {
+	public enum TopologyEventType {
 		CREATE_NODE, DESTROY_NODE,MOVE_NODE
 	};
 	
 	private TopologyEventType type = null;
+	private IStation station = null;
 	
 	/**
 	 * @param time
 	 */
-	public TopologyEvent(long time) {
+	public TopologyEvent(long time, TopologyEventType type, IStation station) {
 		super(time);
+		this.type = type;
+		this.station = station;
 	}
 
 	/* (non-Javadoc)
