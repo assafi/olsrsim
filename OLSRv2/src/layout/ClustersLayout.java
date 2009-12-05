@@ -33,8 +33,8 @@ public class ClustersLayout extends Layout{
 	 * Cartesian grid, as if the south west corner is the (0,0)
 	 * Coordinates. The number of clusters defined is the default
 	 * value (5).
-	 * @param xBoundry the right border of the space.   
-	 * @param yBoundry the upper border of the space.  
+	 * @param xBoundry The right border of the space.   
+	 * @param yBoundry The upper border of the space.  
 	 * @param radius If defined as a positive value, all clusters 
 	 * will be defined by this value. if set to 0, clusters will have random
 	 * radius in which they can define relative points.

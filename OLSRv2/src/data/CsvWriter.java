@@ -46,12 +46,6 @@ public class CsvWriter implements DataWriter {
 		openFile(file, encoding);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see data.DataWriter#openFile(java.io.File, java.lang.String)
-	 */
-	@Override
 	public void openFile(File file, String encoding) throws IOException {
 		if (null == encoding) {
 			encoding = System.getProperty("file.encoding");
@@ -62,24 +56,12 @@ public class CsvWriter implements DataWriter {
 		this.writer = new OutputStreamWriter(fout, encoding);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see data.DataWriter#writeLabels(java.io.File)
-	 */
-	@Override
 	public void writeLabels(String[] labels) throws IOException {
 		this.nbrCols = labels.length;
 		writeData(labels);
 		this.labels = labels.clone();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see data.DataWriter#writeData(java.util.Map)
-	 */
-	@Override
 	public void writeData(Map<String, String> data) throws IOException {
 
 		if (null == data) {
@@ -142,10 +124,6 @@ public class CsvWriter implements DataWriter {
 		return sb.toString();
 	}
 
-	/* (non-Javadoc)
-	 * @see data.DataWriter#getExtension()
-	 */
-	@Override
 	public String getExtension() {
 		return new String("csv");
 	}
