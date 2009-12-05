@@ -109,11 +109,11 @@ public class ClustersLayout extends Layout{
 	private void defineClusters() {
 		
 		for (int i=0; i< this.nmbClusters; i++){
-			double xCoor = new Random().nextDouble() % xBoundry;
-			double yCoor = new Random().nextDouble() % yBoundry;
+			double xCoor = new Random().nextDouble() * xBoundry;
+			double yCoor = new Random().nextDouble() * yBoundry;
 			double clusterRadius;
 			if (radius <= 0){
-				clusterRadius = new Random().nextDouble() % 
+				clusterRadius = new Random().nextDouble() * 
 					Math.min(Math.min(xCoor, xBoundry - xCoor),
 							 Math.min(yCoor, yBoundry - yCoor));
 			} else {
@@ -149,7 +149,7 @@ public class ClustersLayout extends Layout{
 		int clusterIndex = new Random().nextInt() % clusters.size();
 		Point2D.Double clusterCenter = (java.awt.geom.Point2D.Double) clusters.keySet().toArray()[clusterIndex];
 		double theta = new Random().nextDouble() % (2*Math.PI);
-		double radius = Math.pow(new Random().nextDouble() % 1.0,2) * this.radius;
+		double radius = Math.pow(new Random().nextDouble(),2) * this.radius;
 		
 		double xCoor = Math.cos(theta)*radius + clusterCenter.getX();
 		double yCoor = Math.sin(theta)*radius + clusterCenter.getY();

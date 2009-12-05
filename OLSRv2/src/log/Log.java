@@ -75,23 +75,8 @@ public class Log implements ILog {
 		}
 		
 		File logFile = new File(ILog.basePath + ILog.fileName + currentTime() + "." + fileExtension);
-		
 		try {
-			logFile.createNewFile();
-			if (!logFile.setReadable(true)){
-				/*
-				 * If eventually we can't read the file, there's no point 
-				 * in writing it.
-				 */
-				close();
-			}
-			
-			/*
-			 * The following credentials settings are optional, so we don't really care if they succeed or not.
-			 */
-			logFile.setWritable(true);
-			logFile.setExecutable(true);
-			
+			logFile.createNewFile();			
 			dataWriter.close(); // Closes any files that may have been passed along
 			this.writer = dataWriter;
 			this.writer.openFile(logFile, null);
