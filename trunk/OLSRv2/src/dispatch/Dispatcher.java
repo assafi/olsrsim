@@ -15,6 +15,8 @@ import java.util.Hashtable;
 import java.util.Map;
 import java.util.PriorityQueue;
 
+import layout.Layout;
+
 import eventGen.EventGenerator;
 import events.Event;
 import events.StopEvent;
@@ -89,7 +91,14 @@ public class Dispatcher implements IDispatcher {
 		return this.currentVirtualTime;
 	}
 	
-	public void startSimulation(float factor) throws DispatcherException {
+	/**
+	 * @param factor An optional parameter specify a factor to take into consideration 
+	 * @param layout The Layout object representing the layout by which station will be
+	 * generated.
+	 * @param maxStations The maximum number of stations.
+	 * @throws DispatcherException
+	 */
+	public void startSimulation(float factor, Layout layout, int maxStations) throws DispatcherException {
 		
 		//TODO Implement main simulation method. should invoke the event generator, and start
 		// pulling tasks from the queue until the queue is empty.
@@ -98,7 +107,7 @@ public class Dispatcher implements IDispatcher {
 			throw new DispatcherException("Can only start the dispatcher once...");
 		}
 		
-		this.eventGen = EventGenerator.getInstance(factor);
+		this.eventGen = EventGenerator.getInstance(factor,layout, maxStations);
 		
 		/*
 		 * Generating the first event

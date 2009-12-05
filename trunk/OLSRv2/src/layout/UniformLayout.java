@@ -51,8 +51,8 @@ public class UniformLayout extends Layout {
 	@Override
 	public Double getRandomPoint() throws LayoutException {
 		
-		double xCoor = new Random().nextDouble() % xBoundry;
-		double yCoor = new Random().nextDouble() % yBoundry;
+		double xCoor = new Random().nextDouble() * xBoundry;
+		double yCoor = new Random().nextDouble() * yBoundry;
 		return new Point2D.Double(xCoor, yCoor);
 	}
 

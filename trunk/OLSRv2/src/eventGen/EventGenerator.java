@@ -39,6 +39,8 @@ public class EventGenerator {
 	private long nextEventTime;
 	private Dispatcher dispatcher = null;
 	private static EventGenerator instance = null;
+	private int maxStations;
+	private static boolean firstIteration = true;
 	
 	/*
 	 * This map of nodes will be updated before the Topology
@@ -53,27 +55,30 @@ public class EventGenerator {
 	/**
 	 * 
 	 */
-	private EventGenerator(float factor, Layout layout) {
+	private EventGenerator(float factor, Layout layout, int maxStations) {
 		this.factor = factor;
 		this.dispatcher = Dispatcher.getInstance();
 		this.nextEventTime = 0;
 		this.topologyManager = new TopologyManager();
 		this.layout = layout;
+		this.maxStations = maxStations;
 	}
 	
 	/**
 	 * @param factor An optional parameter specify a factor to take into consideration 
 	 * while determine when to generate events. 
+	 * @param layout The Layout object representing the layout by which station will be
+	 * generated.
 	 * @return The EventGenerator singleton
 	 */
-	public static EventGenerator getInstance(Float factor, Layout layout){
+	public static EventGenerator getInstance(Float factor, Layout layout, int maxStations){
 		
 		if (null == factor){
 			factor = new Float(0.5);
 		}
 		
 		if (null == instance){
-			instance = new EventGenerator(factor, layout);
+			instance = new EventGenerator(factor, layout,maxStations);
 		}
 		return instance;
 	}
@@ -105,13 +110,13 @@ public class EventGenerator {
 		} else {
 			
 			switch (randomAction()){
-			case TopologyEventType.CREATE_NODE:
+			case CREATE_NODE:
 				dispatcher.pushEvent(createStation());
 				break;
-			case TopologyEventType.MOVE_NODE:
+			case MOVE_NODE:
 				dispatcher.pushEvent(moveStation());
 				break;
-			case TopologyEventType.DESTROY_NODE:
+			case DESTROY_NODE:
 				dispatcher.pushEvent(removeStation());
 				break;
 			}
@@ -119,6 +124,37 @@ public class EventGenerator {
 		
 	}
 
+
+	/**
+	 * @return
+	 */
+	private TopologyEventType randomAction() {
+		if (firstIteration && topologyManager.count() == maxStations) {
+			firstIteration = false;
+		}
+		
+		if (firstIteration){
+			return TopologyEventType.CREATE_NODE;
+		} 
+		
+		if (topologyManager.count() < maxStations){
+			float rand = new Random().nextFloat();
+			if (rand <= 0.33){
+				return TopologyEventType.CREATE_NODE;
+			} else if (rand <= 0.67) {
+				return TopologyEventType.MOVE_NODE;
+			} else {
+				return TopologyEventType.DESTROY_NODE;
+			}
+		} else {
+			float rand = new Random().nextFloat();
+			if (rand <= 0.5){
+				return TopologyEventType.MOVE_NODE;
+			} else if (rand <= 0.67) {
+				return TopologyEventType.DESTROY_NODE;
+			}
+		}	
+	}
 
 	/**
 	 * @return a new TopologyEvent which describes a new station creation
@@ -136,7 +172,7 @@ public class EventGenerator {
 	 */
 	private Event moveStation() {
 		Point2D.Double newStationLocation = this.layout.getRandomPoint();
-		while (this.topologyManager.doesStationExist(newStationLocation)){
+		while (this.topologyManager.stationExist(newStationLocation)){
 			
 			newStationLocation = this.layout.getRandomPoint();
 		}
