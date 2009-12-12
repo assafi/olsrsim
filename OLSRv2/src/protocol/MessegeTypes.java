@@ -8,7 +8,7 @@
  * Date: Nov 18, 2009
  *
  */
-package protocol.InformationBases;
+package protocol;
 
 /**
  * @author Eli Nazarov

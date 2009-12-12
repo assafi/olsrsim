@@ -10,6 +10,8 @@
  */
 package protocol.InformationBases;
 
+import protocol.MessegeTypes;
+
 /**
  * @author Eli Nazarov
  *
