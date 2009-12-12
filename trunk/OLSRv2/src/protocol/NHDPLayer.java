@@ -19,7 +19,6 @@ import dispatch.Dispatcher;
 import protocol.InformationBases.LocalInformationBase;
 import protocol.InformationBases.NeighborInformationBase;
 import protocol.InformationBases.NeighborProperty;
-import protocol.InformationBases.ProtocolDefinitions;
 import events.HelloMessage;
 
 /**
@@ -29,7 +28,6 @@ import events.HelloMessage;
 public class NHDPLayer implements INHDPLayer {
 
 	//TODO see how to remove all records with TTL expires
-	//TODO see how to pass the Hello message to OLSRv2 to be modified maybe receive OLSRv2 object or return a indication that hello message should be transmitted
 		
 	private String stationID;
 	//private long symTime;
@@ -38,16 +36,19 @@ public class NHDPLayer implements INHDPLayer {
 	//TODO See if this base is really needed
 	private LocalInformationBase localInfo = null;
 	private NeighborInformationBase neighborInfo = null;
+	private IOLSRv2Layer olsrLayer = null;
 	
 	public NHDPLayer(String stationID, 
 					 LocalInformationBase localInfo,
-					 NeighborInformationBase neighborInfo){
+					 NeighborInformationBase neighborInfo,
+					 IOLSRv2Layer olsrLayer){
 		Dispatcher dispatcher = Dispatcher.getInstance();
 		this.stationID = stationID;
 		this.localInfo = localInfo;
 		this.neighborInfo = neighborInfo;
-
-		dispatcher.pushEvent(generateHelloMessage(dispatcher.getCurrentVirtualTime()));		
+		this.olsrLayer = olsrLayer;
+		
+		dispatcher.pushEvent(generateHelloMessage(dispatcher.getCurrentVirtualTime()));
 	}
 	
 	/* (non-Javadoc)
@@ -72,7 +73,7 @@ public class NHDPLayer implements INHDPLayer {
 				property.setQuality(helloMsg.getNeighborSet().get(stationID).getQuality());
 				property.setSymetricLink(true);
 				property.setValideTime(simTime + ProtocolDefinitions.EntryValidPeriod); 
-				//insert event that the validity time has passed or check in other ways
+				//TODO insert event that the validity time has passed or check in other ways
 				//dispatcher.pushEvent(new );
 				neighborInfo.addNeighbor(msgSrc, property);
 			}
@@ -132,7 +133,10 @@ public class NHDPLayer implements INHDPLayer {
 	 */
 	@Override
 	public HelloMessage generateHelloMessage(long currentSimTime) {
-		HelloMessage msg = new HelloMessage(stationID, currentSimTime + HelloInterval, neighborInfo.getAllNeighbors(), neighborInfo.getAllLostNeighborSet());
+		// Create new Hello message
+		HelloMessage msg = new HelloMessage(stationID, currentSimTime + ProtocolDefinitions.HelloInterval, neighborInfo.getAllNeighbors(), neighborInfo.getAllLostNeighborSet());
+		// Pass it to OLSR layer for update
+		msg = olsrLayer.helloMessageModification(msg);
 		return msg;
 	}
 

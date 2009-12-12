@@ -38,7 +38,7 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		
 		//TODO OLSR layer should receive more bases.
 		this.olsrLayer = new OLSRv2Layer(stationID, localInfo, neighborInfo);
-		this.nhdpLayer = new NHDPLayer(stationID, localInfo, neighborInfo);
+		this.nhdpLayer = new NHDPLayer(stationID, localInfo, neighborInfo, this.olsrLayer);
 		
 		symTime = 0; //TODO see if need to make it better time;
 	}
@@ -48,6 +48,9 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 	 */
 	@Override
 	public void helloIntervalTriger() {
+		/* when we recive an event that the hello interval is over
+		we should generate hello massage and insert GenerateHelloMsg
+		event so that we will know next time that the interval is over*/
 	}
 
 	/* (non-Javadoc)
@@ -76,6 +79,9 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 	 */
 	@Override
 	public void tcIntervalTriger() {
+		/* when we recive an event that the tc interval is over
+		we should generate hello massage and insert GenerateTCMsg
+		event so that we will know next time that the interval is over*/
 	}
 
 }
