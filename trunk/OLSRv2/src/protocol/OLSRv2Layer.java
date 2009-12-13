@@ -13,6 +13,8 @@ package protocol;
 import protocol.InformationBases.LocalInformationBase;
 import protocol.InformationBases.NeighborInformationBase;
 import protocol.InformationBases.NeighborProperty;
+import protocol.InformationBases.ReceivedMessageInformationBase;
+import protocol.InformationBases.TopologyInformationBase;
 import events.HelloMessage;
 import events.TCMessage;
 
@@ -29,12 +31,19 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 	private LocalInformationBase localInfo = null;
 	private NeighborInformationBase neighborInfo = null;
 	
+	private TopologyInformationBase topologyInfo = null;
+	private ReceivedMessageInformationBase receivedMsgInfo = null;
+	
 	public OLSRv2Layer(String stationID, 
 					 LocalInformationBase localInfo,
-					 NeighborInformationBase neighborInfo){
+					 NeighborInformationBase neighborInfo,
+					 TopologyInformationBase topologyInfo,
+					 ReceivedMessageInformationBase receiveMsgInfo){
 		this.stationID = stationID;
 		this.localInfo = localInfo;
 		this.neighborInfo = neighborInfo;
+		this.topologyInfo = topologyInfo;
+		this.receivedMsgInfo = receiveMsgInfo;
 		
 		//TODO generate first TC message
 	}

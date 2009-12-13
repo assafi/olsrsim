@@ -12,6 +12,8 @@ package protocol;
 
 import protocol.InformationBases.LocalInformationBase;
 import protocol.InformationBases.NeighborInformationBase;
+import protocol.InformationBases.ReceivedMessageInformationBase;
+import protocol.InformationBases.TopologyInformationBase;
 import events.MessageEvent;
 
 /**
@@ -24,8 +26,14 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 	private int symTime;
 	
 	/** Protocol information bases **/
+	
+	/* NHDP layer information bases */
 	private LocalInformationBase localInfo = null;
 	private NeighborInformationBase neighborInfo = null;
+	
+	/* OLSRv2 layer information bases */
+	private TopologyInformationBase topologyInfo = null;
+	private ReceivedMessageInformationBase receivedMsgInfo = null;
 	
 	/** Protocol layers **/
 	private IOLSRv2Layer olsrLayer = null;
@@ -33,11 +41,15 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 	
 	public OLSRv2Protocol(String stationID){
 		this.stationID = stationID;
+		
+		// allocation of the information bases
 		this.localInfo = new LocalInformationBase();
 		this.neighborInfo = new NeighborInformationBase();
+		this.receivedMsgInfo = new ReceivedMessageInformationBase();
+		this.topologyInfo = new TopologyInformationBase();
 		
 		//TODO OLSR layer should receive more bases.
-		this.olsrLayer = new OLSRv2Layer(stationID, localInfo, neighborInfo);
+		this.olsrLayer = new OLSRv2Layer(stationID, localInfo, neighborInfo, topologyInfo, receivedMsgInfo);
 		this.nhdpLayer = new NHDPLayer(stationID, localInfo, neighborInfo, this.olsrLayer);
 		
 		symTime = 0; //TODO see if need to make it better time;
