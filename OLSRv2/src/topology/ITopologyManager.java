@@ -50,17 +50,19 @@ public interface ITopologyManager {
 	/**
 	 * @param stationID
 	 *            Unique identifier.
+	 * @return The station that was removed
 	 * @throws Exception 
 	 */
-	void removeStation(String stationID) throws Exception;
+	IStation removeStation(String stationID) throws Exception;
 
 	/**
 	 * @param stationLocation
 	 *            Physical location of the station, represented as a Point
 	 *            object.
+	 * @return The station that was removed
 	 * @throws Exception 
 	 */
-	void removeStation(Point stationLocation) throws Exception;
+	IStation removeStation(Point stationLocation) throws Exception;
 
 	/**
 	 * @param stationID
@@ -93,6 +95,16 @@ public interface ITopologyManager {
 	 * @throws Exception 
 	 */
 	List<IStation> getStationNeighbors(String stationID) throws Exception;
+
+	/**
+	 * @return The total number of stations 
+	 */
+	int count();
+
+	/**
+	 * @return An existing station in a random matter.
+	 */
+	String getRandomStation();
 }
 
 

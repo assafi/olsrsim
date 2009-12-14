@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * @author Asi
@@ -24,7 +25,7 @@ public class TopologyManager implements ITopologyManager {
 	private Map<String, IStation> stationsByID;
 	private Map<Point, IStation> stationsByLocation;
 	private Map<IStation, List<IStation>> stationNeigbors;
-	
+	private Random rand;
 	/**
 	 * 
 	 */
@@ -32,6 +33,7 @@ public class TopologyManager implements ITopologyManager {
 		stationsByID = new HashMap<String, IStation>();
 		stationsByLocation = new HashMap<Point, IStation>();
 		stationNeigbors = new HashMap<IStation, List<IStation>>();
+		rand = new Random(System.currentTimeMillis());
 	}
 	
 	public IStation createNewStation(String stationID, Point stationLocation) throws Exception {
@@ -89,7 +91,7 @@ public class TopologyManager implements ITopologyManager {
 		return res;
 	}
 
-	public void removeStation(String stationID) throws Exception {
+	public IStation removeStation(String stationID) throws Exception {
 		if(!doesStationExist(stationID)) {
 			throw new Exception("Station " + stationID + "doesn't exist");
 		}
@@ -101,10 +103,11 @@ public class TopologyManager implements ITopologyManager {
 		for (IStation station : stationNeigbors.keySet()) {
 			stationNeigbors.get(station).remove(iStation);
 		}
+		return iStation;
 	}
 	
-	public void removeStation(Point stationLocation) throws Exception {
-		removeStation(stationsByLocation.get(stationLocation).getID());
+	public IStation removeStation(Point stationLocation) throws Exception {
+		return removeStation(stationsByLocation.get(stationLocation).getID());
 	}
 	
 	public void changeStationPosition(String stationID, Point newPosition) throws Exception {
@@ -153,6 +156,13 @@ public class TopologyManager implements ITopologyManager {
 		return stationNeigbors.get(iStation);
 	}
 
+	public int count() {
+		return stationsByID.size();
+	}
 
+	public String getRandomStation() {
+		int randomStationIndex = rand.nextInt(this.count());
+		return new String((String)stationsByID.keySet().toArray()[randomStationIndex]);
+	}
 
 }
