@@ -185,7 +185,12 @@ public class EventGenerator {
 	 * @return
 	 */
 	private Event removeStation() {
-		IStation station = this.topologyManager.removeStation(topologyManager.getRandomStation());
+		IStation station;
+		try {
+			station = this.topologyManager.removeStation(topologyManager.getRandomStation());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return new TopologyEvent(this.nextEventTime, TopologyEventType.DESTROY_NODE, station);
 	}
 
