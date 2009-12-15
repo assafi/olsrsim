@@ -19,6 +19,7 @@ import java.util.List;
  */
 public class TopologySetData extends TopologyCommonData {
 	
+	// all the addresses that we can reach in 1-hop
 	private List<String> toAddresses = null;
 	/**
 	 * @param sequenceNumber

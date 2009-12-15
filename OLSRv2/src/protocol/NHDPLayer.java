@@ -55,10 +55,14 @@ public class NHDPLayer implements INHDPLayer {
 	 * @see protocol.INHDPLayer#receiveHelloMessage(events.HelloMessage)
 	 */
 	@Override
-	public void receiveHelloMessage(HelloMessage helloMsg) throws ProtocolException {
+	public boolean receiveHelloMessage(HelloMessage helloMsg) throws ProtocolException {
 		if (null == helloMsg){
 			throw new ProtocolException("Wrong message!");
 		}
+		
+		// in case we have new symmetric 1-hop neighbor or new 2-hop neighbor 
+		// we should notify so that OLSRv2 layer can recalculate the MPRs
+		boolean newSemmerticOr2hop = false;
 		
 		Dispatcher dispatcher = Dispatcher.getInstance();
 		
@@ -69,9 +73,10 @@ public class NHDPLayer implements INHDPLayer {
 		NeighborProperty property = new NeighborProperty();
 		
 		if (!neighborInfo.isNeighbor(msgSrc)){
-			if (helloMsg.getNeighborSet().containsKey(stationID)){
+			if (helloMsg.getNeighborSet().containsKey(stationID)){// if the receiving station is a neighbor then this is a symmetric connection 
 				property.setQuality(helloMsg.getNeighborSet().get(stationID).getQuality());
 				property.setSymetricLink(true);
+				newSemmerticOr2hop = true;
 				property.setValideTime(simTime + ProtocolDefinitions.EntryValidPeriod); 
 				//TODO insert event that the validity time has passed or check in other ways
 				//dispatcher.pushEvent(new );
@@ -79,7 +84,7 @@ public class NHDPLayer implements INHDPLayer {
 			}
 			else{
 				property.setQuality(1);/*TODO calculate the quality*/
-				property.setSymetricLink(true);
+				property.setSymetricLink(false);
 				property.setValideTime(simTime + ProtocolDefinitions.EntryValidPeriod);
 				neighborInfo.addNeighbor(msgSrc, property);
 				//TODO insert event that the validity time has passed or check in other ways
@@ -112,6 +117,7 @@ public class NHDPLayer implements INHDPLayer {
 		//if this was a symmetric neighbor must sent HELLO message
 		if (sendHelloMsg){
 			generateHelloMessage(simTime);
+			newSemmerticOr2hop = true;
 		}
 		
 		/* Update the 2-hop neighbor set */
@@ -124,8 +130,11 @@ public class NHDPLayer implements INHDPLayer {
 				// that we got the Hello message from will be added to the
 				// list of 1-hop nodes that we can reach it from
 				neighborInfo.add2HopNeighbor(secondHopNeighbor, msgSrc);
+				newSemmerticOr2hop = true;
 			}
 		}
+		
+		return newSemmerticOr2hop;
 	}
 
 	/* (non-Javadoc)

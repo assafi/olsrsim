@@ -24,20 +24,20 @@ public class TopologyInformationBase {
 	 * Maps the address of the station that transmits TC messages
 	 * to sequence number and validity time
 	 */
-	private Map<String, TopologyCommonData> advertisingRemoteRouterSet = null;
+	private HashMap<String, TopologyCommonData> advertisingRemoteRouterSet = null;
 	
 	/**
 	 * Maps the address of the station in the MANET
 	 * to its list of all stations that could be reached from it 
 	 * in 1-hop
 	 */
-	private Map<String, TopologySetData> topologySet = null;
+	private HashMap<String, TopologySetData> topologySet = null;
 	
 	/**
 	 * Maps the address of the destination station 
 	 * to its next hop station and number of hops.
 	 */
-	private Map<String, RoutingSetData> routingSet = null;
+	private HashMap<String, RoutingSetData> routingSet = null;
 	
 	public TopologyInformationBase(){
 		advertisingRemoteRouterSet = new HashMap<String, TopologyCommonData>();
@@ -58,22 +58,26 @@ public class TopologyInformationBase {
 	/**
 	 * @return the advertisingRemoteRouterSet
 	 */
-	public Map<String, TopologyCommonData> getAdvertisingRemoteRouterSet() {
+	public HashMap<String, TopologyCommonData> getAdvertisingRemoteRouterSet() {
 		return advertisingRemoteRouterSet;
 	}
 
 	/**
 	 * @return the topologySet
 	 */
-	public Map<String, TopologySetData> getTopologySet() {
+	public HashMap<String, TopologySetData> getTopologySet() {
 		return topologySet;
 	}
 
 	/**
 	 * @return the routingSet
 	 */
-	public Map<String, RoutingSetData> getRoutingSet() {
+	public HashMap<String, RoutingSetData> getRoutingSet() {
 		return routingSet;
+	}
+	
+	public void addTopologyEntry(String station, TopologySetData entryData){
+		topologySet.put(station, entryData);
 	}
 	
 	
