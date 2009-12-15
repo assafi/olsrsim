@@ -10,6 +10,6 @@ import events.HelloMessage;
  *
  */
 public interface INHDPLayer {
-	public void receiveHelloMessage(HelloMessage helloMsg) throws ProtocolException;
+	public boolean receiveHelloMessage(HelloMessage helloMsg) throws ProtocolException;
 	public HelloMessage generateHelloMessage(long currentSimTime);
 }

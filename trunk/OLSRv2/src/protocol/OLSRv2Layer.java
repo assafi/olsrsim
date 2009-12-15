@@ -10,11 +10,16 @@
  */
 package protocol;
 
+import java.util.Collection;
+import java.util.Set;
+
 import protocol.InformationBases.LocalInformationBase;
 import protocol.InformationBases.NeighborInformationBase;
 import protocol.InformationBases.NeighborProperty;
 import protocol.InformationBases.ReceivedMessageInformationBase;
+import protocol.InformationBases.TopologyCommonData;
 import protocol.InformationBases.TopologyInformationBase;
+import protocol.InformationBases.TopologySetData;
 import events.HelloMessage;
 import events.TCMessage;
 
@@ -56,11 +61,73 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 		return null;
 	}
 
+	private void updateRoutingSet(){
+		//TODO implement
+	}
+	
 	/* (non-Javadoc)
 	 * @see protocol.IOLSRv2Layer#receiveTCMessage(events.TCMessage)
 	 */
 	@Override
 	public void receiveTCMessage(TCMessage tcMsg) throws ProtocolException {
+		/* We should update the following bases
+		 * 1. Update bases according to the TC message: (see OLSR rfc section 12.3)
+		 *  1.1. Populating the Advertising Remote Router Set - advertisingRemoteRouterSet in Topology Base
+		 * 	     add a new tuple if the originator doesn't exist 
+		 *  1.2. Populating the Router Topology Set - topologySet in Topology base
+		 *       add new entry or update if existing.
+		 * 
+		 * 2. Update the routingSet in Topology Base
+		 *    (see OLSR rfc section 13.6 and 15)
+		 *    
+		 * 3. We should check if this message was already farwerded in the Receive Message
+		 *    base and if yes skip step 5.
+		 *   
+		 * 4. We should check if TC Message was received from MPR selector
+		 *    and if yes flood this message to all my MPRs
+		 * 
+		 */
+		
+		String src = tcMsg.getSource();
+		
+		// 1.1 Populating the Advertising Remote Router Set
+		if (!topologyInfo.getAdvertisingRemoteRouterSet().containsKey(src)){
+			TopologyCommonData entryData = new TopologyCommonData(tcMsg.getTime() + ProtocolDefinitions.EntryValidPeriod);
+			topologyInfo.getAdvertisingRemoteRouterSet().put(src, entryData);
+		}
+		
+		//1.2 Populating the Router Topology Set
+		
+		// get MPR selectors from the 
+		Set<String>  mprSelectorsInTcMsg = tcMsg.getMprSelectors().keySet();
+		
+		//if this station is not in the Topology Set
+		if (!topologyInfo.getTopologySet().containsKey(src)){
+			TopologySetData entryData = new TopologySetData(tcMsg.getTime() + ProtocolDefinitions.EntryValidPeriod);
+			
+			for (String mprSelector : mprSelectorsInTcMsg) {
+				entryData.addToAddress(mprSelector);
+			}
+			
+			topologyInfo.addTopologyEntry(src, entryData);
+		}
+		else{ // if this station already exists in the entry.
+			TopologySetData entryData = topologyInfo.getTopologySet().get(src);
+			
+			for (String mprSelector : mprSelectorsInTcMsg) {
+				entryData.addToAddress(mprSelector);
+			}
+			
+			// update validity time of the entry
+			entryData.setTTL(tcMsg.getTime() + ProtocolDefinitions.EntryValidPeriod);
+		}
+		
+		// 2. Update the routingSet in Topology Base
+		updateRoutingSet();
+		
+		// 3. Forward the tcMsg to all my MPRs
+		
+		// Add the TC message to the Received TC messages base
 	}
 
 	/* (non-Javadoc)
@@ -91,6 +158,18 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 	public HelloMessage helloMessageModification(HelloMessage helloMsg) {
 		helloMsg.setWillingnes(3); //TODO change it to be correct willingness
 		return helloMsg;
+	}
+
+	/* (non-Javadoc)
+	 * @see protocol.IOLSRv2Layer#calculateMPRs()
+	 */
+	@Override
+	public void calculateMPRs() {
+		/* 2. If 1-hop symmetric neighbor is added we must recalculate the MPRs
+		 *    If 2-hop neighbor is added/removed we must recalculate the MPRs
+		 *    (see OLSR rfc section 13.5 and 14)
+		 */    
+		//TODO implement
 	}
 
 }

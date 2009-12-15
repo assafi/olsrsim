@@ -63,6 +63,7 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		/* when we recive an event that the hello interval is over
 		we should generate hello massage and insert GenerateHelloMsg
 		event so that we will know next time that the interval is over*/
+	
 	}
 
 	/* (non-Javadoc)
@@ -77,6 +78,9 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 	 */
 	@Override
 	public void reciveHelloMessage(MessageEvent helloMsg) {
+		/* if NHDP layer returns true after proccesing meaning that there
+		 * was a new 1-jop symmetric neighbor added or 2-hop neighbor
+		 * we must invoke the recalculation of MPRs */
 	}
 
 	/* (non-Javadoc)

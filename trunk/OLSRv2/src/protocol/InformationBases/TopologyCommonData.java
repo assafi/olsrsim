@@ -42,7 +42,7 @@ public class TopologyCommonData {
 	/**
 	 * @return the time
 	 */
-	public long getTime() {
+	public long getTTL() {
 		return timeToLeave;
 	}
 

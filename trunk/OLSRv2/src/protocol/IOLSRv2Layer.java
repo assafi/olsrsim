@@ -22,4 +22,5 @@ public interface IOLSRv2Layer {
 	public TCMessage generateTCMessage();
 	public void processHelloMessage(HelloMessage helloMsg);
 	public HelloMessage helloMessageModification(HelloMessage helloMsg);
+	public void calculateMPRs();
 }
