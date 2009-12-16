@@ -12,6 +12,7 @@ package topology;
 
 import java.awt.Point;
 import java.util.List;
+import java.util.Set;
 
 /**
  * This interface indicates the methods that is implemented in the topology manger class.
@@ -105,6 +106,11 @@ public interface ITopologyManager {
 	 * @return An existing station in a random matter.
 	 */
 	String getRandomStation();
+	
+	/**
+	 * @return A set of all the stations position
+	 */
+	public Set<Point> getAllStationsPositions();
 }
 
 
