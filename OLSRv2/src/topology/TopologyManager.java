@@ -16,6 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 /**
  * @author Asi
@@ -163,6 +164,10 @@ public class TopologyManager implements ITopologyManager {
 	public String getRandomStation() {
 		int randomStationIndex = rand.nextInt(this.count());
 		return new String((String)stationsByID.keySet().toArray()[randomStationIndex]);
+	}
+	
+	public Set<Point> getAllStationsPositions() {
+		return stationsByLocation.keySet();
 	}
 
 }
