@@ -10,6 +10,8 @@
  */
 package protocol.InformationBases;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,13 +30,34 @@ public class ReceivedMessageInformationBase {
 	 * this set has all the information in the Process set.
 	 * 
 	 */
-	private Map<String, List<ReceivedSetData>> receivedSet = null;
+	private HashMap<String, ArrayList<ReceivedSetData>> receivedSet = null;
 	
 	/**
 	 * Mapping between the station that send messages
 	 * and the details of the forward message.
 	 *
 	 */
-	private Map<String, List<ReceivedSetData>> forwardSet = null;
+	private HashMap<String, ArrayList<ReceivedSetData>> forwardSet = null;
+
+	public ReceivedMessageInformationBase(){
+		receivedSet = new HashMap<String, ArrayList<ReceivedSetData>>();
+		forwardSet = new HashMap<String, ArrayList<ReceivedSetData>>();
+	}
+	
+	/**
+	 * @return the receivedSet
+	 */
+	public HashMap<String, ArrayList<ReceivedSetData>> getReceivedSet() {
+		return receivedSet;
+	}
+
+	/**
+	 * @return the forwardSet
+	 */
+	public HashMap<String, ArrayList<ReceivedSetData>> getForwardSet() {
+		return forwardSet;
+	}
+	
+	
 
 }
