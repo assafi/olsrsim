@@ -14,7 +14,10 @@ import java.awt.TrayIcon.MessageType;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+
+import dispatch.Dispatcher;
 
 import protocol.InformationBases.LocalInformationBase;
 import protocol.InformationBases.NeighborInformationBase;
@@ -73,7 +76,16 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 	 * This method should send the TC message it received to all it's MPRs
 	 */
 	private void floodTCMsg(TCMessage tcMsg){
-		//TODO implement
+		/* Go over all the 1-hop neighbors that are selected as 
+		   MPRs and send the message to them */
+		Set<String> neighbors = neighborInfo.getAllNeighbors().keySet();
+		for (String neighbor : neighbors) {
+			NeighborProperty neighborProp = neighborInfo.getAllNeighbors().get(neighbor);
+			if (neighborProp.isMpr()){
+				Dispatcher dispatcher = Dispatcher.getInstance();
+				dispatcher.pushEvent(tcMsg);
+			}
+		}
 	}
 	
 	/* (non-Javadoc)
