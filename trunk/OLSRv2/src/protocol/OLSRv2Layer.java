@@ -64,8 +64,11 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 	 * @see protocol.IOLSRv2Layer#generateTCMessage()
 	 */
 	@Override
-	public TCMessage generateTCMessage() {
-		return null;
+	public TCMessage generateTCMessage(long currentSimTime) {
+		TCMessage tcMsg = new TCMessage(stationID, currentSimTime + ProtocolDefinitions.TCInterval, neighborInfo.getAllNeighbors());
+		Dispatcher dispatcher = Dispatcher.getInstance();
+		dispatcher.pushEvent(tcMsg);
+		return tcMsg;
 	}
 
 	private void updateRoutingSet(){
@@ -223,6 +226,11 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 		if (helloMsg.getNeighborSet().containsKey(stationID) && 
 			helloMsg.getNeighborSet().get(stationID).isMpr()){
 			neighborInfo.getNeighborProperty(helloMsg.getSource()).setMpr_selector(true);
+			
+			//because the MPR selector set is changed we must send a TC message
+			//TODO see how this settels with minimum time before trunsmition
+			//     and if the interval of TC is passed or near to finish
+			generateTCMessage(helloMsg.getTime());
 		}
 		else{ // otherwise set it to be false. Needed in case it was selected and now it is not
 			neighborInfo.getNeighborProperty(helloMsg.getSource()).setMpr_selector(false);
@@ -245,11 +253,14 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 	 */
 	@Override
 	public void calculateMPRs() {
-		/* 2. If 1-hop symmetric neighbor is added we must recalculate the MPRs
+		/*    This function should be called when:
+		 *    If 1-hop symmetric neighbor is added we must recalculate the MPRs
 		 *    If 2-hop neighbor is added/removed we must recalculate the MPRs
 		 *    (see OLSR rfc section 13.5 and 14)
 		 */    
-		//TODO implement
+		//TODO Use the willingness of a station to be a MPR when calculating the MPR set
+		
+		
 	}
 
 }

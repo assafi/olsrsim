@@ -19,7 +19,15 @@ import events.TCMessage;;
  */
 public interface IOLSRv2Layer {
 	public void receiveTCMessage(TCMessage tcMsg) throws ProtocolException;
-	public TCMessage generateTCMessage();
+	
+	/**
+	 * Generates TC message and sends it, 
+	 * Pushes it into the dispatcher
+	 * 
+	 * @param currentSimTime
+	 * @return Generated TC Message
+	 */
+	public TCMessage generateTCMessage(long currentSimTime);
 	public void processHelloMessage(HelloMessage helloMsg);
 	public HelloMessage helloMessageModification(HelloMessage helloMsg);
 	public void calculateMPRs();

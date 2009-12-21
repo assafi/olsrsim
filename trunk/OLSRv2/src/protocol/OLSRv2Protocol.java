@@ -97,7 +97,8 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 	public void tcIntervalTriger() {
 		/* when we recive an event that the tc interval is over
 		we should generate hello massage and insert GenerateTCMsg
-		event so that we will know next time that the interval is over*/
+		event so that we will know next time that the interval is over
+		TODO here we must send a new TC Message*/
 	}
 
 }
