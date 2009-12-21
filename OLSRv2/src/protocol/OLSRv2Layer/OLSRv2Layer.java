@@ -262,8 +262,57 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 		 *    (see OLSR rfc section 13.5 and 14)
 		 */    
 		//TODO Use the willingness of a station to be a MPR when calculating the MPR set
+		//TODO enhance the algorithm to select minimal MPR set
 		
+		/* First clean our current MPR set */
+		Set<String> neighbors1hop = neighborInfo.getAllNeighbors().keySet();
+		for (String neighbor : neighbors1hop) {
+			NeighborProperty neighborProp = neighborInfo.getNeighborProperty(neighbor);
+			neighborProp.setMpr(false);
+		}
 		
+		/* Get a list of all 2-hop neighbors
+		 * and for each neighbor see if there is only one 1-hop neighbor that
+		 * we can reach the 2-hop neighbor then make it an MPR.
+		 * 
+		 * For other neighbors we will add 1-hop to MPR with the biggest number
+		 * of 2-hop neighbors.
+		 */
+		List<String> neighbors2hop  = neighborInfo.get2hopNeighbors();
+		
+		while (!neighbors2hop.isEmpty()){
+			String next2hopNeighbor = neighbors2hop.get(0);
+			List<String> mprCandidates = neighborInfo.get2HopReachAddresses(next2hopNeighbor);
+			if (1 == mprCandidates.size()){// if the 1-hop neighbor is the only one we can reach the neighbor2hop set it as MPR
+				neighborInfo.getNeighborProperty(mprCandidates.get(0)).setMpr(true);
+				
+				// remove from the neighbors2hop all the 2-hop neighbors that the selected MPR covers
+				// we can get it from the topology set
+				List<String> toAddresses = topologyInfo.getTopologySet().get(mprCandidates.get(0)).getToAddresses();
+				
+				neighbors2hop.removeAll(toAddresses);
+			}
+			else{
+				/* Find the MPR with max neighbors */
+				int max = -1;
+				String mpr = null;
+				for (String candidate : mprCandidates) {
+					int candidateToAddressesSize = topologyInfo.getTopologySet().get(candidate).getToAddresses().size();
+					if (candidateToAddressesSize > max){
+						max = candidateToAddressesSize;
+						mpr = candidate;
+					}
+				}
+				
+				//set the MPR
+				neighborInfo.getNeighborProperty(mpr).setMpr(true);
+				
+				// remove from the neighbors2hop all the 2-hop neighbors that the selected MPR covers
+				// we can get it from the topology set
+				List<String> toAddresses = topologyInfo.getTopologySet().get(mpr).getToAddresses();
+				
+				neighbors2hop.removeAll(toAddresses);
+			}
+		}
 	}
-
 }
