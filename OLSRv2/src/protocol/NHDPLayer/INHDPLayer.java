@@ -1,8 +1,9 @@
 /**
  * This Interface exposes the functionality
  */
-package protocol;
+package protocol.NHDPLayer;
 
+import protocol.ProtocolException;
 import events.HelloMessage;
 
 /**

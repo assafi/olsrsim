@@ -8,7 +8,7 @@
  * Date: Nov 16, 2009
  *
  */
-package protocol;
+package protocol.OLSRv2Layer;
 
 import java.awt.TrayIcon.MessageType;
 import java.util.ArrayList;
@@ -19,6 +19,9 @@ import java.util.Set;
 
 import dispatch.Dispatcher;
 
+import protocol.MessegeTypes;
+import protocol.ProtocolDefinitions;
+import protocol.ProtocolException;
 import protocol.InformationBases.LocalInformationBase;
 import protocol.InformationBases.NeighborInformationBase;
 import protocol.InformationBases.NeighborProperty;
