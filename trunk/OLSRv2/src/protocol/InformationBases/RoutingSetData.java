@@ -18,7 +18,7 @@ public class RoutingSetData extends TopologyCommonData {
 	
 	private String destination;
 	private String nextHop;
-	private long hopsNumber;
+	private long numberOfHops;
 	
 	/**
 	 * @param sequenceNumber
@@ -27,11 +27,11 @@ public class RoutingSetData extends TopologyCommonData {
 	public RoutingSetData(long timeToLeave, 
 						  String destination,
 						  String nextHop,
-						  long hopsNumber) {
+						  long numberOfHops) {
 		super(timeToLeave);
 		this.destination = destination;
 		this.nextHop = nextHop;
-		this.hopsNumber = hopsNumber;
+		this.numberOfHops = numberOfHops;
 	}
 
 	/**
@@ -68,14 +68,14 @@ public class RoutingSetData extends TopologyCommonData {
 	 * @return the hopsNumber
 	 */
 	public long getHopsNumber() {
-		return hopsNumber;
+		return numberOfHops;
 	}
 
 	/**
 	 * @param hopsNumber the hopsNumber to set
 	 */
-	public void setHopsNumber(long hopsNumber) {
-		this.hopsNumber = hopsNumber;
+	public void setHopsNumber(long numberOfHops) {
+		this.numberOfHops = numberOfHops;
 	}
 	
 	
