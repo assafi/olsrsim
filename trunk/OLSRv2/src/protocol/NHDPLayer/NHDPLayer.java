@@ -8,7 +8,7 @@
  * Date: Nov 16, 2009
  *
  */
-package protocol;
+package protocol.NHDPLayer;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -16,9 +16,12 @@ import java.util.Set;
 
 import dispatch.Dispatcher;
 
+import protocol.ProtocolDefinitions;
+import protocol.ProtocolException;
 import protocol.InformationBases.LocalInformationBase;
 import protocol.InformationBases.NeighborInformationBase;
 import protocol.InformationBases.NeighborProperty;
+import protocol.OLSRv2Layer.IOLSRv2Layer;
 import events.HelloMessage;
 
 /**

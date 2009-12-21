@@ -24,11 +24,11 @@ public class ProtocolDefinitions {
 	 * The Interval that the Hello messages should be generated
 	 * periodically. 
 	 */
-	static final int TCInterval = 10; //TODO see that this is a correct interval
+	static public final int TCInterval = 10; //TODO see that this is a correct interval
 	
 	/**
 	 * The Interval that the Hello messages should be generated
 	 * periodically. 
 	 */
-	static final int HelloInterval = 100; //TODO see that this is a correct interval
+	static public final int HelloInterval = 100; //TODO see that this is a correct interval
 }

@@ -8,8 +8,9 @@
  * Date: Nov 16, 2009
  *
  */
-package protocol;
+package protocol.OLSRv2Layer;
 
+import protocol.ProtocolException;
 import events.HelloMessage;
 import events.TCMessage;;
 
