@@ -48,6 +48,7 @@ public class NeighborInformationBase {
 	public NeighborInformationBase(){
 		lostNeighborSet = new HashMap<String, Long>();
 		neighborSet = new HashMap<String, NeighborProperty>();
+		secondHopNeighbors = new HashMap<String, List<String>>();
 	}
 	
 	public boolean isNeighbor(String neighbor) {
@@ -108,6 +109,17 @@ public class NeighborInformationBase {
 	
 	public List<String> get2HopReachAddresses(String secondHopAddr){
 		return secondHopNeighbors.get(secondHopAddr);
+	}
+	
+	public List<String> get2hopNeighbors(){
+		Set<String> secondHopNeighborsNameSet = secondHopNeighbors.keySet();
+		List<String> secondHopNeighborsNameList = new ArrayList<String>();
+		
+		for (String name : secondHopNeighborsNameSet) {
+			secondHopNeighborsNameList.add(name);
+		}
+		
+		return secondHopNeighborsNameList;
 	}
 	
 	/**
