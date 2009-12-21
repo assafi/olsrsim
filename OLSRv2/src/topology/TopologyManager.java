@@ -12,6 +12,7 @@ package topology;
 
 import java.awt.Point;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -111,10 +112,12 @@ public class TopologyManager implements ITopologyManager {
 		return removeStation(stationsByLocation.get(stationLocation).getID());
 	}
 	
-	public void changeStationPosition(String stationID, Point newPosition) throws Exception {
-		if(doesStationExist(newPosition)) {
+	public synchronized void changeStationPosition(String stationID, Point position) throws Exception {
+		if(doesStationExist(position)) {
 			throw new Exception("New position already in use");
 		}
+		
+		Point newPosition = new Point(position);
 		
 		IStation iStation = stationsByID.get(stationID);
 		stationsByLocation.remove(iStation.getLocation());
@@ -161,13 +164,17 @@ public class TopologyManager implements ITopologyManager {
 		return stationsByID.size();
 	}
 
-	public String getRandomStation() {
+	public synchronized String getRandomStation() {
 		int randomStationIndex = rand.nextInt(this.count());
 		return new String((String)stationsByID.keySet().toArray()[randomStationIndex]);
 	}
 	
-	public Set<Point> getAllStationsPositions() {
-		return stationsByLocation.keySet();
+	public synchronized Set<Point>  getAllStationsPositions() {
+		return new HashSet<Point>(stationsByLocation.keySet());
+	}
+	
+	public synchronized Point getStationPosition(String stationID) {
+		return new Point(stationsByID.get(stationID).getLocation());
 	}
 
 }
