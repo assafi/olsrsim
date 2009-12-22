@@ -3,9 +3,9 @@
  * 
  * Team members: Assaf Israel, Eli Nazarov, Asi Bross
  *
- * File: StopEvent.java
- * Author: Assaf
- * Date: Nov 15, 2009
+ * File: DataMessage.java
+ * Author: Eli Nazarov
+ * Date: Nov 16, 2009
  *
  */
 package events;
@@ -15,23 +15,17 @@ import java.util.Collection;
 import topology.IStation;
 
 /**
- * @author Assaf
+ * @author Eli Nazarov
  *
  */
-public class StopEvent extends Event {
+public class DataMessage extends MessageEvent {
 
 	/**
-	 * Stop simulation now
+	 * @param src
+	 * @param time
 	 */
-	public StopEvent(){
-		super(-1);
-	}
-	
-	/**
-	 * @param time Stop the simulation at custom Virtual time 
-	 */
-	public StopEvent(long time) {
-		super(time);
+	public DataMessage(String src, long time) {
+		super(src, time);
 	}
 
 	/* (non-Javadoc)
@@ -41,4 +35,5 @@ public class StopEvent extends Event {
 	public void execute(Object nodes) {
 		//TODO implement
 	}
+
 }

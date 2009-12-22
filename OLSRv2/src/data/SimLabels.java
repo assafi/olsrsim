@@ -18,7 +18,7 @@ package data;
 public enum SimLabels {
 	VIRTUAL_TIME, NODE_ID, EVENT_TYPE, 
 	GLOBAL_SOURCE, LOCAL_SOURCE, LOCAL_TARGET, GLOBAL_TARGET,
-	X_COOR, Y_COOR, RANGE, LOST;
+	X_COOR, Y_COOR, RANGE, LOST, ERROR, DETAILS;
 
 	/**
 	 * @return Array of the SimLabels names 
