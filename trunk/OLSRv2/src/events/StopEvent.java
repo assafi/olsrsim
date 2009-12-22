@@ -10,6 +10,16 @@
  */
 package events;
 
+import java.util.Hashtable;
+import java.util.Map;
+
+import data.SimEvents;
+import data.SimLabels;
+import dispatch.Dispatcher;
+
+import log.Log;
+import log.LogException;
+
 
 /**
  * @author Assaf
@@ -36,6 +46,18 @@ public class StopEvent extends Event {
 	 */
 	@Override
 	public void execute(Object nodes) {
-		//TODO implement
+		logSimEnd();
+	}
+	
+	private void logSimEnd() {
+		Map<String,String> data = new Hashtable<String, String>();
+		data.put(SimLabels.VIRTUAL_TIME.name(), 
+				Long.toString(Dispatcher.getInstance().getCurrentVirtualTime()));
+		data.put(SimLabels.EVENT_TYPE.name(), SimEvents.SIM_END.name());
+		try {
+			Log.getInstance().writeDown(data);
+		} catch (LogException e) {
+			System.err.println(e.getMessage());
+		}
 	}
 }

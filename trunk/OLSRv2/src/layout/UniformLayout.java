@@ -49,7 +49,7 @@ public class UniformLayout extends Layout {
 		
 		int xCoor = new Random().nextInt() % xBoundry;
 		int yCoor = new Random().nextInt() % yBoundry;
-		return new Point(xCoor, yCoor);
+		return new Point(Math.abs(xCoor), Math.abs(yCoor));
 	}
 
 }

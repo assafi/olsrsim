@@ -28,6 +28,7 @@ import events.StopEvent;
 import events.TopologyEvent;
 import topology.IStation;
 import topology.ITopologyManager;
+import topology.Station;
 import topology.TopologyManager;
 
 /**
@@ -107,10 +108,17 @@ public class Dispatcher implements IDispatcher {
 	 * @param radius The stations reception radius
 	 * @throws DispatcherException
 	 */
-	public void startSimulation(float factor, Layout layout, int maxStations, int radius) throws DispatcherException {
+	public void startSimulation(float factor, Layout layout, int maxStations, int radius, long timeout) throws DispatcherException {
 		
-		//TODO Implement main simulation method. should invoke the event generator, and start
-		// pulling tasks from the queue until the queue is empty.
+		/*
+		 * Comment this out in release
+		 */
+		
+		Station.defaultReceptionRadius = radius;
+		
+		/*
+		 * 
+		 */
 		
 		if (null != this.eventGen){
 			throw new DispatcherException("Can only start the dispatcher once...");
@@ -120,9 +128,9 @@ public class Dispatcher implements IDispatcher {
 		/*
 		 * Generating the first event
 		 */
-		this.eventGen.generateEvent();
+		this.eventGen.tick();
 		
-		while (true){
+		while (timeout > currentVirtualTime){
 			
 			while (tasksQueue.isEmpty()){
 				this.currentVirtualTime++;
@@ -143,7 +151,7 @@ public class Dispatcher implements IDispatcher {
 				try {
 					List<IStation> relevantNodesList = 
 						this.topologyManager.getStationNeighbors(me.getSource());
-					me.execute(relevantNodesList);
+//					me.execute(relevantNodesList);
 				} catch (Exception e) {
 					logDispError(currentEvent,e);
 				}
@@ -158,7 +166,12 @@ public class Dispatcher implements IDispatcher {
 					logDispError(currentEvent,e);
 				}
 			}
-			
+		}
+		
+		try {
+			new StopEvent().execute(null);
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
 		}
 	}
 	

@@ -36,7 +36,7 @@ import events.TopologyEvent.TopologyEventType;
 public class EventGenerator {
 
 	private float factor;
-	private static final float MAX_DELAY = 10; 
+	private static final float MAX_DELAY = 2; 
 	private long nextEventTime;
 	private Dispatcher dispatcher = null;
 	private static EventGenerator instance = null;
@@ -108,30 +108,25 @@ public class EventGenerator {
 	public void generateEvent() {
 		
 		Dispatcher dispatcher = Dispatcher.getInstance();
-		
-		if (this.nextEventTime == 0){
-			
-			
-		} else {
-			
-			TopologyEventType type = randomAction();
-			
-			try{
-				switch (type){
-				case CREATE_NODE:
-					dispatcher.pushEvent(createStation());
-					break;
-				case MOVE_NODE:
-					dispatcher.pushEvent(moveStation());
-					break;
-				case DESTROY_NODE:
-					dispatcher.pushEvent(removeStation());
-					break;
-				}
-			} catch (Exception e){
-				logEvGenError(type, e);
+	
+		TopologyEventType type = randomAction();
+
+		try{
+			switch (type){
+			case NODE_CREATE:
+				dispatcher.pushEvent(createStation());
+				break;
+			case NODE_MOVE:
+				dispatcher.pushEvent(moveStation());
+				break;
+			case NODE_DESTROY:
+				dispatcher.pushEvent(removeStation());
+				break;
 			}
+		} catch (Exception e){
+			logEvGenError(type, e);
 		}
+		
 		
 	}
 
@@ -145,26 +140,26 @@ public class EventGenerator {
 		}
 		
 		if (firstIteration){
-			return TopologyEventType.CREATE_NODE;
+			return TopologyEventType.NODE_CREATE;
 		} 
 		
 		if (topologyManager.count() < maxStations){
 			float rand = new Random().nextFloat();
 			if (rand <= 0.33){
-				return TopologyEventType.CREATE_NODE;
+				return TopologyEventType.NODE_CREATE;
 			} else if (rand <= 0.67) {
-				return TopologyEventType.MOVE_NODE;
+				return TopologyEventType.NODE_MOVE;
 			} else {
-				return TopologyEventType.DESTROY_NODE;
+				return TopologyEventType.NODE_DESTROY;
 			}
 		} else {
 			float rand = new Random().nextFloat();
 			if (rand <= 0.5){
-				return TopologyEventType.MOVE_NODE;
+				return TopologyEventType.NODE_MOVE;
 			} else if (rand <= 0.67) {
-				return TopologyEventType.DESTROY_NODE;
+				return TopologyEventType.NODE_DESTROY;
 			}
-			return TopologyEventType.CREATE_NODE;
+			return TopologyEventType.NODE_CREATE;
 		}	
 	}
 
@@ -179,7 +174,7 @@ public class EventGenerator {
 		Point stationLocation = this.layout.getRandomPoint();
 		IStation station = this.topologyManager.createNewStation(stationID, stationLocation);
 		
-		return new TopologyEvent(0, TopologyEventType.CREATE_NODE, station);
+		return new TopologyEvent(this.nextEventTime, TopologyEventType.NODE_CREATE, station);
 	}
 
 	/**
@@ -196,7 +191,7 @@ public class EventGenerator {
 		
 		IStation station = topologyManager
 			.changeStationPosition(topologyManager.getRandomStation(), newStationLocation); //will need to return the updated IStation
-		return new TopologyEvent(this.nextEventTime, TopologyEventType.MOVE_NODE, station);
+		return new TopologyEvent(this.nextEventTime, TopologyEventType.NODE_MOVE, station);
 	}
 	
 	/**
@@ -205,7 +200,7 @@ public class EventGenerator {
 	 */
 	private Event removeStation() throws Exception {
 		IStation station = this.topologyManager.removeStation(topologyManager.getRandomStation());
-		return new TopologyEvent(this.nextEventTime, TopologyEventType.DESTROY_NODE, station);
+		return new TopologyEvent(this.nextEventTime, TopologyEventType.NODE_DESTROY, station);
 	}
 
 	private float getExpDelay(float factor){
