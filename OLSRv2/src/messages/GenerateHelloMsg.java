@@ -3,35 +3,34 @@
  * 
  * Team members: Assaf Israel, Eli Nazarov, Asi Bross
  *
- * File: GenerateTCMsg.java
+ * File: GenerateHelloMsg.java
  * Author: Eli Nazarov
  * Date: Nov 16, 2009
  *
  */
-package events;
+package messages;
 
 import java.util.Collection;
 import java.util.Map;
+
+import events.Event;
 
 import protocol.IOLSRv2Protocol;
 
 import topology.IStation;
 
 /**
- * This event simulates that the TC Interval is passed
- * and the station should transmit another TC message.
+ * This event simulates that the Hello Interval is passed
+ * and the station should transmit another Hello message.
  * 
  * @author Eli Nazarov
  *
  */
-public class GenerateTCMsg extends Event {
+public class GenerateHelloMsg extends Event {
 
 	private String destination;
 	
-	/**
-	 * @param time
-	 */
-	public GenerateTCMsg(long time) {
+	public GenerateHelloMsg(long time) {
 		super(time);
 	}
 
@@ -46,7 +45,7 @@ public class GenerateTCMsg extends Event {
 		Collection<IStation> stations = nodes.values();
 		for (IStation station : stations) {
 			IOLSRv2Protocol olsrProtocol = station.getOLSRv2Protocol();
-			olsrProtocol.tcIntervalTriger();
+			olsrProtocol.helloIntervalTriger();
 		}
 	}
 

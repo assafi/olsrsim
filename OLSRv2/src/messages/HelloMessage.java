@@ -8,11 +8,13 @@
  * Date: Nov 14, 2009
  *
  */
-package events;
+package messages;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
+import events.MessageEvent;
 
 import protocol.IOLSRv2Protocol;
 import protocol.InformationBases.NeighborProperty;

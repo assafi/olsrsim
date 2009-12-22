@@ -8,9 +8,11 @@
  * Date: Nov 16, 2009
  *
  */
-package events;
+package messages;
 
 import java.util.Map;
+
+import events.MessageEvent;
 
 import topology.IStation;
 

@@ -3,8 +3,8 @@
  */
 package protocol.NHDPLayer;
 
+import messages.HelloMessage;
 import protocol.ProtocolException;
-import events.HelloMessage;
 
 /**
  * @author Eli Nazarov
