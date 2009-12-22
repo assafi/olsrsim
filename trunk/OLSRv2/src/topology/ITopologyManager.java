@@ -70,9 +70,10 @@ public interface ITopologyManager {
 	 *            Unique identifier.
 	 * @param newPosition
 	 *            New position of the station, represented as a Point object.
+	 * @return The station in it's new location
 	 * @throws Exception 
 	 */
-	void changeStationPosition(String stationID, Point newPosition) throws Exception;
+	IStation changeStationPosition(String stationID, Point newPosition) throws Exception;
 
 	/**
 	 * @param stationID

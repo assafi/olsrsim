@@ -11,18 +11,19 @@
 package eventGen;
 
 import java.awt.Point;
-import java.awt.geom.Point2D;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
 import layout.Layout;
+import log.Log;
+import log.LogException;
 
 import topology.IStation;
 import topology.ITopologyManager;
 import topology.TopologyManager;
 
+import data.SimLabels;
 import dispatch.Dispatcher;
 import events.Event;
 import events.TopologyEvent;
@@ -52,6 +53,8 @@ public class EventGenerator {
 	private ITopologyManager topologyManager = null;
 	private Layout layout = null;
 	
+	private Log log = null;
+	
 	/**
 	 * 
 	 */
@@ -62,6 +65,7 @@ public class EventGenerator {
 		this.topologyManager = new TopologyManager();
 		this.layout = layout;
 		this.maxStations = maxStations;
+		this.log = Log.getInstance();
 	}
 	
 	/**
@@ -69,6 +73,7 @@ public class EventGenerator {
 	 * while determine when to generate events. 
 	 * @param layout The Layout object representing the layout by which station will be
 	 * generated.
+	 * @param maxStations The maximum number of simulated stations
 	 * @return The EventGenerator singleton
 	 */
 	public static EventGenerator getInstance(Float factor, Layout layout, int maxStations){
@@ -109,16 +114,22 @@ public class EventGenerator {
 			
 		} else {
 			
-			switch (randomAction()){
-			case CREATE_NODE:
-				dispatcher.pushEvent(createStation());
-				break;
-			case MOVE_NODE:
-				dispatcher.pushEvent(moveStation());
-				break;
-			case DESTROY_NODE:
-				dispatcher.pushEvent(removeStation());
-				break;
+			TopologyEventType type = randomAction();
+			
+			try{
+				switch (type){
+				case CREATE_NODE:
+					dispatcher.pushEvent(createStation());
+					break;
+				case MOVE_NODE:
+					dispatcher.pushEvent(moveStation());
+					break;
+				case DESTROY_NODE:
+					dispatcher.pushEvent(removeStation());
+					break;
+				}
+			} catch (Exception e){
+				logEvGenError(type, e);
 			}
 		}
 		
@@ -153,49 +164,68 @@ public class EventGenerator {
 			} else if (rand <= 0.67) {
 				return TopologyEventType.DESTROY_NODE;
 			}
+			return TopologyEventType.CREATE_NODE;
 		}	
 	}
 
 	/**
 	 * @return a new TopologyEvent which describes a new station creation
+	 * @throws Exception 
 	 */
-	private Event createStation() {
+	private Event createStation() throws Exception {
 		
 		String stationID = UUID.randomUUID().toString();
-		Point2D.Double stationLocation = this.layout.getRandomPoint();
+		
+		Point stationLocation = this.layout.getRandomPoint();
 		IStation station = this.topologyManager.createNewStation(stationID, stationLocation);
-		return new TopologyEvent(0, TopologyEventType.CREATE_NODE, station);;
+		
+		return new TopologyEvent(0, TopologyEventType.CREATE_NODE, station);
 	}
-	
+
 	/**
 	 * @return
+	 * @throws Exception 
 	 */
-	private Event moveStation() {
-		Point2D.Double newStationLocation = this.layout.getRandomPoint();
-		while (this.topologyManager.stationExist(newStationLocation)){
+	private Event moveStation() throws Exception {
+		Point newStationLocation = this.layout.getRandomPoint();
+		
+		while (this.topologyManager.doesStationExist(newStationLocation)){
 			
 			newStationLocation = this.layout.getRandomPoint();
 		}
+		
 		IStation station = topologyManager
-			.changeStationPosition(topologyManager.getRandomStation(), newPosition); //will need to return the updated IStation
+			.changeStationPosition(topologyManager.getRandomStation(), newStationLocation); //will need to return the updated IStation
 		return new TopologyEvent(this.nextEventTime, TopologyEventType.MOVE_NODE, station);
 	}
 	
 	/**
 	 * @return
+	 * @throws Exception 
 	 */
-	private Event removeStation() {
-		IStation station;
-		try {
-			station = this.topologyManager.removeStation(topologyManager.getRandomStation());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	private Event removeStation() throws Exception {
+		IStation station = this.topologyManager.removeStation(topologyManager.getRandomStation());
 		return new TopologyEvent(this.nextEventTime, TopologyEventType.DESTROY_NODE, station);
 	}
 
 	private float getExpDelay(float factor){
 		float u = (new Random().nextFloat())/(MAX_DELAY);
 		return (float) ((-1/factor)*Math.log(1-u));
+	}
+	
+	/**
+	 * @param e logs the exception in the system log
+	 */
+	private void logEvGenError(TopologyEventType type, Exception e) {		
+		HashMap<String, String> data = new HashMap<String, String>();
+		data.put(SimLabels.VIRTUAL_TIME.name(), Long.toString(this.nextEventTime));
+		data.put(SimLabels.EVENT_TYPE.name(), type.name());
+		data.put(SimLabels.ERROR.name(), "true");
+		data.put(SimLabels.DETAILS.name(), e.getMessage());
+		try {
+			log.writeDown(data);
+		} catch (LogException le) {
+			System.out.println(le.getMessage());
+		}
 	}
 }

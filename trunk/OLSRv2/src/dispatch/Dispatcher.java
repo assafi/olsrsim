@@ -11,16 +11,28 @@
 package dispatch;
 
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 
+import data.CsvWriter;
+import data.SimEvents;
+import data.SimLabels;
+
 import layout.Layout;
+import log.Log;
+import log.LogException;
 
 import eventGen.EventGenerator;
 import events.Event;
+import events.MessageEvent;
 import events.StopEvent;
+import events.TopologyEvent;
 import topology.IStation;
+import topology.ITopologyManager;
+import topology.TopologyManager;
 
 /**
  * @author Assaf
@@ -32,7 +44,8 @@ public class Dispatcher implements IDispatcher {
 	private Map<String, IStation> nodes = null;
 	private long currentVirtualTime;
 	private EventGenerator eventGen = null;
-
+	private ITopologyManager topologyManager = null;
+	private Log log = null;
 	/*
 	 * The events priority queue, sorted by the virtual time.
 	 */
@@ -53,7 +66,9 @@ public class Dispatcher implements IDispatcher {
 				});
 		
 		this.currentVirtualTime = 0;
-		
+		this.topologyManager = new TopologyManager(); 
+		this.log = Log.getInstance();
+	
 		/*
 		 * Can't set eventGen here because of deadlock.
 		 */
@@ -98,7 +113,7 @@ public class Dispatcher implements IDispatcher {
 	 * @param maxStations The maximum number of stations.
 	 * @throws DispatcherException
 	 */
-	public void startSimulation(float factor, Layout layout, int maxStations) throws DispatcherException {
+	public void startSimulation(float factor, Layout layout, int maxStations, int radius) throws DispatcherException {
 		
 		//TODO Implement main simulation method. should invoke the event generator, and start
 		// pulling tasks from the queue until the queue is empty.
@@ -108,7 +123,6 @@ public class Dispatcher implements IDispatcher {
 		}
 		
 		this.eventGen = EventGenerator.getInstance(factor,layout, maxStations);
-		
 		/*
 		 * Generating the first event
 		 */
@@ -126,8 +140,48 @@ public class Dispatcher implements IDispatcher {
 				break;
 			}
 			
-			//TODO: switch accroding to event type - handle topology event or execute message with neighbors list
-			currentEvent.execute(this.nodes);
+			/*
+			 * Handles the event according to it's type
+			 */
+			if (MessageEvent.class.isAssignableFrom(currentEvent.getClass())){
+				
+				MessageEvent me = (MessageEvent)currentEvent;
+				try {
+					List<IStation> relevantNodesList = 
+						this.topologyManager.getStationNeighbors(me.getSource());
+					me.execute(relevantNodesList);
+				} catch (Exception e) {
+					logDispError(currentEvent,e);
+				}
+			}
+
+			if (TopologyEvent.class.isAssignableFrom(currentEvent.getClass())){
+				
+				TopologyEvent te = (TopologyEvent)currentEvent;
+				try {
+					te.execute(this.topologyManager);
+				} catch (Exception e) {
+					logDispError(currentEvent,e);
+				}
+			}
+			
+		}
+	}
+	
+	/**
+	 * @param currentEvent
+	 * @param e
+	 */
+	public void logDispError(Event currentEvent, Exception e) {
+		HashMap<String, String> data = new HashMap<String, String>();
+		data.put(SimLabels.VIRTUAL_TIME.name(), Long.toString(currentEvent.getTime()));
+		data.put(SimLabels.EVENT_TYPE.name(), currentEvent.getClass().getName());
+		data.put(SimLabels.ERROR.name(), "true");
+		data.put(SimLabels.DETAILS.name(), e.getMessage());
+		try {
+			log.writeDown(data);
+		} catch (LogException le) {
+			System.out.println(le.getMessage());
 		}
 	}
 }

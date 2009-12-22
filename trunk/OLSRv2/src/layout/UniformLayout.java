@@ -10,8 +10,7 @@
  */
 package layout;
 
-import java.awt.geom.Point2D;
-import java.awt.geom.Point2D.Double;
+import java.awt.Point;
 import java.util.Random;
 
 /**
@@ -19,9 +18,6 @@ import java.util.Random;
  *
  */
 public class UniformLayout extends Layout {
-
-	private double xBoundry;
-	private double yBoundry;
 	
 	/**
 	 * This object defines a uniform scatter layout in 2D space. </br>
@@ -34,7 +30,7 @@ public class UniformLayout extends Layout {
 	 * positive, or if radius is negative.
 	 * 
 	 */
-	public UniformLayout(double xBoundry, double yBoundry) 
+	public UniformLayout(int xBoundry, int yBoundry) 
 		throws LayoutException {
 		
 		if (xBoundry <= 0 || yBoundry <= 0){
@@ -49,11 +45,11 @@ public class UniformLayout extends Layout {
 	 * @see layout.Layout#getRandomPoint()
 	 */
 	@Override
-	public Double getRandomPoint() throws LayoutException {
+	public Point getRandomPoint() throws LayoutException {
 		
-		double xCoor = new Random().nextDouble() * xBoundry;
-		double yCoor = new Random().nextDouble() * yBoundry;
-		return new Point2D.Double(xCoor, yCoor);
+		int xCoor = new Random().nextInt() % xBoundry;
+		int yCoor = new Random().nextInt() % yBoundry;
+		return new Point(xCoor, yCoor);
 	}
 
 }

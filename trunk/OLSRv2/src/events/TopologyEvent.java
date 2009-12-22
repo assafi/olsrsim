@@ -10,9 +10,10 @@
  */
 package events;
 
-import java.util.Map;
+import java.util.Collection;
 
 import topology.IStation;
+import topology.TopologyManager;
 
 /**
  * @author olsr1
@@ -20,6 +21,10 @@ import topology.IStation;
  */
 public class TopologyEvent extends Event {
 
+	/**
+	 * @author Assaf
+	 *
+	 */
 	public enum TopologyEventType {
 		CREATE_NODE, DESTROY_NODE,MOVE_NODE
 	};
@@ -28,7 +33,9 @@ public class TopologyEvent extends Event {
 	private IStation station = null;
 	
 	/**
-	 * @param time
+	 * @param time event virtual time
+	 * @param type the sub-type of the topology event
+	 * @param station the station this event relates to
 	 */
 	public TopologyEvent(long time, TopologyEventType type, IStation station) {
 		super(time);
@@ -40,9 +47,33 @@ public class TopologyEvent extends Event {
 	 * @see events.Event#execute(java.util.Map)
 	 */
 	@Override
-	public void execute(Map<String, IStation> nodes) {
-		// do nothing
+	public void execute(Object topologyManager) throws Exception {
+		
+		TopologyManager tm = (TopologyManager)topologyManager;
+		switch (type){
+		case CREATE_NODE:
+			tm.createNewStation(station.getID(), station.getLocation());
+			break;
+		case DESTROY_NODE:
+			tm.removeStation(station.getID());
+			break;
+		case MOVE_NODE:
+			tm.changeStationPosition(station.getID(), station.getLocation());
+			break;
+		}
 	}
 	
-	//TODO: getters...
+	/**
+	 * @return The topology event type
+	 */
+	public TopologyEventType getType(){
+		return this.type;
+	}
+	
+	/**
+	 * @return the station
+	 */
+	public IStation getStation(){
+		return this.station;
+	}
 }

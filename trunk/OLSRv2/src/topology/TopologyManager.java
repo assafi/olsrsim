@@ -112,7 +112,7 @@ public class TopologyManager implements ITopologyManager {
 		return removeStation(stationsByLocation.get(stationLocation).getID());
 	}
 	
-	public synchronized void changeStationPosition(String stationID, Point position) throws Exception {
+	public synchronized IStation changeStationPosition(String stationID, Point position) throws Exception {
 		if(doesStationExist(position)) {
 			throw new Exception("New position already in use");
 		}
@@ -142,6 +142,8 @@ public class TopologyManager implements ITopologyManager {
 		List<IStation> newNeigbors = getNeighborsInReceptionArea(newPosition, iStation.getReceptionRadius());
 		stationNeigbors.put(iStation, newNeigbors);
 		stationsByLocation.put(newPosition, iStation);
+		
+		return iStation;
 	}
 
 	public boolean doesStationExist(String stationID) {

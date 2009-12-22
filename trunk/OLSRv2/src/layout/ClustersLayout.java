@@ -10,7 +10,7 @@
  */
 package layout;
 
-import java.awt.geom.Point2D;
+import java.awt.Point;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Random;
@@ -24,8 +24,8 @@ public class ClustersLayout extends Layout{
 	private final static int defaultNmbClusters = 5;
 	
 	private int nmbClusters;
-	private double radius;
-	private Map<Point2D.Double, Double> clusters;
+	private int radius;
+	private Map<Point, Integer> clusters;
 	
 	/**
 	 * This object defines a clusters layout in 2D space.
@@ -42,7 +42,7 @@ public class ClustersLayout extends Layout{
 	 * positive, or if radius is negative.
 	 * 
 	 */
-	public ClustersLayout(double xBoundry, double yBoundry, double radius) 
+	public ClustersLayout(int xBoundry, int yBoundry, int radius) 
 			throws LayoutException {
 		
 		this.nmbClusters = defaultNmbClusters;
@@ -58,7 +58,7 @@ public class ClustersLayout extends Layout{
 		}
 		this.radius = radius;
 		
-		this.clusters = new Hashtable<Point2D.Double, Double>();
+		this.clusters = new Hashtable<Point, Integer>();
 		
 		defineClusters();
 	}
@@ -79,8 +79,8 @@ public class ClustersLayout extends Layout{
 	 * is not positive.
 	 * 
 	 */
-	public ClustersLayout(int nmbClusters,double xBoundry, double yBoundry
-			, double radius) throws LayoutException{
+	public ClustersLayout(int nmbClusters,int xBoundry, int yBoundry
+			, int radius) throws LayoutException{
 		
 		if (nmbClusters <= 0){
 			throw new LayoutException("Number of clusters must be positive");
@@ -98,7 +98,7 @@ public class ClustersLayout extends Layout{
 		}
 		this.radius = radius;
 		
-		this.clusters = new Hashtable<Point2D.Double, Double>();
+		this.clusters = new Hashtable<Point, Integer>();
 		
 		defineClusters();
 	}
@@ -109,18 +109,24 @@ public class ClustersLayout extends Layout{
 	private void defineClusters() {
 		
 		for (int i=0; i< this.nmbClusters; i++){
-			double xCoor = new Random().nextDouble() * xBoundry;
-			double yCoor = new Random().nextDouble() * yBoundry;
-			double clusterRadius;
-			if (radius <= 0){
-				clusterRadius = new Random().nextDouble() * 
+			
+			int xCoor = new Random().nextInt() % xBoundry;
+			int yCoor = new Random().nextInt() % yBoundry;
+			
+			int clusterRadius;
+			
+			if (radius == 0){
+				/*
+				 * Generate random radius
+				 */
+				clusterRadius = new Random().nextInt() % 
 					Math.min(Math.min(xCoor, xBoundry - xCoor),
 							 Math.min(yCoor, yBoundry - yCoor));
 			} else {
 				clusterRadius = this.radius;
 			}
 			
-			Point2D.Double p = new Point2D.Double(xCoor,yCoor);
+			Point p = new Point(xCoor,yCoor);
 			
 			if (clusters.containsKey(p)){
 				/*
@@ -139,7 +145,7 @@ public class ClustersLayout extends Layout{
 	 * @see layout.Layout#getRandomPoint()
 	 */
 	@Override
-	public Point2D.Double getRandomPoint() 
+	public Point getRandomPoint() 
 		throws LayoutException{
 		
 		if (clusters.isEmpty()){
@@ -147,14 +153,14 @@ public class ClustersLayout extends Layout{
 		}
 		
 		int clusterIndex = new Random().nextInt() % clusters.size();
-		Point2D.Double clusterCenter = (java.awt.geom.Point2D.Double) clusters.keySet().toArray()[clusterIndex];
+		Point clusterCenter = (Point) clusters.keySet().toArray()[clusterIndex];
 		double theta = new Random().nextDouble() % (2*Math.PI);
-		double radius = Math.pow(new Random().nextDouble(),2) * this.radius;
+		int radius = (int) (Math.pow(new Random().nextDouble(),2) * this.radius);
 		
-		double xCoor = Math.cos(theta)*radius + clusterCenter.getX();
-		double yCoor = Math.sin(theta)*radius + clusterCenter.getY();
+		int xCoor = (int) (Math.cos(theta)*radius + clusterCenter.getX());
+		int yCoor = (int) (Math.sin(theta)*radius + clusterCenter.getY());
 		
-		Point2D.Double p = new Point2D.Double(xCoor,yCoor);
+		Point p = new Point(xCoor,yCoor);
 		return p;
 	}
 

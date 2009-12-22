@@ -10,10 +10,6 @@
  */
 package events;
 
-import java.util.Map;
-
-import topology.IStation;
-
 /**
  * @author Assaf
  *
@@ -37,7 +33,8 @@ public abstract class Event {
 
 	/**
 	 * @param nodes The nodes map
+	 * @throws Exception 
 	 */
-	public abstract void execute(Map<String, IStation> nodes);
+	public abstract void execute(Object nodes) throws Exception;
 }
  
