@@ -11,7 +11,6 @@
 package messages;
 
 import java.util.Collection;
-import java.util.Map;
 
 import events.Event;
 
@@ -37,12 +36,13 @@ public class GenerateHelloMsg extends Event {
 	/* (non-Javadoc)
 	 * @see events.Event#execute(java.util.Map)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
-	public void execute(Map<String, IStation> nodes) {
+	public void execute(Object nodes) {
 		//TODO see if this is correct. maybe we should pass to Ctor the station
 		//	   and run helloIntervalTriger only on her
 		
-		Collection<IStation> stations = nodes.values();
+		Collection<IStation> stations = (Collection<IStation>)nodes;
 		for (IStation station : stations) {
 			IOLSRv2Protocol olsrProtocol = station.getOLSRv2Protocol();
 			olsrProtocol.helloIntervalTriger();

@@ -10,7 +10,6 @@
  */
 package messages;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -67,9 +66,11 @@ public class TCMessage extends MessageEvent {
 	/* (non-Javadoc)
 	 * @see events.Event#execute(java.util.Map)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
-	public void execute(Map<String, IStation> nodes) {
-		Collection<IStation> stations = nodes.values();
+	public void execute(Object nodes) {
+		
+		Collection<IStation> stations = (Collection<IStation>)nodes;
 		for (IStation station : stations) {
 			IOLSRv2Protocol olsrProtocol = station.getOLSRv2Protocol();
 			olsrProtocol.reciveTCMessage(this);
