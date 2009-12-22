@@ -41,6 +41,8 @@ public class TopologyEvent extends Event {
 	 */
 	@Override
 	public void execute(Map<String, IStation> nodes) {
-		
+		// do nothing
 	}
+	
+	//TODO: getters...
 }
