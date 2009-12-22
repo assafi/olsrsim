@@ -19,5 +19,6 @@ public enum SimEvents {
 	NODE_CREATE, NODE_DESTROY, NODE_MOVE, 
 	HELLO_SENT, HELLO_REACH,
 	TC_SENT, TC_REACH,
-	DATA_SENT, DATA_REACH, DATA_LOSS //Can add more as needed
+	DATA_SENT, DATA_REACH, DATA_LOSS,
+	SIM_END //Can add more as needed
 }

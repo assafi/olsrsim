@@ -10,6 +10,15 @@
  */
 package events;
 
+import java.util.Hashtable;
+import java.util.Map;
+
+import data.SimEvents;
+import data.SimLabels;
+import dispatch.Dispatcher;
+
+import log.Log;
+import log.LogException;
 import topology.IStation;
 import topology.TopologyManager;
 
@@ -24,7 +33,7 @@ public class TopologyEvent extends Event {
 	 *
 	 */
 	public enum TopologyEventType {
-		CREATE_NODE, DESTROY_NODE,MOVE_NODE
+		NODE_CREATE, NODE_DESTROY, NODE_MOVE
 	};
 	
 	private TopologyEventType type = null;
@@ -47,18 +56,20 @@ public class TopologyEvent extends Event {
 	@Override
 	public void execute(Object topologyManager) throws Exception {
 		
-		TopologyManager tm = (TopologyManager)topologyManager;
+		TopologyManager tm = (TopologyManager)topologyManager;		
 		switch (type){
-		case CREATE_NODE:
+		case NODE_CREATE:
 			tm.createNewStation(station.getID(), station.getLocation());
 			break;
-		case DESTROY_NODE:
+		case NODE_DESTROY:
 			tm.removeStation(station.getID());
 			break;
-		case MOVE_NODE:
+		case NODE_MOVE:
 			tm.changeStationPosition(station.getID(), station.getLocation());
 			break;
 		}
+		
+		logTopologyEvent();
 	}
 	
 	/**
@@ -73,5 +84,22 @@ public class TopologyEvent extends Event {
 	 */
 	public IStation getStation(){
 		return this.station;
+	}
+	
+	private void logTopologyEvent() {
+		Map<String, String> data = new Hashtable<String, String>();
+		data.put(SimLabels.VIRTUAL_TIME.name(), 
+				Long.toString(Dispatcher.getInstance().getCurrentVirtualTime()));
+		data.put(SimLabels.X_COOR.name(), 
+				Integer.toString(station.getLocation().x));
+		data.put(SimLabels.Y_COOR.name(), 
+				Integer.toString(station.getLocation().y));
+		data.put(SimLabels.NODE_ID.name(),station.getID());
+		data.put(SimLabels.EVENT_TYPE.name(), type.name());
+		try {
+			Log.getInstance().writeDown(data);
+		} catch (LogException e) {
+			System.err.println(e.getMessage());
+		}
 	}
 }
