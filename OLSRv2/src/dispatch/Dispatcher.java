@@ -126,6 +126,7 @@ public class Dispatcher implements IDispatcher {
 				break;
 			}
 			
+			//TODO: switch accroding to event type - handle topology event or execute message with neighbors list
 			currentEvent.execute(this.nodes);
 		}
 	}
