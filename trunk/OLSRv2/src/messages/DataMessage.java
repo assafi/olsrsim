@@ -10,11 +10,7 @@
  */
 package messages;
 
-import java.util.Map;
-
 import events.MessageEvent;
-
-import topology.IStation;
 
 /**
  * @author Eli Nazarov
@@ -34,7 +30,7 @@ public class DataMessage extends MessageEvent {
 	 * @see events.Event#execute(java.util.Map)
 	 */
 	@Override
-	public void execute(Map<String, IStation> nodes) {
+	public void execute(Object nodes) {
 		//TODO implement
 	}
 

@@ -12,13 +12,9 @@ package dispatch;
 
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
 import java.util.PriorityQueue;
 
-import data.CsvWriter;
-import data.SimEvents;
 import data.SimLabels;
 
 import layout.Layout;
@@ -41,7 +37,6 @@ import topology.TopologyManager;
 public class Dispatcher implements IDispatcher {
 
 	private static Dispatcher instance = null;
-	private Map<String, IStation> nodes = null;
 	private long currentVirtualTime;
 	private EventGenerator eventGen = null;
 	private ITopologyManager topologyManager = null;
@@ -55,8 +50,6 @@ public class Dispatcher implements IDispatcher {
 	 * 
 	 */
 	private Dispatcher() {
-
-		this.nodes = new Hashtable<String, IStation>();
 
 		this.tasksQueue = new PriorityQueue<Event>(INITIAL_QUEUE_SIZE,
 				new Comparator<Event>() {
@@ -111,6 +104,7 @@ public class Dispatcher implements IDispatcher {
 	 * @param layout The Layout object representing the layout by which station will be
 	 * generated.
 	 * @param maxStations The maximum number of stations.
+	 * @param radius The stations reception radius
 	 * @throws DispatcherException
 	 */
 	public void startSimulation(float factor, Layout layout, int maxStations, int radius) throws DispatcherException {
@@ -170,7 +164,7 @@ public class Dispatcher implements IDispatcher {
 	
 	/**
 	 * @param currentEvent
-	 * @param e
+	 * @param e 
 	 */
 	public void logDispError(Event currentEvent, Exception e) {
 		HashMap<String, String> data = new HashMap<String, String>();

@@ -10,8 +10,6 @@
  */
 package events;
 
-import java.util.Collection;
-
 import topology.IStation;
 import topology.TopologyManager;
 
