@@ -10,7 +10,10 @@
  */
 package events;
 
+import java.util.Collection;
 import java.util.Map;
+
+import protocol.IOLSRv2Protocol;
 
 import topology.IStation;
 
@@ -34,7 +37,14 @@ public class GenerateHelloMsg extends Event {
 	 */
 	@Override
 	public void execute(Map<String, IStation> nodes) {
-		//TODO implement
+		//TODO see if this is correct. maybe we should pass to Ctor the station
+		//	   and run helloIntervalTriger only on her
+		
+		Collection<IStation> stations = nodes.values();
+		for (IStation station : stations) {
+			IOLSRv2Protocol olsrProtocol = station.getOLSRv2Protocol();
+			olsrProtocol.helloIntervalTriger();
+		}
 	}
 
 }
