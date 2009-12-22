@@ -17,6 +17,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import messages.HelloMessage;
+import messages.TCMessage;
+
 import dispatch.Dispatcher;
 
 import protocol.MessegeTypes;
@@ -30,8 +33,6 @@ import protocol.InformationBases.ReceivedSetData;
 import protocol.InformationBases.TopologyCommonData;
 import protocol.InformationBases.TopologyInformationBase;
 import protocol.InformationBases.TopologySetData;
-import events.HelloMessage;
-import events.TCMessage;
 
 /**
  * @author Eli Nazarov

@@ -8,7 +8,7 @@
  * Date: Nov 14, 2009
  *
  */
-package events;
+package messages;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,6 +16,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
+
+import events.MessageEvent;
 
 import protocol.IOLSRv2Protocol;
 import protocol.InformationBases.NeighborProperty;

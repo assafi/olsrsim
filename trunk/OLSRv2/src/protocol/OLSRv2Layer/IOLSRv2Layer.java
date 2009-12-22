@@ -10,9 +10,9 @@
  */
 package protocol.OLSRv2Layer;
 
+import messages.HelloMessage;
+import messages.TCMessage;
 import protocol.ProtocolException;
-import events.HelloMessage;
-import events.TCMessage;;
 
 /**
  * @author Eli Nazarov

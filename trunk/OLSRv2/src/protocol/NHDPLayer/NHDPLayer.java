@@ -14,6 +14,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import messages.HelloMessage;
+
 import dispatch.Dispatcher;
 
 import protocol.ProtocolDefinitions;
@@ -22,7 +24,6 @@ import protocol.InformationBases.LocalInformationBase;
 import protocol.InformationBases.NeighborInformationBase;
 import protocol.InformationBases.NeighborProperty;
 import protocol.OLSRv2Layer.IOLSRv2Layer;
-import events.HelloMessage;
 
 /**
  * @author Eli Nazarov
