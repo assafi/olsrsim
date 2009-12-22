@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import protocol.IOLSRv2Protocol;
 import protocol.InformationBases.NeighborProperty;
 import topology.IStation;
 
@@ -66,7 +67,11 @@ public class TCMessage extends MessageEvent {
 	 */
 	@Override
 	public void execute(Map<String, IStation> nodes) {
-		//TODO implement
+		Collection<IStation> stations = nodes.values();
+		for (IStation station : stations) {
+			IOLSRv2Protocol olsrProtocol = station.getOLSRv2Protocol();
+			olsrProtocol.reciveTCMessage(this);
+		}
 	}
 
 

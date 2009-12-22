@@ -60,7 +60,9 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 		this.topologyInfo = topologyInfo;
 		this.receivedMsgInfo = receiveMsgInfo;
 		
-		//TODO generate first TC message
+		// generate first TC message
+		Dispatcher dispatcher = Dispatcher.getInstance();
+		generateTCMessage(dispatcher.getCurrentVirtualTime());
 	}
 	
 	/* (non-Javadoc)

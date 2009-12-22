@@ -66,7 +66,10 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 	public void helloIntervalTriger() {
 		/* when we recive an event that the hello interval is over
 		we should generate hello massage and insert GenerateHelloMsg
-		event so that we will know next time that the interval is over*/
+		event so that we will know next time that the interval is over
+		Impotant: the distination should be us meaning src=dst
+		TODO: See that when a dispacher procceses this event only I get it
+		*/
 	
 	}
 
