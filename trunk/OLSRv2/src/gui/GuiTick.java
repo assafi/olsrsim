@@ -10,6 +10,11 @@
  */
 package gui;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.Timer;
+
 /**
  * @author Asi
  *
@@ -19,6 +24,7 @@ public class GuiTick {
 	public static final int GUI_TICK = 50;
 	private static GuiTick instance = null;
 	private long currentTickCount = 0;
+	private Timer timer;
 	
 	public static GuiTick getInstance() {
 		if(instance == null) {
@@ -27,7 +33,7 @@ public class GuiTick {
 		return instance;
 	}
 	
-	public void tick() {
+	private void tick() {
 		currentTickCount++;
 	}
 	
@@ -35,6 +41,27 @@ public class GuiTick {
 		return currentTickCount;
 	}
 	
-	private GuiTick() {}
+	public void start() {
+		timer.start();
+	}
+
+	public void stop() {
+		timer.stop();
+	}
+	
+	private GuiTick() {
+		timer = new Timer(GUI_TICK, new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				tick();
+			}
+		});
+	}
+
+	/**
+	 * 
+	 */
+	public void stopTime() {
+	}
 	
 }

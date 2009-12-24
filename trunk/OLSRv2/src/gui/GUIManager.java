@@ -37,9 +37,15 @@ public class GUIManager implements Runnable {
 			while (true) {		
 				currEvent = queue.popEvent();
 				timeDelta = currEvent.getTime() - GuiTick.getInstance().getTickCount();
+				System.out.println("Latest Event Time: " + currEvent.getTime());
 				if(timeDelta > 0) {
+					// In case it was stopped
+					GuiTick.getInstance().start();
 					// synchronize simulation time with GUI tick time
 					Thread.sleep(timeDelta * GuiTick.GUI_TICK);
+				}
+				else if(timeDelta < 0) {
+					GuiTick.getInstance().stop();
 				}
 				
 				if (currEvent.getClass() == TopologyEvent.class) {
