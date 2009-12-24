@@ -118,6 +118,11 @@ public interface ITopologyManager {
 	 * @return The station position.
 	 */
 	Point getStationPosition(String stationID);
+	
+	/**
+	 * @return All the stations
+	 */
+	Set<IStation> getAllStations();
 }
 
 

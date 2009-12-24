@@ -112,7 +112,7 @@ public class TopologyManager implements ITopologyManager {
 		return removeStation(stationsByLocation.get(stationLocation).getID());
 	}
 	
-	public synchronized IStation changeStationPosition(String stationID, Point position) throws Exception {
+	public IStation changeStationPosition(String stationID, Point position) throws Exception {
 		if(doesStationExist(position)) {
 			throw new Exception("New position already in use");
 		}
@@ -166,17 +166,21 @@ public class TopologyManager implements ITopologyManager {
 		return stationsByID.size();
 	}
 
-	public synchronized String getRandomStation() {
+	public String getRandomStation() {
 		int randomStationIndex = rand.nextInt(this.count());
 		return new String((String)stationsByID.keySet().toArray()[randomStationIndex]);
 	}
 	
-	public synchronized Set<Point>  getAllStationsPositions() {
+	public Set<Point>  getAllStationsPositions() {
 		return new HashSet<Point>(stationsByLocation.keySet());
 	}
 	
-	public synchronized Point getStationPosition(String stationID) {
+	public Point getStationPosition(String stationID) {
 		return new Point(stationsByID.get(stationID).getLocation());
+	}
+	
+	public Set<IStation> getAllStations() {
+		return stationNeigbors.keySet();
 	}
 
 }
