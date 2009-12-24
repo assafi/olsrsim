@@ -48,7 +48,6 @@ public class WorldTopology extends JPanel {
 	private static final Color background = new Color(200,230,250);
 	private static final Color pointColor = new Color(255,0,0);
 	private static final Color borderColor = new Color(0,0,0);
-	Timer timer;
 	private int worldWidth;
 	private int worldHeight;
 
@@ -58,13 +57,6 @@ public class WorldTopology extends JPanel {
 		this.setPreferredSize(new Dimension(width, height));
 		this.setBackground(background);
 		this.setBorder(new LineBorder(borderColor));
-		timer = new Timer(GuiTick.GUI_TICK, new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				GuiTick.getInstance().tick();
-			}
-		});
-		timer.start();
 	}
 	
 	public void paintComponent(Graphics g) {
@@ -90,8 +82,10 @@ public class WorldTopology extends JPanel {
 	public static void main(String[] args) {
 		JFrame mainFrame = new JFrame();
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		SimulatorTime sTimer = new SimulatorTime();
 		WorldTopology wt = new WorldTopology(500, 500);
 		mainFrame.getContentPane().setLayout(new FlowLayout(FlowLayout.CENTER, 20, 20));
+		mainFrame.getContentPane().add(sTimer);
 		mainFrame.getContentPane().add(wt);
 		mainFrame.pack();
 		mainFrame.setVisible(true);
@@ -105,13 +99,15 @@ public class WorldTopology extends JPanel {
 	    // Start the thread
 	    thread.start();
 		
+	    GuiTick.getInstance().start();
+	    
 	    Random rand = new Random();
 	    
 	    GuiEventsQueue queue = GuiEventsQueue.getInstance();
 		long time = 0;
 	    while(true) {
 	    	try {
-				Thread.sleep(10);
+				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
