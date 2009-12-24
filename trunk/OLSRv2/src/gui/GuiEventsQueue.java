@@ -11,6 +11,7 @@
 package gui;
 
 import java.util.LinkedList;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import events.Event;
 
@@ -20,7 +21,7 @@ import events.Event;
  */
 public class GuiEventsQueue {
 	private static GuiEventsQueue instance = null;
-	private LinkedList<Event> eventsQueue;
+	private LinkedBlockingQueue<Event> eventsQueue;
 	
 	public static GuiEventsQueue getInstance() {
 		if(instance == null) {
@@ -30,17 +31,26 @@ public class GuiEventsQueue {
 	}
 	
 	private GuiEventsQueue() {
-		this.eventsQueue = new LinkedList<Event>();
+		this.eventsQueue = new LinkedBlockingQueue<Event>();
 	}
 	
+	/**
+	 * Non blocking method that adds an event to the queue.
+	 * @param event
+	 */
 	public void addEvent(Event event) {
 		this.eventsQueue.add(event);
 	}
 	
-	public Event popEvent() throws Exception {
-		if(this.eventsQueue.isEmpty()) {
-			throw new Exception("Tried to retrieve an event from an empty queue");
-		}
-		return this.eventsQueue.remove();
+	/**
+	 * This method is a blocking method, will be released when an event is added to the queue.
+	 * @return The next event
+	 * @throws InterruptedException 
+	 * @throws Exception
+	 */
+	public Event popEvent() throws InterruptedException {
+		return this.eventsQueue.take();
 	}
+	
+	
 }
