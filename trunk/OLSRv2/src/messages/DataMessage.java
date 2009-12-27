@@ -10,6 +10,12 @@
  */
 package messages;
 
+import java.util.Collection;
+
+import protocol.IOLSRv2Protocol;
+
+import topology.IStation;
+
 import events.MessageEvent;
 
 /**
@@ -31,7 +37,11 @@ public class DataMessage extends MessageEvent {
 	 */
 	@Override
 	public void execute(Object nodes) {
-		//TODO implement
+		Collection<IStation> stations = (Collection<IStation>)nodes;
+		for (IStation station : stations) {
+			IOLSRv2Protocol olsrProtocol = station.getOLSRv2Protocol();
+			olsrProtocol.reciveDataMessage(this);
+		}
 	}
 
 }
