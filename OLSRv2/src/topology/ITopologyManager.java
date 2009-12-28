@@ -123,6 +123,12 @@ public interface ITopologyManager {
 	 * @return All the stations
 	 */
 	Set<IStation> getAllStations();
+	
+	/**
+	 * @param stationID
+	 * @return The station.
+	 */
+	IStation getStationById(String stationID);
 }
 
 

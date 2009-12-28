@@ -69,7 +69,7 @@ public class TCMessage extends MessageEvent {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void execute(Object nodes) {
-	
+		logEvent();
 		Collection<IStation> stations = (Collection<IStation>)nodes;
 		for (IStation station : stations) {
 			IOLSRv2Protocol olsrProtocol = station.getOLSRv2Protocol();

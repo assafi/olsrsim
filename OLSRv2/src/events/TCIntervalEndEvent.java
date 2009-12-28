@@ -8,12 +8,10 @@
  * Date: Nov 16, 2009
  *
  */
-package messages;
+package events;
 
 import java.util.Collection;
 
-import events.Event;
-import events.MessageEvent;
 
 import protocol.IOLSRv2Protocol;
 
@@ -26,14 +24,12 @@ import topology.IStation;
  * @author Eli Nazarov
  *
  */
-public class GenerateTCMsg extends MessageEvent {
-
-	private String destination;
+public class TCIntervalEndEvent extends IntervalEndEvent {
 	
 	/**
 	 * @param time
 	 */
-	public GenerateTCMsg(String src, long time) {
+	public TCIntervalEndEvent(String src, long time) {
 		super(src, time);
 	}
 
@@ -43,14 +39,11 @@ public class GenerateTCMsg extends MessageEvent {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void execute(Object nodes) {
-		//TODO see if this is correct. maybe we should pass to Ctor the station
-		//	   and run helloIntervalTriger only on her
+		//we should receive only our-selves
+		IStation station = (IStation)nodes;
 		
-		Collection<IStation> stations = (Collection<IStation>)nodes;
-		for (IStation station : stations) {
-			IOLSRv2Protocol olsrProtocol = station.getOLSRv2Protocol();
-			olsrProtocol.tcIntervalTriger(this);
-		}
+		IOLSRv2Protocol olsrProtocol = station.getOLSRv2Protocol();
+		olsrProtocol.tcIntervalTriger(this);
 	}
 
 }

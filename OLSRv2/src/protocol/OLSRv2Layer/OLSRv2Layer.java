@@ -21,6 +21,8 @@ import messages.HelloMessage;
 import messages.TCMessage;
 
 import dispatch.Dispatcher;
+import events.HelloIntervalEndEvent;
+import events.TCIntervalEndEvent;
 
 import protocol.MessegeTypes;
 import protocol.ProtocolDefinitions;
@@ -61,9 +63,11 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 		this.topologyInfo = topologyInfo;
 		this.receivedMsgInfo = receiveMsgInfo;
 		
-		// generate first TC message
+		// generate first TC message and massage for TC Interval finish
 		Dispatcher dispatcher = Dispatcher.getInstance();
 		generateTCMessage(dispatcher.getCurrentVirtualTime());
+		
+		dispatcher.pushEvent(new TCIntervalEndEvent(stationID, dispatcher.getCurrentVirtualTime() + ProtocolDefinitions.TCInterval));
 	}
 	
 	/* (non-Javadoc)
