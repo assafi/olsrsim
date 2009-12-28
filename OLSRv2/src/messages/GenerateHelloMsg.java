@@ -13,6 +13,7 @@ package messages;
 import java.util.Collection;
 
 import events.Event;
+import events.MessageEvent;
 
 import protocol.IOLSRv2Protocol;
 
@@ -25,12 +26,12 @@ import topology.IStation;
  * @author Eli Nazarov
  *
  */
-public class GenerateHelloMsg extends Event {
+public class GenerateHelloMsg extends MessageEvent {
 
 	private String destination;
 	
-	public GenerateHelloMsg(long time) {
-		super(time);
+	public GenerateHelloMsg(String src, long time) {
+		super(src, time);
 	}
 
 	/* (non-Javadoc)
@@ -45,7 +46,7 @@ public class GenerateHelloMsg extends Event {
 		Collection<IStation> stations = (Collection<IStation>)nodes;
 		for (IStation station : stations) {
 			IOLSRv2Protocol olsrProtocol = station.getOLSRv2Protocol();
-			olsrProtocol.helloIntervalTriger();
+			olsrProtocol.helloIntervalTriger(this);
 		}
 	}
 
