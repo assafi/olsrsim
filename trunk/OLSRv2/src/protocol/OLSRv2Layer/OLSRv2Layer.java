@@ -121,6 +121,9 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 		 * 
 		 */
 		
+		if (null == tcMsg){
+			throw new ProtocolException("Wrong message!");
+		}
 		
 		String src = tcMsg.getSource();
 		

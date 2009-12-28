@@ -20,6 +20,6 @@ public interface IOLSRv2Protocol {
 	public void reciveHelloMessage(MessageEvent helloMsg);
 	public void reciveTCMessage(MessageEvent tcMsg);
 	public void reciveDataMessage(MessageEvent dataMsg);
-	public void helloIntervalTriger();
-	public void tcIntervalTriger();
+	public void helloIntervalTriger(MessageEvent helloTrigerMsg);
+	public void tcIntervalTriger(MessageEvent tcTrigerMsg);
 }

@@ -28,8 +28,8 @@ import protocol.InformationBases.LocalInformationBase;
 public class LocalInfoBaseTest {
 
 	static public LocalInformationBase base = null;
-	private Address addr1 = new Address("10.0.0.1");
-	private Address addr2 = new Address("10.0.0.2");
+	private String addr1 = new String("10.0.0.1");
+	private String addr2 = new String("10.0.0.2");
 	
 	/**
 	 * @throws java.lang.Exception
@@ -86,14 +86,14 @@ public class LocalInfoBaseTest {
 	@Test
 	public void testGetInterfaceAddress() {
 		try {
-			System.out.println(base.getInterfaceAddress("eth0").getAddress());
-			System.out.println(base.getInterfaceAddress("eth1").getAddress());
+			System.out.println(base.getInterfaceAddress("eth0"));
+			System.out.println(base.getInterfaceAddress("eth1"));
 		} catch (ProtocolException e) {
 			fail();
 		}
 		
 		try {
-			System.out.println(base.getInterfaceAddress("eth2").getAddress());
+			System.out.println(base.getInterfaceAddress("eth2"));
 		} catch (ProtocolException e) {
 			return;
 		}
@@ -106,9 +106,9 @@ public class LocalInfoBaseTest {
 	 */
 	@Test
 	public void testGetAllLocalInterfaces() {
-		Map<String, Address> map =  base.getAllLocalInterfaces();
-		System.out.println(map.get("eth0").getAddress());
-		System.out.println(map.get("eth1").getAddress());
+		Map<String, String> map =  base.getAllLocalInterfaces();
+		System.out.println(map.get("eth0"));
+		System.out.println(map.get("eth1"));
 	}
 
 }
