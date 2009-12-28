@@ -11,7 +11,6 @@
 package protocol;
 
 import dispatch.Dispatcher;
-import messages.GenerateHelloMsg;
 import messages.HelloMessage;
 import messages.TCMessage;
 import protocol.InformationBases.LocalInformationBase;
@@ -22,6 +21,8 @@ import protocol.NHDPLayer.INHDPLayer;
 import protocol.NHDPLayer.NHDPLayer;
 import protocol.OLSRv2Layer.IOLSRv2Layer;
 import protocol.OLSRv2Layer.OLSRv2Layer;
+import events.HelloIntervalEndEvent;
+import events.IntervalEndEvent;
 import events.MessageEvent;
 
 /**
@@ -64,7 +65,7 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 	 * @see protocol.IOLSRv2Protocol#helloIntervalTriger()
 	 */
 	@Override
-	public void helloIntervalTriger(MessageEvent helloTrigerMsg) {
+	public void helloIntervalTriger(IntervalEndEvent helloTrigerMsg) {
 		/* when we recive an event that the hello interval is over
 		we should generate hello massage and insert GenerateHelloMsg
 		event so that we will know next time that the interval is over
@@ -73,7 +74,7 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		*/
 		
 		//Create the messages
-		GenerateHelloMsg nexTriger = new GenerateHelloMsg(stationID, helloTrigerMsg.getTime() + ProtocolDefinitions.HelloInterval);
+		HelloIntervalEndEvent nexTriger = new HelloIntervalEndEvent(stationID, helloTrigerMsg.getTime() + ProtocolDefinitions.HelloInterval);
 		HelloMessage newHelloMsg = nhdpLayer.generateHelloMessage(helloTrigerMsg.getTime());
 		
 		// Send them to the dispatcher
@@ -131,14 +132,14 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 	 * @see protocol.IOLSRv2Protocol#tcIntervalTriger()
 	 */
 	@Override
-	public void tcIntervalTriger(MessageEvent tcTrigerMsg) {
+	public void tcIntervalTriger(IntervalEndEvent tcTrigerMsg) {
 		/* when we receive an event that the TC interval is over
 		we should generate hello massage and insert GenerateTCMsg
 		event so that we will know next time that the interval is over
 		here we must send a new TC Message*/
 		
 		//Create the messages
-		GenerateHelloMsg nexTriger = new GenerateHelloMsg(stationID, tcTrigerMsg.getTime() + ProtocolDefinitions.TCInterval);
+		HelloIntervalEndEvent nexTriger = new HelloIntervalEndEvent(stationID, tcTrigerMsg.getTime() + ProtocolDefinitions.TCInterval);
 		TCMessage newTCMsg = olsrLayer.generateTCMessage(tcTrigerMsg.getTime());
 		
 		// Send them to the dispatcher

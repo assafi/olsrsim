@@ -183,4 +183,17 @@ public class TopologyManager implements ITopologyManager {
 		return stationNeigbors.keySet();
 	}
 
+	/* (non-Javadoc)
+	 * @see topology.ITopologyManager#getStationById(java.lang.String)
+	 */
+	@Override
+	public IStation getStationById(String stationID) {
+		if(doesStationExist(stationID)){
+			return stationsByID.get(stationID);
+		}
+		else{
+			return null;
+		}
+	}
+
 }

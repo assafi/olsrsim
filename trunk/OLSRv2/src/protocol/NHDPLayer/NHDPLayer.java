@@ -17,6 +17,7 @@ import java.util.Set;
 import messages.HelloMessage;
 
 import dispatch.Dispatcher;
+import events.HelloIntervalEndEvent;
 
 import protocol.ProtocolDefinitions;
 import protocol.ProtocolException;
@@ -53,6 +54,7 @@ public class NHDPLayer implements INHDPLayer {
 		this.olsrLayer = olsrLayer;
 		
 		dispatcher.pushEvent(generateHelloMessage(dispatcher.getCurrentVirtualTime()));
+		dispatcher.pushEvent(new HelloIntervalEndEvent(stationID, dispatcher.getCurrentVirtualTime() + ProtocolDefinitions.HelloInterval));
 	}
 	
 	/* (non-Javadoc)

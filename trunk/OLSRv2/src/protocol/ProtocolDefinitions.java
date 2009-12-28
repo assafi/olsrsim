@@ -18,17 +18,17 @@ public class ProtocolDefinitions {
 	/**
 	 * The validity period of the entry in the table 
 	 */
-	static public final int EntryValidPeriod = 10;
+	static public int EntryValidPeriod = 10;
 	
 	/**
 	 * The Interval that the Hello messages should be generated
 	 * periodically. 
 	 */
-	static public final int TCInterval = 10; //TODO see that this is a correct interval
+	static public int TCInterval = 100; //TODO see that this is a correct interval
 	
 	/**
 	 * The Interval that the Hello messages should be generated
 	 * periodically. 
 	 */
-	static public final int HelloInterval = 100; //TODO see that this is a correct interval
+	static public int HelloInterval = 100; //TODO see that this is a correct interval
 }

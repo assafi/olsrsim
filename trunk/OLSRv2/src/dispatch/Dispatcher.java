@@ -15,14 +15,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.PriorityQueue;
 
+import data.SimEvents;
 import data.SimLabels;
 
 import layout.Layout;
 import log.Log;
 import log.LogException;
+import messages.HelloMessage;
+import messages.TCMessage;
 
 import eventGen.EventGenerator;
 import events.Event;
+import events.IntervalEndEvent;
 import events.MessageEvent;
 import events.StopEvent;
 import events.TopologyEvent;
@@ -132,7 +136,7 @@ public class Dispatcher implements IDispatcher {
 		
 		while (timeout > currentVirtualTime){
 			
-			while (tasksQueue.isEmpty()){
+			while (tasksQueue.isEmpty() /* TODO added do to a infinit loop need to remove*/&& timeout > currentVirtualTime){
 				this.currentVirtualTime++;
 				this.eventGen.tick();
 			}
@@ -151,7 +155,7 @@ public class Dispatcher implements IDispatcher {
 				try {
 					List<IStation> relevantNodesList = 
 						this.topologyManager.getStationNeighbors(me.getSource());
-//					me.execute(relevantNodesList);
+					//me.execute(relevantNodesList);
 				} catch (Exception e) {
 					logDispError(currentEvent,e);
 				}
@@ -162,6 +166,17 @@ public class Dispatcher implements IDispatcher {
 				TopologyEvent te = (TopologyEvent)currentEvent;
 				try {
 					te.execute(this.topologyManager);
+				} catch (Exception e) {
+					logDispError(currentEvent,e);
+				}
+			}
+			
+			if (IntervalEndEvent.class.isAssignableFrom(currentEvent.getClass())){
+				
+				IntervalEndEvent ie = (IntervalEndEvent)currentEvent;
+				try {
+					IStation station = this.topologyManager.getStationById(ie.getSource());
+					//ie.execute(station);
 				} catch (Exception e) {
 					logDispError(currentEvent,e);
 				}
@@ -183,6 +198,14 @@ public class Dispatcher implements IDispatcher {
 		HashMap<String, String> data = new HashMap<String, String>();
 		data.put(SimLabels.VIRTUAL_TIME.name(), Long.toString(currentEvent.getTime()));
 		data.put(SimLabels.EVENT_TYPE.name(), currentEvent.getClass().getName());
+		if (TCMessage.class.isAssignableFrom(currentEvent.getClass())){
+			data.put(SimLabels.GLOBAL_SOURCE.name(),((TCMessage)currentEvent).getSource());
+		}
+		
+		if (HelloMessage.class.isAssignableFrom(currentEvent.getClass())){
+			data.put(SimLabels.GLOBAL_SOURCE.name(),((HelloMessage)currentEvent).getSource());
+		}
+		
 		data.put(SimLabels.ERROR.name(), "true");
 		data.put(SimLabels.DETAILS.name(), e.getMessage());
 		try {
