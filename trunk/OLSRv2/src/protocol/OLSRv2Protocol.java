@@ -118,9 +118,14 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 	 */
 	@Override
 	public void reciveTCMessage(MessageEvent tcMsg) {
+		
 		try {
 			if (TCMessage.class.isAssignableFrom(tcMsg.getClass())){
-				olsrLayer.receiveTCMessage((TCMessage)tcMsg);
+				//we should receive the TC message only if we were selected as MPRs
+				if(neighborInfo.isNeighbor(tcMsg.getSource()) && 
+				   neighborInfo.getNeighborProperty(tcMsg.getSource()).isMpr_selector()){
+					olsrLayer.receiveTCMessage((TCMessage)tcMsg);
+				}	
 			}
 		} catch (ProtocolException e) {
 			//Shouldn't fail

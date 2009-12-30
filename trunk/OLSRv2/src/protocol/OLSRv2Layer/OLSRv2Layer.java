@@ -65,8 +65,8 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 		
 		// generate first TC message and massage for TC Interval finish
 		Dispatcher dispatcher = Dispatcher.getInstance();
-		generateTCMessage(dispatcher.getCurrentVirtualTime());
 		
+		generateTCMessage(dispatcher.getCurrentVirtualTime());
 		dispatcher.pushEvent(new TCIntervalEndEvent(stationID, dispatcher.getCurrentVirtualTime() + ProtocolDefinitions.TCInterval));
 	}
 	
@@ -75,7 +75,7 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 	 */
 	@Override
 	public TCMessage generateTCMessage(long currentSimTime) {
-		TCMessage tcMsg = new TCMessage(stationID, currentSimTime + ProtocolDefinitions.TCInterval, neighborInfo.getAllNeighbors());
+		TCMessage tcMsg = new TCMessage(stationID, currentSimTime /*TODO mabe add jitter+ ProtocolDefinitions.TCInterval*/, neighborInfo.getAllNeighbors());
 		Dispatcher dispatcher = Dispatcher.getInstance();
 		dispatcher.pushEvent(tcMsg);
 		return tcMsg;
@@ -89,16 +89,28 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 	 * This method should send the TC message it received to all it's MPRs
 	 */
 	private void floodTCMsg(TCMessage tcMsg){
-		/* Go over all the 1-hop neighbors that are selected as 
-		   MPRs and send the message to them */
-		Set<String> neighbors = neighborInfo.getAllNeighbors().keySet();
-		for (String neighbor : neighbors) {
-			NeighborProperty neighborProp = neighborInfo.getAllNeighbors().get(neighbor);
-			if (neighborProp.isMpr()){
-				Dispatcher dispatcher = Dispatcher.getInstance();
-				dispatcher.pushEvent(tcMsg);
-			}
-		}
+		/*
+		 * In order to simulate the flooding of the TC message 
+		 * we just push the message to the dispatcher and when the
+		 * message is executed only neighbors that are selected as MPR
+		 * will receive this message see receive reciveTCMessage in OLSRv2Protocol
+		 */
+		
+		Dispatcher dispatcher = Dispatcher.getInstance();
+		dispatcher.pushEvent(tcMsg);
+		
+		
+		
+//		/* Go over all the 1-hop neighbors that are selected as 
+//		   MPRs and send the message to them */
+//		Set<String> neighbors = neighborInfo.getAllNeighbors().keySet();
+//		for (String neighbor : neighbors) {
+//			NeighborProperty neighborProp = neighborInfo.getAllNeighbors().get(neighbor);
+//			if (neighborProp.isMpr()){
+//				Dispatcher dispatcher = Dispatcher.getInstance();
+//				dispatcher.pushEvent(tcMsg);
+//			}
+//		}
 	}
 	
 	/* (non-Javadoc)
