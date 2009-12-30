@@ -155,7 +155,7 @@ public class Dispatcher implements IDispatcher {
 				try {
 					List<IStation> relevantNodesList = 
 						this.topologyManager.getStationNeighbors(me.getSource());
-					//me.execute(relevantNodesList);
+					me.execute(relevantNodesList);
 				} catch (Exception e) {
 					logDispError(currentEvent,e);
 				}
@@ -176,7 +176,7 @@ public class Dispatcher implements IDispatcher {
 				IntervalEndEvent ie = (IntervalEndEvent)currentEvent;
 				try {
 					IStation station = this.topologyManager.getStationById(ie.getSource());
-					//ie.execute(station);
+					ie.execute(station);
 				} catch (Exception e) {
 					logDispError(currentEvent,e);
 				}

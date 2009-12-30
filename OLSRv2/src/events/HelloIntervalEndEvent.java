@@ -36,6 +36,9 @@ public class HelloIntervalEndEvent extends IntervalEndEvent {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void execute(Object nodes) {
+		
+		logEvent();
+		
 		//we should receive only our-selves
 		IStation station = (IStation)nodes;
 		
