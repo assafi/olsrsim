@@ -14,6 +14,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.logging.Logger;
 
 import data.SimEvents;
 import data.SimLabels;
@@ -136,11 +137,21 @@ public class Dispatcher implements IDispatcher {
 		
 		while (timeout > currentVirtualTime){
 			
-			while (tasksQueue.isEmpty() /* TODO added do to a infinit loop need to remove*/&& timeout > currentVirtualTime){
+			if (tasksQueue.peek().getTime() > currentVirtualTime){
 				this.currentVirtualTime++;
 				this.eventGen.tick();
+				continue;
 			}
 			
+			/*
+			 * Error handling
+			 */
+			if (tasksQueue.peek().getTime() < currentVirtualTime){
+				logDispError(tasksQueue.poll(),new DispatcherException("Simulation internal error - event time: " + 
+						tasksQueue.peek().getTime() + ", sim time: " + currentVirtualTime + "."));
+				continue;
+			}
+						
 			Event currentEvent = tasksQueue.poll();
 			if (currentEvent.getClass().equals(StopEvent.class)){
 				break;
