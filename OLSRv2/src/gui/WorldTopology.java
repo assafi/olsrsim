@@ -45,9 +45,7 @@ import topology.TopologyManager;
  */
 public class WorldTopology extends JPanel {
 	private static final long serialVersionUID = -4369922278122645088L;
-	private static final Color background = new Color(200,230,250);
 	private static final Color pointColor = new Color(255,0,0);
-	private static final Color borderColor = new Color(0,0,0);
 	private int worldWidth;
 	private int worldHeight;
 
@@ -55,8 +53,8 @@ public class WorldTopology extends JPanel {
 		this.worldWidth = width;
 		this.worldHeight = height;
 		this.setPreferredSize(new Dimension(width, height));
-		this.setBackground(background);
-		this.setBorder(new LineBorder(borderColor));
+		this.setBackground(Main.BACKGROUND);
+		this.setBorder(new LineBorder(Color.black));
 	}
 	
 	public void paintComponent(Graphics g) {
@@ -82,10 +80,10 @@ public class WorldTopology extends JPanel {
 	public static void main(String[] args) {
 		JFrame mainFrame = new JFrame();
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		SimulatorTime sTimer = new SimulatorTime();
+		//SimulatorTime sTimer = new SimulatorTime();
 		WorldTopology wt = new WorldTopology(500, 500);
 		mainFrame.getContentPane().setLayout(new FlowLayout(FlowLayout.CENTER, 20, 20));
-		mainFrame.getContentPane().add(sTimer);
+		//mainFrame.getContentPane().add(sTimer);
 		mainFrame.getContentPane().add(wt);
 		mainFrame.pack();
 		mainFrame.setVisible(true);
