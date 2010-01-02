@@ -17,6 +17,7 @@ import events.*;
  *
  */
 public interface IOLSRv2Protocol {
+	public void start();
 	public void reciveHelloMessage(MessageEvent helloMsg);
 	public void reciveTCMessage(MessageEvent tcMsg);
 	public void reciveDataMessage(MessageEvent dataMsg);

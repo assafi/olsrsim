@@ -31,4 +31,9 @@ public class ProtocolDefinitions {
 	 * periodically. 
 	 */
 	static public int HelloInterval = 100; //TODO see that this is a correct interval
+	
+	/**
+	 * The Delta of time after which the messages are being sent. 
+	 */
+	static public int Delta = 5; //TODO see that this is a correct interval
 }

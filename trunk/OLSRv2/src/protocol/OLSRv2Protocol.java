@@ -55,10 +55,15 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		this.neighborInfo = new NeighborInformationBase();
 		this.receivedMsgInfo = new ReceivedMessageInformationBase();
 		this.topologyInfo = new TopologyInformationBase();
-		
+	}
+	
+	/* (non-Javadoc)
+	 * @see protocol.IOLSRv2Protocol#start()
+	 */
+	@Override
+	public void start() {
 		this.olsrLayer = new OLSRv2Layer(stationID, localInfo, neighborInfo, topologyInfo, receivedMsgInfo);
 		this.nhdpLayer = new NHDPLayer(stationID, localInfo, neighborInfo, this.olsrLayer);
-		
 	}
 	
 	/* (non-Javadoc)

@@ -75,7 +75,7 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 	 */
 	@Override
 	public TCMessage generateTCMessage(long currentSimTime) {
-		TCMessage tcMsg = new TCMessage(stationID, currentSimTime /*TODO mabe add jitter+ ProtocolDefinitions.TCInterval*/, neighborInfo.getAllNeighbors());
+		TCMessage tcMsg = new TCMessage(stationID, currentSimTime + ProtocolDefinitions.Delta, neighborInfo.getAllNeighbors());
 		Dispatcher dispatcher = Dispatcher.getInstance();
 		dispatcher.pushEvent(tcMsg);
 		return tcMsg;
