@@ -21,6 +21,6 @@ public abstract class InputEntry extends JPanel {
 	/**
 	 * @return The entry value as a string.
 	 */
-	abstract String getEntryValue();
+	abstract Object getEntryValue();
 	
 }

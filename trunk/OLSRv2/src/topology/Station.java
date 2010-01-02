@@ -25,7 +25,7 @@ public class Station implements IStation {
 	private double recptionRadius;
 	private OLSRv2Protocol protocolObject;
 
-	public static double defaultReceptionRadius = -1;
+	public static int defaultReceptionRadius = -1;
 	
 	/**
 	 * @param stationID
@@ -35,15 +35,15 @@ public class Station implements IStation {
 		this.stationID = stationID;
 		this.location = location;
 		this.recptionRadius = Station.defaultReceptionRadius;
-		this.protocolObject = new OLSRv2Protocol(stationID);
+		//this.protocolObject = new OLSRv2Protocol(stationID);
 	}
 	
-	public String getID() {
+	public synchronized String getID() {
 		return stationID;
 	}
 
-	public Point getLocation() {
-		return location;
+	public synchronized Point getLocation() {
+		return new Point(location);
 	}
 	
 	public void setLocation(Point location) throws Exception {

@@ -37,7 +37,7 @@ public class InputsPanel extends JPanel {
 	
 	public InputsPanel(int width, int height) {
 		this.setPreferredSize(new Dimension(width, height));
-		this.setBackground(Main.BACKGROUND);
+		this.setBackground(GUIManager.BACKGROUND);
 		this.setBorder(new LineBorder(Color.black));
 		this.setInputEntries();
 		this.setLayout(new FlowLayout(FlowLayout.LEFT));

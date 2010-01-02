@@ -11,11 +11,13 @@
 package gui.input_pannels;
 
 
+import gui.GUIManager;
 import gui.Main;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionListener;
 
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -36,7 +38,7 @@ public class ComboBoxEntry extends InputEntry {
 	 * @param fieldSize
 	 * @param values
 	 */
-	public ComboBoxEntry(String parameterText, Dimension fieldSize, String[] values, boolean vertical) {
+	public ComboBoxEntry(String parameterText, Dimension fieldSize, Object[] values, boolean vertical) {
 		setLayout(new FlowLayout(FlowLayout.LEFT));
 		JLabel label = new JLabel(parameterText);
 		comboBox = new JComboBox(values);
@@ -44,9 +46,9 @@ public class ComboBoxEntry extends InputEntry {
 		
 		JPanel innerPanel;
 		if(vertical) {
-			setBackground(Main.BACKGROUND);
+			setBackground(GUIManager.BACKGROUND);
 			innerPanel = new JPanel(new GridLayout(2, 1));
-			innerPanel.setBackground(Main.BACKGROUND);
+			innerPanel.setBackground(GUIManager.BACKGROUND);
 			innerPanel.add(label);
 			innerPanel.add(comboBox);
 			this.add(innerPanel);
@@ -55,12 +57,15 @@ public class ComboBoxEntry extends InputEntry {
 			this.add(label);
 			this.add(comboBox);
 		}
-			
 	}
 
 	@Override
-	public String getEntryValue() {
-		return (String)comboBox.getSelectedItem();
+	public Object getEntryValue() {
+		return comboBox.getSelectedItem();
+	}
+	
+	public void addListener(ActionListener listener) {
+		comboBox.addActionListener(listener);
 	}
 
 }
