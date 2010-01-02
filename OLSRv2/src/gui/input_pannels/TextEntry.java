@@ -10,6 +10,7 @@
  */
 package gui.input_pannels;
 
+import gui.GUIManager;
 import gui.Main;
 
 import java.awt.Dimension;
@@ -38,9 +39,9 @@ public class TextEntry extends InputEntry {
 	 */
 	public TextEntry(String parameterText, Dimension fieldSize, String defaultValue) {
 		setLayout(new FlowLayout(FlowLayout.LEFT));
-		setBackground(Main.BACKGROUND);
+		setBackground(GUIManager.BACKGROUND);
 		JPanel innerPanel = new JPanel(new GridLayout(2, 1));
-		innerPanel.setBackground(Main.BACKGROUND);
+		innerPanel.setBackground(GUIManager.BACKGROUND);
 		label = new JLabel(parameterText);
 		innerPanel.add(label);
 		field = new JTextField(defaultValue);
@@ -49,7 +50,8 @@ public class TextEntry extends InputEntry {
 		innerPanel.add(field);
 		this.add(innerPanel);
 	}
-
+	
+	@Override
 	public String getEntryValue() {
 		return field.getText();
 	}

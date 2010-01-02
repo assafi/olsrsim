@@ -53,7 +53,7 @@ public class WorldTopology extends JPanel {
 		this.worldWidth = width;
 		this.worldHeight = height;
 		this.setPreferredSize(new Dimension(width, height));
-		this.setBackground(Main.BACKGROUND);
+		this.setBackground(GUIManager.BACKGROUND);
 		this.setBorder(new LineBorder(Color.black));
 	}
 	
@@ -74,49 +74,49 @@ public class WorldTopology extends JPanel {
 	}
 	
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		JFrame mainFrame = new JFrame();
-		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//SimulatorTime sTimer = new SimulatorTime();
-		WorldTopology wt = new WorldTopology(500, 500);
-		mainFrame.getContentPane().setLayout(new FlowLayout(FlowLayout.CENTER, 20, 20));
-		//mainFrame.getContentPane().add(sTimer);
-		mainFrame.getContentPane().add(wt);
-		mainFrame.pack();
-		mainFrame.setVisible(true);
-		
-		// Create the object with the run() method
-	    Runnable runnable = new GUIManager();
-	    
-	    // Create the thread supplying it with the runnable object
-	    Thread thread = new Thread(runnable);
-	    
-	    // Start the thread
-	    thread.start();
-		
-	    GuiTick.getInstance().start();
-	    
-	    Random rand = new Random();
-	    
-	    GuiEventsQueue queue = GuiEventsQueue.getInstance();
-		long time = 0;
-	    while(true) {
-	    	try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-	    	time += rand.nextInt(30);
-	    	int xCord = rand.nextInt(497);
-	    	int yCord = rand.nextInt(497);
-	    	
-	    	queue.addEvent(new TopologyEvent(time, TopologyEventType.NODE_CREATE, 
-	    			new Station(new String("" + time + ":" + xCord + "x" + yCord), new Point(xCord,yCord))));
-		}
-		
-	}
+//	/**
+//	 * @param args
+//	 */
+//	public static void main(String[] args) {
+//		JFrame mainFrame = new JFrame();
+//		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		//SimulatorTime sTimer = new SimulatorTime();
+//		WorldTopology wt = new WorldTopology(500, 500);
+//		mainFrame.getContentPane().setLayout(new FlowLayout(FlowLayout.CENTER, 20, 20));
+//		//mainFrame.getContentPane().add(sTimer);
+//		mainFrame.getContentPane().add(wt);
+//		mainFrame.pack();
+//		mainFrame.setVisible(true);
+//		
+//		// Create the object with the run() method
+//	    Runnable runnable = new GUIManager();
+//	    
+//	    // Create the thread supplying it with the runnable object
+//	    Thread thread = new Thread(runnable);
+//	    
+//	    // Start the thread
+//	    thread.start();
+//		
+//	    GuiTick.getInstance().start();
+//	    
+//	    Random rand = new Random();
+//	    
+//	    GuiEventsQueue queue = GuiEventsQueue.getInstance();
+//		long time = 0;
+//	    while(true) {
+//	    	try {
+//				Thread.sleep(1000);
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			}
+//	    	time += rand.nextInt(30);
+//	    	int xCord = rand.nextInt(497);
+//	    	int yCord = rand.nextInt(497);
+//	    	
+//	    	queue.addEvent(new TopologyEvent(time, TopologyEventType.NODE_CREATE, 
+//	    			new Station(new String("" + time + ":" + xCord + "x" + yCord), new Point(xCord,yCord))));
+//		}
+//		
+//	}
 
 }
