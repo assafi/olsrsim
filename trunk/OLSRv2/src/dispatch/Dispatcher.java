@@ -137,8 +137,8 @@ public class Dispatcher implements IDispatcher {
 		
 		while (timeout > currentVirtualTime){
 			
-			if (tasksQueue.peek().getTime() > currentVirtualTime || 
-					tasksQueue.isEmpty()){
+			if (tasksQueue.isEmpty() || 
+					tasksQueue.peek().getTime() > currentVirtualTime){
 				this.currentVirtualTime++;
 				this.eventGen.tick();
 				continue;
