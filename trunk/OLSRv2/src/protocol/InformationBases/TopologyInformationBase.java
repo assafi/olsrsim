@@ -28,14 +28,15 @@ public class TopologyInformationBase {
 	
 	/**
 	 * Maps the address of the station in the MANET
-	 * to its list of all stations that could be reached from it 
+	 * to a list of all stations that could be reached from it 
 	 * in 1-hop
 	 */
 	private HashMap<String, TopologySetData> topologySet = null;
 	
 	/**
 	 * Maps the address of the destination station 
-	 * to its next hop station and number of hops.
+	 * to its next hop station on the route and number of hops
+	 * (Length) of the rout until the destination station.
 	 */
 	private HashMap<String, RoutingSetData> routingSet = null;
 	

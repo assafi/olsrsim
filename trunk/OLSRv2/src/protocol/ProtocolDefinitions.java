@@ -36,4 +36,14 @@ public class ProtocolDefinitions {
 	 * The Delta of time after which the messages are being sent. 
 	 */
 	static public int Delta = 5; //TODO see that this is a correct interval
+	
+	/**
+	 * This defines whether the protocol chooses its
+	 * MPRs regularly or all of the nodes are selected 
+	 * as MPRs 
+	 */
+	public enum ProtocolMprMpde{
+		NORMAL, /* Regular MPR selection */ 
+		ALL_MPRS /* All nodes are being chosen as MPRs*/
+	}
 }
