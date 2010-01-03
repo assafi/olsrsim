@@ -21,6 +21,7 @@ import protocol.NHDPLayer.INHDPLayer;
 import protocol.NHDPLayer.NHDPLayer;
 import protocol.OLSRv2Layer.IOLSRv2Layer;
 import protocol.OLSRv2Layer.OLSRv2Layer;
+import protocol.ProtocolDefinitions.ProtocolMprMpde;
 import events.HelloIntervalEndEvent;
 import events.IntervalEndEvent;
 import events.MessageEvent;
@@ -61,8 +62,8 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 	 * @see protocol.IOLSRv2Protocol#start()
 	 */
 	@Override
-	public void start() {
-		this.olsrLayer = new OLSRv2Layer(stationID, localInfo, neighborInfo, topologyInfo, receivedMsgInfo);
+	public void start(ProtocolMprMpde mprMode) {
+		this.olsrLayer = new OLSRv2Layer(stationID, localInfo, neighborInfo, topologyInfo, receivedMsgInfo, mprMode);
 		this.nhdpLayer = new NHDPLayer(stationID, localInfo, neighborInfo, this.olsrLayer);
 	}
 	
