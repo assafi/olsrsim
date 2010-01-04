@@ -140,6 +140,8 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 		if(neighborInfo.is1HopNeighbor(tcMsg.getSource()) && 
 		   neighborInfo.getNeighborProperty(tcMsg.getSource()).isMpr_selector()){
 			Dispatcher dispatcher = Dispatcher.getInstance();
+			//send the message after Delta time
+			tcMsg.updateTime(dispatcher.getCurrentVirtualTime() + ProtocolDefinitions.Delta);
 			dispatcher.pushEvent(tcMsg);
 		}
 	}

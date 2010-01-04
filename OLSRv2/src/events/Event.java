@@ -30,6 +30,13 @@ public abstract class Event {
 	public long getTime() {
 		return time;
 	}
+	
+	/**
+	 *
+	 */
+	public void updateTime(long time) {
+		this.time = time;
+	}
 
 	/**
 	 * @param nodes The nodes map

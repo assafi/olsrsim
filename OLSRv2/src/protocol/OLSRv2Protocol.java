@@ -111,6 +111,7 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 					// if the destination is my neighbor send him the message
 					msg.setLocalSrc(stationID);
 					msg.setLocalDst(msg.getGlobalDst());
+					msg.updateTime(dispatcher.getCurrentVirtualTime() + ProtocolDefinitions.Delta);
 					dispatcher.pushEvent(msg);
 				}
 				else{
@@ -127,6 +128,7 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 					
 					RoutingSetData entryData = routingSet.get(msg.getGlobalDst());
 					msg.setLocalDst(entryData.getNextHop());
+					msg.updateTime(dispatcher.getCurrentVirtualTime() + ProtocolDefinitions.Delta);
 					dispatcher.pushEvent(msg);
 				}
 			}
