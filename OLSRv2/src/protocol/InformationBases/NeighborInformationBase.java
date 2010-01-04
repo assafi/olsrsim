@@ -51,7 +51,7 @@ public class NeighborInformationBase {
 		secondHopNeighbors = new HashMap<String, List<String>>();
 	}
 	
-	public boolean isNeighbor(String neighbor) {
+	public boolean is1HopNeighbor(String neighbor) {
 		return neighborSet.containsKey(neighbor);
 	}
 

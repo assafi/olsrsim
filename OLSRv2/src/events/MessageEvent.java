@@ -30,6 +30,13 @@ public abstract class MessageEvent extends Event {
 		return eventSource;
 	}
 	
+	/**
+	 * 
+	 */
+	public void setSource(String src) {
+		this.eventSource = src; 
+	}
+	
 	public void logEvent() {
 		Log log = Log.getInstance();
 		HashMap<String, String> data = new HashMap<String, String>();

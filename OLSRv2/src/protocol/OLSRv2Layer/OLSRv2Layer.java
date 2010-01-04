@@ -13,9 +13,11 @@ package protocol.OLSRv2Layer;
 import java.awt.TrayIcon.MessageType;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import messages.HelloMessage;
 import messages.TCMessage;
@@ -33,6 +35,7 @@ import protocol.InformationBases.NeighborInformationBase;
 import protocol.InformationBases.NeighborProperty;
 import protocol.InformationBases.ReceivedMessageInformationBase;
 import protocol.InformationBases.ReceivedSetData;
+import protocol.InformationBases.RoutingSetData;
 import protocol.InformationBases.TopologyCommonData;
 import protocol.InformationBases.TopologyInformationBase;
 import protocol.InformationBases.TopologySetData;
@@ -86,7 +89,44 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 	}
 
 	private void updateRoutingSet(){
-		//TODO implement
+		HashMap<String, RoutingSetData>  routingSet = topologyInfo.getRoutingSet();
+		RoutingSetData rData = null;
+		
+		//clear all the entries in the routing set
+		routingSet.clear();
+		
+		// add all 1-hop neighbors to the set
+		Set<String> neighbors = neighborInfo.getAllNeighbors().keySet();
+		
+		for (String hop1Neighbor : neighbors) {
+			rData = new RoutingSetData(Dispatcher.getInstance().getCurrentVirtualTime() + ProtocolDefinitions.EntryValidPeriod,
+													  hop1Neighbor, 
+													  1);
+			routingSet.put(hop1Neighbor, rData);
+		}
+		
+		HashMap<String, TopologySetData> topologySet = topologyInfo.getTopologySet();
+		
+		int hops = 1;
+		while(true){
+			boolean routingSetChanged = false;
+			for (Entry<String, TopologySetData> topologyEntry : topologySet.entrySet()) {
+				for (String station : topologyEntry.getValue().getToAddresses()) {
+					if (!routingSet.containsKey(station) && 
+						routingSet.containsKey(topologyEntry.getKey())){
+						rData = new RoutingSetData(Dispatcher.getInstance().getCurrentVirtualTime() + ProtocolDefinitions.EntryValidPeriod,
+												   topologyEntry.getKey(), 
+												   hops);
+						routingSet.put(station, rData);
+						routingSetChanged = true;
+					}
+				}
+			}
+			hops++;
+			if(!routingSetChanged){// if there was no change then stop
+				break;
+			}
+		}
 	}
 
 	/**
@@ -94,27 +134,14 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 	 */
 	private void floodTCMsg(TCMessage tcMsg){
 		/*
-		 * In order to simulate the flooding of the TC message 
-		 * we just push the message to the dispatcher and when the
-		 * message is executed only neighbors that are selected as MPR
-		 * will receive this message see receive reciveTCMessage in OLSRv2Protocol
+		 * We should flood the TC message only if 
+		 * we are selected as MPR
 		 */
-		
-		Dispatcher dispatcher = Dispatcher.getInstance();
-		dispatcher.pushEvent(tcMsg);
-		
-		
-		
-//		/* Go over all the 1-hop neighbors that are selected as 
-//		   MPRs and send the message to them */
-//		Set<String> neighbors = neighborInfo.getAllNeighbors().keySet();
-//		for (String neighbor : neighbors) {
-//			NeighborProperty neighborProp = neighborInfo.getAllNeighbors().get(neighbor);
-//			if (neighborProp.isMpr()){
-//				Dispatcher dispatcher = Dispatcher.getInstance();
-//				dispatcher.pushEvent(tcMsg);
-//			}
-//		}
+		if(neighborInfo.is1HopNeighbor(tcMsg.getSource()) && 
+		   neighborInfo.getNeighborProperty(tcMsg.getSource()).isMpr_selector()){
+			Dispatcher dispatcher = Dispatcher.getInstance();
+			dispatcher.pushEvent(tcMsg);
+		}
 	}
 	
 	/* (non-Javadoc)
