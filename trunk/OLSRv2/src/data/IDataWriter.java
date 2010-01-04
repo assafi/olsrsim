@@ -3,29 +3,22 @@
  * 
  * Team members: Assaf Israel, Eli Nazarov, Asi Bross
  *
- * File: DataWriter.java
+ * File: IDataWriter.java
  * Author: Assaf
- * Date: 13/11/2009
+ * Date: Jan 4, 2010
  *
  */
 package data;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
 /**
  * @author Assaf
- * 
+ *
  */
-public interface DataWriter {
-	
-	/**
-	 * @param file
-	 * @param encoding
-	 * @throws IOException
-	 */
-	public void openFile(File file, String encoding) throws IOException;
+public interface IDataWriter {
+
 	/**
 	 * @param labels The different data labels 
 	 * @throws IOException 
@@ -39,11 +32,6 @@ public interface DataWriter {
 	 * @throws IOException 
 	 */
 	public void writeData(Map<String, String> data) throws IOException;
-	
-	/**
-	 * @return The current file extension that matches the DataWriter files format
-	 */
-	public String getExtension();
 	
 	/**
 	 * Closes the file stream
