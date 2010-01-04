@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
+import java.util.Map.Entry;
 
 /**
  * This Class contains the Neighbor Information Base and Interface Information Base
@@ -75,24 +76,24 @@ public class NeighborInformationBase {
 		lostNeighborSet.put(neighbor, time);
 	}
 	
-	/**
-	 * Removes all lost neighbors that their valid time is after 
-	 * the time received.
-	 * 
-	 * @param time
-	 * @return the lostNeighborSet
-	 */
-	public void removeInvalidLostNeighbors(int time) {
-		Set<String> elements = lostNeighborSet.keySet();
-		Iterator<String> it = elements.iterator();
-		String key = it.next();
-		while (it.hasNext()){
-			long entryTime = lostNeighborSet.get(key);
-			if (entryTime > time){ //TODO think how to compare times- made create an abstraction of time
-				lostNeighborSet.remove(key);
-			}
-		}
-	}
+//	/**
+//	 * Removes all lost neighbors that their valid time is after 
+//	 * the time received.
+//	 * 
+//	 * @param time
+//	 * @return the lostNeighborSet
+//	 */
+//	public void removeInvalidLostNeighbors(int time) {
+//		Set<String> elements = lostNeighborSet.keySet();
+//		Iterator<String> it = elements.iterator();
+//		String key = it.next();
+//		while (it.hasNext()){
+//			long entryTime = lostNeighborSet.get(key);
+//			if (entryTime > time){ //TODO think how to compare times- made create an abstraction of time
+//				lostNeighborSet.remove(key);
+//			}
+//		}
+//	}
 	/**
 	 * @return the neighborSet
 	 */
@@ -151,5 +152,56 @@ public class NeighborInformationBase {
 	}
 	public void remove2hoptNeighbor(String neighbor){
 		secondHopNeighbors.remove(neighbor);
+	}
+	
+	public void clearExpiredEntries(long currTime){
+		ArrayList<String> keysToRemove = new ArrayList<String>();
+		
+		//clear Neighbor Set
+		for (Entry<String, NeighborProperty> entry : neighborSet.entrySet()) {
+			if(entry.getValue().getValideTime() < currTime){
+				keysToRemove.add(entry.getKey());
+			}
+		}
+		for (String key : keysToRemove) {
+			neighborSet.remove(key);
+		}
+		keysToRemove.clear();
+		
+		//clear Lost Neighbor Set
+		for (Entry<String, Long> entry : lostNeighborSet.entrySet()) {
+			if(entry.getValue() < currTime){
+				keysToRemove.add(entry.getKey());
+			}
+		}
+		for (String key : keysToRemove) {
+			neighborSet.remove(key);
+		}
+		keysToRemove.clear();
+
+		
+		/*
+		 * clear 2 Hop Neighbors Set
+		 * if all 1-hop neighbors that some 2-hop neighbor
+		 * is reachable via them dosn't exist in the neighborSet or are 
+		 * reported as lost, we'll remove the 2-hop neighbor from our set.
+		 */
+		
+		for (Entry<String,List<String>> entry : secondHopNeighbors.entrySet()) {
+			boolean valid = false;
+			for (String viaNode : entry.getValue()) {
+				if(neighborSet.containsKey(viaNode)){
+					valid = true;
+				}
+			}
+			if(!valid){
+				keysToRemove.add(entry.getKey());
+			}
+		}
+		for (String key : keysToRemove) {
+			neighborSet.remove(key);
+		}
+		keysToRemove.clear();
+		
 	}
 }

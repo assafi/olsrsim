@@ -12,8 +12,10 @@ package protocol.InformationBases;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * @author Eli Nazarov
@@ -58,6 +60,37 @@ public class ReceivedMessageInformationBase {
 		return forwardSet;
 	}
 	
+	private void setCleaner(HashMap<String, ArrayList<ReceivedSetData>> set, long currTime){
+		ArrayList<ReceivedSetData> keysToRemove1 = new ArrayList<ReceivedSetData>();
+		ArrayList<String> keysToRemove2 = new ArrayList<String>();
+		
+		
+		for (Entry<String,ArrayList<ReceivedSetData>> entry : set.entrySet()) {
+			for (ReceivedSetData data : entry.getValue()) {
+				if(data.getTTL() < currTime){
+					keysToRemove1.add(data);
+				}
+			}
+			entry.getValue().removeAll(keysToRemove1);
+		}
+		
+		//delete all entries with empty lists
+		for (String key : set.keySet()) {
+			if(set.get(key).isEmpty()){
+				keysToRemove2.add(key);
+			}
+		}
+		
+		for (String key : keysToRemove2) {
+			set.remove(key);
+		}
+	}
 	
+	public void clearExpiredEntries(long currTime){		
+		//clear Received Set
+		setCleaner(receivedSet, currTime);
+		//clear Forward Set
+		setCleaner(forwardSet, currTime);
+	}
 
 }
