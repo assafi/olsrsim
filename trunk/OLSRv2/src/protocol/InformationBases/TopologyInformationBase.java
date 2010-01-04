@@ -10,8 +10,10 @@
  */
 package protocol.InformationBases;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 
 
@@ -81,6 +83,30 @@ public class TopologyInformationBase {
 		topologySet.put(station, entryData);
 	}
 	
-	
+	public void clearExpiredEntries(long currTime){
+		ArrayList<String> keysToRemove = new ArrayList<String>();
+		
+		//clear Advertising Remote Router Set
+		for (Entry<String, TopologyCommonData> entry : advertisingRemoteRouterSet.entrySet()) {
+			if(entry.getValue().getTTL() < currTime){
+				keysToRemove.add(entry.getKey());
+			}
+		}
+		for (String key : keysToRemove) {
+			advertisingRemoteRouterSet.remove(key);
+		}
+		keysToRemove.clear();
+		
+		//clear Advertising Remote Router Set
+		for (Entry<String, TopologySetData> entry : topologySet.entrySet()) {
+			if(entry.getValue().getTTL() < currTime){
+				keysToRemove.add(entry.getKey());
+			}
+		}
+		for (String key : keysToRemove) {
+			topologySet.remove(key);
+		}
+		keysToRemove.clear();
+	}
 	
 }

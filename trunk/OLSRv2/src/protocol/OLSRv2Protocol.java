@@ -62,6 +62,17 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		this.topologyInfo = new TopologyInformationBase();
 	}
 	
+	/*
+	 * This function removes all entries in the
+	 * tables that their TTL has been expired
+	 */
+	private void cleanExpiredSetEntries(){
+		long currTime = Dispatcher.getInstance().getCurrentVirtualTime();
+		neighborInfo.clearExpiredEntries(currTime);
+		receivedMsgInfo.clearExpiredEntries(currTime);
+		topologyInfo.clearExpiredEntries(currTime);
+	}
+	
 	/* (non-Javadoc)
 	 * @see protocol.IOLSRv2Protocol#start()
 	 */
@@ -82,6 +93,9 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		Impotant: the distination should be us meaning src=dst
 		TODO: See that when a dispacher procceses this event only I get it
 		*/
+		
+		//clear the sets of invalid entries
+		cleanExpiredSetEntries();
 		
 		//Create the messages
 		HelloIntervalEndEvent nexTriger = new HelloIntervalEndEvent(stationID, helloTrigerMsg.getTime() + ProtocolDefinitions.HelloInterval);
@@ -144,6 +158,9 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		 * was a new 1-jop symmetric neighbor added or 2-hop neighbor
 		 * we must invoke the recalculation of MPRs */
 		
+		//clear the sets of invalid entries
+		cleanExpiredSetEntries();
+		
 		try {
 			if (HelloMessage.class.isAssignableFrom(helloMsg.getClass())){
 				if (nhdpLayer.receiveHelloMessage((HelloMessage)helloMsg)){
@@ -163,13 +180,11 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 	@Override
 	public void reciveTCMessage(MessageEvent tcMsg) {
 		
+		//clear the sets of invalid entries
+		cleanExpiredSetEntries();
+		
 		try {
 			if (TCMessage.class.isAssignableFrom(tcMsg.getClass())){
-//				//we should receive the TC message only if we were selected as MPRs
-//				if(neighborInfo.isNeighbor(tcMsg.getSource()) && 
-//				   neighborInfo.getNeighborProperty(tcMsg.getSource()).isMpr_selector()){
-//					olsrLayer.receiveTCMessage((TCMessage)tcMsg);
-//				}	
 				olsrLayer.receiveTCMessage((TCMessage)tcMsg);
 			}
 		} catch (ProtocolException e) {
@@ -187,6 +202,9 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		we should generate hello massage and insert GenerateTCMsg
 		event so that we will know next time that the interval is over
 		here we must send a new TC Message*/
+		
+		//clear the sets of invalid entries
+		cleanExpiredSetEntries();
 		
 		//Create the messages
 		HelloIntervalEndEvent nexTriger = new HelloIntervalEndEvent(stationID, tcTrigerMsg.getTime() + ProtocolDefinitions.TCInterval);
