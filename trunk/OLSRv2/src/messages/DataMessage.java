@@ -24,12 +24,30 @@ import events.MessageEvent;
  */
 public class DataMessage extends MessageEvent {
 
+	/*
+	 * Global source and destination defines the src 
+	 * of the data and the station that should receive it.
+	 * the locaDst along with the src that is defined in MessageEvent
+	 * are setting the stations that should receive and forward on
+	 * the route the data message that was received. 
+	 * 
+	 */
+	private String globalSrc = null;
+	private String globalDst = null;
+	private String localDst = null;
 	/**
 	 * @param src
 	 * @param time
 	 */
-	public DataMessage(String src, long time) {
-		super(src, time);
+	public DataMessage(String localSrc, 
+					   String localDst, 
+					   String globalSrc, 
+					   String globalDst,  
+					   long time) {
+		super(localSrc, time);
+		this.localDst = localDst;
+		this.globalSrc = globalSrc;
+		this.globalDst = globalDst;
 	}
 
 	/* (non-Javadoc)
@@ -43,5 +61,65 @@ public class DataMessage extends MessageEvent {
 			olsrProtocol.reciveDataMessage(this);
 		}
 	}
+
+	/**
+	 * @return the globalSrc
+	 */
+	public String getGlobalSrc() {
+		return globalSrc;
+	}
+
+	/**
+	 * @param globalSrc the globalSrc to set
+	 */
+	public void setGlobalSrc(String globalSrc) {
+		this.globalSrc = globalSrc;
+		}
+	
+
+	/**
+	 * @return the globalDst
+	 */
+	public String getGlobalDst() {
+		return globalDst;
+	}
+
+	/**
+	 * @param globalDst the globalDst to set
+	 */
+	public void setGlobalDst(String globalDst) {
+		this.globalDst = globalDst;
+	}
+	
+
+	/**
+	 * @return the localDst
+	 */
+	public String getLocalDst() {
+		return localDst;
+	}
+
+	/**
+	 * @param localDst the localDst to set
+	 */
+	public void setLocalDst(String localDst) {
+		this.localDst = localDst;
+	}
+	
+	/**
+	 * @return the localSrc
+	 */
+	public String getLocalSrc() {
+		return this.getSource();
+	}
+
+	/**
+	 * @param localDst the localDst to set
+	 */
+	public void setLocalSrc(String localSst) {
+		this.setSource(localSst);
+	}
+	
+	
 
 }

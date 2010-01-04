@@ -16,7 +16,6 @@ package protocol.InformationBases;
  */
 public class RoutingSetData extends TopologyCommonData {
 	
-	private String destination;
 	private String nextHop;
 	private long numberOfHops;
 	
@@ -25,29 +24,12 @@ public class RoutingSetData extends TopologyCommonData {
 	 * @param time
 	 */
 	public RoutingSetData(long timeToLeave, 
-						  String destination,
 						  String nextHop,
 						  long numberOfHops) {
 		super(timeToLeave);
-		this.destination = destination;
 		this.nextHop = nextHop;
 		this.numberOfHops = numberOfHops;
-	}
-
-	/**
-	 * @return the destination
-	 */
-	public String getDestination() {
-		return destination;
-	}
-
-	/**
-	 * @param destination the destination to set
-	 */
-	public void setDestination(String destination) {
-		this.destination = destination;
-	}
-	
+	}	
 
 	/**
 	 * @return the nextHop

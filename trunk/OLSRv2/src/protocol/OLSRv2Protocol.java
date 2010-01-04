@@ -10,12 +10,16 @@
  */
 package protocol;
 
+import java.util.HashMap;
+
 import dispatch.Dispatcher;
+import messages.DataMessage;
 import messages.HelloMessage;
 import messages.TCMessage;
 import protocol.InformationBases.LocalInformationBase;
 import protocol.InformationBases.NeighborInformationBase;
 import protocol.InformationBases.ReceivedMessageInformationBase;
+import protocol.InformationBases.RoutingSetData;
 import protocol.InformationBases.TopologyInformationBase;
 import protocol.NHDPLayer.INHDPLayer;
 import protocol.NHDPLayer.NHDPLayer;
@@ -94,7 +98,39 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 	 */
 	@Override
 	public void reciveDataMessage(MessageEvent dataMsg) {
-		//TODO implement
+		DataMessage msg  = (DataMessage)dataMsg;
+		Dispatcher dispatcher = Dispatcher.getInstance();
+		
+		if (msg.getLocalDst().equals(stationID)){// check if this message is for me
+			if(msg.getGlobalDst().equals(stationID)){
+				//we got the message!!!
+				//TODO write to log that finished
+			}
+			else{
+				if(neighborInfo.is1HopNeighbor(msg.getGlobalDst())){
+					// if the destination is my neighbor send him the message
+					msg.setLocalSrc(stationID);
+					msg.setLocalDst(msg.getGlobalDst());
+					dispatcher.pushEvent(msg);
+				}
+				else{
+					/*
+					 *  the destination is not our neighbor 
+					 *  -> we should send to the next node in the route 
+					 */
+					
+					HashMap<String, RoutingSetData>  routingSet =  topologyInfo.getRoutingSet();
+					if (!routingSet.containsKey(msg.getGlobalDst())){
+						//TODO log error: we can't fined the destination station or next hop
+						return;
+					}
+					
+					RoutingSetData entryData = routingSet.get(msg.getGlobalDst());
+					msg.setLocalDst(entryData.getNextHop());
+					dispatcher.pushEvent(msg);
+				}
+			}
+		}
 	}
 
 	/* (non-Javadoc)
@@ -127,11 +163,12 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		
 		try {
 			if (TCMessage.class.isAssignableFrom(tcMsg.getClass())){
-				//we should receive the TC message only if we were selected as MPRs
-				if(neighborInfo.isNeighbor(tcMsg.getSource()) && 
-				   neighborInfo.getNeighborProperty(tcMsg.getSource()).isMpr_selector()){
-					olsrLayer.receiveTCMessage((TCMessage)tcMsg);
-				}	
+//				//we should receive the TC message only if we were selected as MPRs
+//				if(neighborInfo.isNeighbor(tcMsg.getSource()) && 
+//				   neighborInfo.getNeighborProperty(tcMsg.getSource()).isMpr_selector()){
+//					olsrLayer.receiveTCMessage((TCMessage)tcMsg);
+//				}	
+				olsrLayer.receiveTCMessage((TCMessage)tcMsg);
 			}
 		} catch (ProtocolException e) {
 			//Shouldn't fail

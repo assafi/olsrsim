@@ -78,7 +78,7 @@ public class NHDPLayer implements INHDPLayer {
 		/* Update the neighbor set */
 		NeighborProperty property = new NeighborProperty();
 		
-		if (!neighborInfo.isNeighbor(msgSrc)){
+		if (!neighborInfo.is1HopNeighbor(msgSrc)){
 			if (helloMsg.getNeighborSet().containsKey(stationID)){// if the receiving station is a neighbor then this is a symmetric connection 
 				property.setQuality(helloMsg.getNeighborSet().get(stationID).getQuality());
 				property.setSymetricLink(true);
@@ -109,7 +109,7 @@ public class NHDPLayer implements INHDPLayer {
 		boolean sendHelloMsg = false;
 		while (it.hasNext()){
 			String lostNeighbor = it.next();
-			if (neighborInfo.isNeighbor(lostNeighbor)){
+			if (neighborInfo.is1HopNeighbor(lostNeighbor)){
 				neighborInfo.addToLostNeighbors(lostNeighbor, simTime + ProtocolDefinitions.EntryValidPeriod);
 				neighborInfo.removeNeighbor(lostNeighbor);
 				//if this was a symmetric neighbor must sent HELLO message
@@ -131,7 +131,7 @@ public class NHDPLayer implements INHDPLayer {
 		it = helloNeigbors.iterator();
 		while (it.hasNext()){
 			String secondHopNeighbor = it.next();
-			if (!neighborInfo.isNeighbor(secondHopNeighbor)){
+			if (!neighborInfo.is1HopNeighbor(secondHopNeighbor)){
 				// If this neighbor already is in 2-hop set the 1-hop neighbor
 				// that we got the Hello message from will be added to the
 				// list of 1-hop nodes that we can reach it from
