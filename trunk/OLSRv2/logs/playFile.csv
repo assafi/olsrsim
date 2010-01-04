@@ -1,7 +1,0 @@
-"VIRTUAL_TIME","NODE_ID","EVENT_TYPE","GLOBAL_SOURCE","LOCAL_SOURCE","LOCAL_TARGET","GLOBAL_TARGET","X_COOR","Y_COOR","RANGE","LOST","ERROR","DETAILS"
-"1","node-1","NODE_CREATE","","","","","1","2","","","",""
-"2","node-2","HELLO_SENT","node-2","","","All neighbors","","","","","",""
-"3","node-1","HELLO_REACH","node-2","","","All neighbors","","","","false","",""
-"4","node-1","DATA_SENT","node-1","node-1","All neighbors","node-3","","","","false","",""
-"5","node-2","DATA_REACH","node-1","node-1","All neighbors","node-3","","","","false","",""
-"6","node-2","DATA_LOSS","node-1","node-2","All neighbors","node-3","","","","true","",""
