@@ -12,11 +12,16 @@ package log;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
-import data.DataWriter;
+import log.sqlproxy.SqlProxyException;
+
+import data.IDataFileWriter;
+import data.IDataSqlWriter;
+import data.IDataWriter;
 import data.SimLabels;
 
 /**
@@ -26,10 +31,14 @@ import data.SimLabels;
 public class Log implements ILog {
 
 	private static Log instance = null; 
-	private DataWriter writer = null; 
+	private IDataWriter writer = null; 
 	private boolean newLog = true;
 	
-	private static String currentTime(){
+	private enum Mode { FILE, SQL } ;
+	
+	private Mode workingMode = Mode.FILE;
+	
+	private static String currentTime() {
 		
 		SimpleDateFormat format = new SimpleDateFormat("_ddMMyyyy_HHmmss");
 		Date now = new Date();
@@ -56,7 +65,7 @@ public class Log implements ILog {
 	 * Different classes will change the way the log is implemented (e.g. XML or CSV)
 	 *
 	 */
-	public synchronized void createLog(DataWriter dataWriter){
+	public synchronized void createLog(IDataWriter dataWriter){
 		//TODO Maybe add an XmlWriter as well
 		//TODO Maybe add a security manager
 		
@@ -69,6 +78,28 @@ public class Log implements ILog {
 			close();
 		}
 		
+		if (null == dataWriter) {
+			System.err.println("Error!! - Can't create new file. Log disabled");
+			return;
+		}
+		
+		this.writer = dataWriter;
+		if (dataWriter instanceof IDataFileWriter) {
+			this.workingMode = Mode.FILE;
+			createFileLog((IDataFileWriter)dataWriter);
+			return;
+		}
+		
+		if (dataWriter instanceof IDataSqlWriter) {
+			this.workingMode = Mode.SQL;
+			createSqlLog((IDataSqlWriter)dataWriter);
+			return;
+		}
+		
+		handleDWError(new LogException("Unknown DataWriter object"));
+	}
+	
+	private void createFileLog(IDataFileWriter dataWriter) {
 		String fileExtension = dataWriter.getExtension();
 		if (null == fileExtension){
 			fileExtension = defaultFileExtension;
@@ -77,18 +108,27 @@ public class Log implements ILog {
 		File logFile = new File(ILog.basePath + ILog.fileName + currentTime() + "." + fileExtension);
 		try {
 			logFile.createNewFile();			
-			dataWriter.close(); // Closes any files that may have been passed along
-			this.writer = dataWriter;
-			this.writer.openFile(logFile, null);
-			
+			dataWriter.openFile(logFile, null);
 		} catch (Exception e) {
-			e.printStackTrace();
-			System.err.println("\nError!! - Can't create new file. Log disabled");
-			close();
-			return;
+			handleDWError(e);
 		}
 	}
 	
+	private void createSqlLog(IDataSqlWriter dataWriter) {
+		
+		String tableName = ILog.fileName + currentTime();
+		try {
+			dataWriter.open(tableName);
+		} catch (Exception e) {
+			handleDWError(e);
+		} 
+	}
+	
+	private void handleDWError(Exception e) {
+		e.printStackTrace();
+		System.err.println("Error!! - Can't create new file. Log disabled");
+		close();
+	}
 	/**
 	 * Closing the edges 
 	 */
@@ -115,13 +155,11 @@ public class Log implements ILog {
 			throw new LogException("Must create new Log before writing to it");
 		}
 		
-		try {
-			
+		try {			
 			if (newLog){
 				this.writer.writeLabels(SimLabels.stringify());
 				this.newLog = false; // This will only happen once per log session
 			}
-			
 			this.writer.writeData(data);
 		} catch (IOException e) {
 			throw new LogException("Error while trying to write data to log",e);

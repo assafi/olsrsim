@@ -20,7 +20,7 @@ import java.util.Map;
  * @author Assaf
  *  
  */
-public class CsvWriter implements DataWriter {
+public class CsvWriter implements IDataFileWriter {
 
 	private String newline = System.getProperty("line.separator");
 	private OutputStreamWriter writer = null;
