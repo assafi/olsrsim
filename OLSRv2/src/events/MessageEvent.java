@@ -43,6 +43,7 @@ public abstract class MessageEvent extends Event {
 		data.put(SimLabels.VIRTUAL_TIME.name(), Long.toString(this.getTime()));
 		data.put(SimLabels.EVENT_TYPE.name(), this.getClass().getName());
 		data.put(SimLabels.GLOBAL_SOURCE.name(),eventSource);
+		data.put(SimLabels.NODE_ID.name(), eventSource);
 		try {
 			log.writeDown(data);
 		} catch (LogException le) {

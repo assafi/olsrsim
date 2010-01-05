@@ -14,6 +14,7 @@ import java.awt.Point;
 
 import protocol.IOLSRv2Protocol;
 import protocol.OLSRv2Protocol;
+import protocol.ProtocolDefinitions;
 
 /**
  * @author Asi
@@ -35,7 +36,7 @@ public class Station implements IStation {
 		this.stationID = stationID;
 		this.location = location;
 		this.recptionRadius = Station.defaultReceptionRadius;
-		//this.protocolObject = new OLSRv2Protocol(stationID);
+		this.protocolObject = new OLSRv2Protocol(stationID);
 	}
 	
 	public synchronized String getID() {
@@ -72,6 +73,10 @@ public class Station implements IStation {
 		return false;
 	}
 
+	@Override
+	public void start() {
+		protocolObject.start(ProtocolDefinitions.mode);
+	}
 }
 
 

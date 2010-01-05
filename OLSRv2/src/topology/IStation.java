@@ -56,4 +56,9 @@ public interface IStation {
 	 * @return Returns true if newStation is in the radius of the station
 	 */
 	boolean isInRange(IStation newStation);
+	
+	/**
+	 * Starts the station activity
+	 */
+	void start();
 }

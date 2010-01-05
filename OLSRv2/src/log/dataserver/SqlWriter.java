@@ -63,7 +63,7 @@ public class SqlWriter implements IDataSqlWriter {
 
 	private void init() {	
 		labelTypes.put(SimLabels.VIRTUAL_TIME, "INTEGER NOT NULL");
-		labelTypes.put(SimLabels.NODE_ID, "VARCHAR(64) NOT NULL");
+		labelTypes.put(SimLabels.NODE_ID, "VARCHAR(64)");
 		labelTypes.put(SimLabels.EVENT_TYPE, "VARCHAR(32) NOT NULL");
 		labelTypes.put(SimLabels.GLOBAL_SOURCE, "VARCHAR(64)");
 		labelTypes.put(SimLabels.LOCAL_SOURCE, "VARCHAR(64)");

@@ -33,7 +33,7 @@ public class TopologyEvent extends Event {
 	 *
 	 */
 	public enum TopologyEventType {
-		NODE_CREATE, NODE_DESTROY, NODE_MOVE
+		NODE_CREATE, NODE_DESTROY, NODE_MOVE, NOOP
 	};
 	
 	private TopologyEventType type = null;
@@ -59,7 +59,8 @@ public class TopologyEvent extends Event {
 		TopologyManager tm = (TopologyManager)topologyManager;		
 		switch (type){
 		case NODE_CREATE:
-			tm.createNewStation(station.getID(), station.getLocation());
+			IStation stationStub = tm.createNewStation(station.getID(), station.getLocation());
+			stationStub.start();
 			break;
 		case NODE_DESTROY:
 			tm.removeStation(station.getID());

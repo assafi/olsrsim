@@ -46,4 +46,6 @@ public class ProtocolDefinitions {
 		NORMAL, /* Regular MPR selection */ 
 		ALL_MPRS /* All nodes are being chosen as MPRs*/
 	}
+	
+	static public ProtocolMprMpde mode = ProtocolMprMpde.NORMAL;
 }

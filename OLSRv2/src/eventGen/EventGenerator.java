@@ -42,6 +42,7 @@ public class EventGenerator {
 	private static EventGenerator instance = null;
 	private int maxStations;
 	private static boolean firstIteration = true;
+	private static boolean staticMode = false;
 	
 	/*
 	 * This map of nodes will be updated before the Topology
@@ -58,7 +59,7 @@ public class EventGenerator {
 	/**
 	 * 
 	 */
-	private EventGenerator(float factor, Layout layout, int maxStations) {
+	private EventGenerator(float factor, Layout layout, int maxStations, boolean staticMod) {
 		this.factor = factor;
 		this.dispatcher = Dispatcher.getInstance();
 		this.nextEventTime = 0;
@@ -66,6 +67,7 @@ public class EventGenerator {
 		this.layout = layout;
 		this.maxStations = maxStations;
 		this.log = Log.getInstance();
+		staticMode = staticMod;
 	}
 	
 	/**
@@ -76,14 +78,15 @@ public class EventGenerator {
 	 * @param maxStations The maximum number of simulated stations
 	 * @return The EventGenerator singleton
 	 */
-	public static EventGenerator getInstance(Float factor, Layout layout, int maxStations){
+	public static EventGenerator getInstance(Float factor, Layout layout, int maxStations, 
+			boolean staticMode){
 		
 		if (null == factor){
 			factor = new Float(0.5);
 		}
 		
 		if (null == instance){
-			instance = new EventGenerator(factor, layout,maxStations);
+			instance = new EventGenerator(factor, layout,maxStations,staticMode);
 		}
 		return instance;
 	}
@@ -111,6 +114,10 @@ public class EventGenerator {
 	
 		TopologyEventType type = randomAction();
 
+		if (null == type) {
+			return;
+		}
+		
 		try{
 			switch (type){
 			case NODE_CREATE:
@@ -142,6 +149,10 @@ public class EventGenerator {
 		if (firstIteration){
 			return TopologyEventType.NODE_CREATE;
 		} 
+		
+		if (staticMode){
+			return null;
+		}
 		
 		if (topologyManager.count() < maxStations){
 			float rand = new Random().nextFloat();

@@ -14,9 +14,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.PriorityQueue;
-import java.util.logging.Logger;
 
-import data.SimEvents;
 import data.SimLabels;
 
 import layout.Layout;
@@ -110,10 +108,13 @@ public class Dispatcher implements IDispatcher {
 	 * @param layout The Layout object representing the layout by which station will be
 	 * generated.
 	 * @param maxStations The maximum number of stations.
+	 * @param staticMode 
 	 * @param radius The stations reception radius
+	 * @param timeout 
 	 * @throws DispatcherException
 	 */
-	public void startSimulation(float factor, Layout layout, int maxStations, int radius, long timeout) throws DispatcherException {
+	public void startSimulation(float factor, Layout layout, int maxStations
+			,boolean staticMode , int radius, long timeout) throws DispatcherException {
 		
 		/*
 		 * Comment this out in release
@@ -129,7 +130,7 @@ public class Dispatcher implements IDispatcher {
 			throw new DispatcherException("Can only start the dispatcher once...");
 		}
 		
-		this.eventGen = EventGenerator.getInstance(factor,layout, maxStations);
+		this.eventGen = EventGenerator.getInstance(factor,layout, maxStations,staticMode);
 		/*
 		 * Generating the first event
 		 */

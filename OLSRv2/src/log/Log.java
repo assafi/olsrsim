@@ -162,7 +162,7 @@ public class Log implements ILog {
 			}
 			this.writer.writeData(data);
 		} catch (IOException e) {
-			throw new LogException("Error while trying to write data to log",e);
+			throw new LogException("Error while trying to write data to log - " + e.getMessage(),e);
 		}
 	}
 }
