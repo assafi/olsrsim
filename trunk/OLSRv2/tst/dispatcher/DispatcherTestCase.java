@@ -17,6 +17,7 @@ import java.awt.Point;
 import layout.LayoutException;
 import layout.UniformLayout;
 import log.Log;
+import log.dataserver.SqlWriter;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -64,8 +65,7 @@ public class DispatcherTestCase {
 	@Before
 	public void setUp() throws Exception {
 		log = Log.getInstance();
-		log.createLog(new CsvWriter());
-		
+		log.createLog(new SqlWriter());	
 		dispatcher = Dispatcher.getInstance();
 	}
 
@@ -80,13 +80,12 @@ public class DispatcherTestCase {
 	}
 
 	/**
-	 * Test method for {@link dispatch.Dispatcher#startSimulation(float, layout.Layout, int, int, long)}.
-	 * @throws LayoutException 
-	 * @throws DispatcherException 
+	 * @throws DispatcherException
+	 * @throws LayoutException
 	 */
 	@Test
 	public void testStartSimulation() throws DispatcherException, LayoutException {
-		dispatcher.startSimulation((float) 0.01, new UniformLayout(100,100), 10, 3, 2500);
+		dispatcher.startSimulation((float) 0.01, new UniformLayout(100,100), 10,true, 3, 2500);
 	}
 
 }
