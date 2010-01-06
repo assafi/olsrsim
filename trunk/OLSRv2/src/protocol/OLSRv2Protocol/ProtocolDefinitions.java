@@ -18,7 +18,7 @@ public class ProtocolDefinitions {
 	/**
 	 * The validity period of the entry in the table 
 	 */
-	static public int EntryValidPeriod = 10;
+	static public int EntryValidPeriod = 1000;
 	
 	/**
 	 * The Interval that the Hello messages should be generated
