@@ -82,7 +82,8 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 	 */
 	@Override
 	public TCMessage generateTCMessage(long currentSimTime) {
-		TCMessage tcMsg = new TCMessage(stationID, currentSimTime + ProtocolDefinitions.Delta, neighborInfo.getAllNeighbors());
+		// first time the local source = global source
+		TCMessage tcMsg = new TCMessage(stationID, stationID, currentSimTime + ProtocolDefinitions.Delta, neighborInfo.getAllNeighbors());
 		Dispatcher dispatcher = Dispatcher.getInstance();
 		dispatcher.pushEvent(tcMsg);
 		return tcMsg;
@@ -141,6 +142,7 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 		   neighborInfo.getNeighborProperty(tcMsg.getSource()).isMpr_selector()){
 			Dispatcher dispatcher = Dispatcher.getInstance();
 			//send the message after Delta time
+			tcMsg.setLocalSrc(stationID); // set the local source to be me the global source doesn't change
 			tcMsg.updateTime(dispatcher.getCurrentVirtualTime() + ProtocolDefinitions.Delta);
 			dispatcher.pushEvent(tcMsg);
 		}
@@ -174,13 +176,20 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 			throw new ProtocolException("Wrong message!");
 		}
 		
-		String src = tcMsg.getSource();
+		// if we got a TC message that we sent discard it 
+		if (tcMsg.getLocalSrc().equals(stationID) || tcMsg.getGlobalSrc().equals(stationID)){
+			return;
+		}
+		
+		String localSrc = tcMsg.getLocalSrc();
+		String globalSrc = tcMsg.getGlobalSrc();
 		
 		/*
-		 * First we should check if the message was already processed 
+		 * First we should check if the message was already processed
+		 * we check according to the messages received from the global source 
 		 */
 		
-		if (receivedMsgInfo.getReceivedSet().containsKey(src)){
+		if (receivedMsgInfo.getReceivedSet().containsKey(globalSrc)){
 			// each address is mapped to a list of messages it sent
 			ArrayList<ReceivedSetData> receviedMsgList = receivedMsgInfo.getReceivedSet().values().iterator().next();
 			for (ReceivedSetData receivedMsg : receviedMsgList) {
@@ -198,13 +207,13 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 			ArrayList<ReceivedSetData> msgList = new ArrayList<ReceivedSetData>();
 			msgList.add(new ReceivedSetData(MessegeTypes.TC, tcMsg.hashCode(), tcMsg.getTime() + ProtocolDefinitions.EntryValidPeriod));
 			
-			receivedMsgInfo.getReceivedSet().put(src, msgList);
+			receivedMsgInfo.getReceivedSet().put(globalSrc, msgList);
 		}
 		
 		// 1.1 Populating the Advertising Remote Router Set
-		if (!topologyInfo.getAdvertisingRemoteRouterSet().containsKey(src)){
+		if (!topologyInfo.getAdvertisingRemoteRouterSet().containsKey(globalSrc)){
 			TopologyCommonData entryData = new TopologyCommonData(tcMsg.getTime() + ProtocolDefinitions.EntryValidPeriod);
-			topologyInfo.getAdvertisingRemoteRouterSet().put(src, entryData);
+			topologyInfo.getAdvertisingRemoteRouterSet().put(globalSrc, entryData);
 		}
 		
 		//1.2 Populating the Router Topology Set
@@ -213,17 +222,17 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 		Set<String>  mprSelectorsInTcMsg = tcMsg.getMprSelectors().keySet();
 		
 		//if this station is not in the Topology Set
-		if (!topologyInfo.getTopologySet().containsKey(src)){
+		if (!topologyInfo.getTopologySet().containsKey(globalSrc)){
 			TopologySetData entryData = new TopologySetData(tcMsg.getTime() + ProtocolDefinitions.EntryValidPeriod);
 			
 			for (String mprSelector : mprSelectorsInTcMsg) {
 				entryData.addToAddress(mprSelector);
 			}
 			
-			topologyInfo.addTopologyEntry(src, entryData);
+			topologyInfo.addTopologyEntry(globalSrc, entryData);
 		}
 		else{ // if this station already exists in the entry.
-			TopologySetData entryData = topologyInfo.getTopologySet().get(src);
+			TopologySetData entryData = topologyInfo.getTopologySet().get(globalSrc);
 			
 			for (String mprSelector : mprSelectorsInTcMsg) {
 				entryData.addToAddress(mprSelector);
@@ -237,7 +246,7 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 		updateRoutingSet();
 		
 		// 3. Forward the tcMsg to all my MPRs unless it was already forwarded
-		if (!receivedMsgInfo.getForwardSet().containsKey(src)){
+		if (!receivedMsgInfo.getForwardSet().containsKey(globalSrc)){
 			floodTCMsg(tcMsg);// flood message
 			
 			// add new entry for the originator the Forward set
@@ -246,7 +255,7 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 			ArrayList<ReceivedSetData> msgList = new ArrayList<ReceivedSetData>();
 			msgList.add(new ReceivedSetData(MessegeTypes.TC, tcMsg.hashCode(), tcMsg.getTime() + ProtocolDefinitions.EntryValidPeriod));
 			
-			receivedMsgInfo.getForwardSet().put(src, msgList);
+			receivedMsgInfo.getForwardSet().put(globalSrc, msgList);
 		}
 		else{
 			ArrayList<ReceivedSetData> forwardMsgList = receivedMsgInfo.getForwardSet().values().iterator().next();
