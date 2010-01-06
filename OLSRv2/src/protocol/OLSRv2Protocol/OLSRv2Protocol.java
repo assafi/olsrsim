@@ -29,6 +29,7 @@ import protocol.OLSRv2Protocol.ProtocolDefinitions.ProtocolMprMpde;
 import events.HelloIntervalEndEvent;
 import events.IntervalEndEvent;
 import events.MessageEvent;
+import events.TCIntervalEndEvent;
 
 /**
  * @author Eli Nazarov
@@ -172,6 +173,12 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 			//Shouldn't fail
 			e.printStackTrace();
 		}
+		
+		//TODO remove
+		if(stationID.equals("1")){
+			neighborInfo.logStationTables(stationID);
+			topologyInfo.logStationTables(stationID);
+		}
 	}
 
 	/* (non-Javadoc)
@@ -191,6 +198,12 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 			//Shouldn't fail
 			e.printStackTrace();
 		}
+		
+		//TODO remove
+		if(stationID.equals("1")){
+			neighborInfo.logStationTables(stationID);
+			topologyInfo.logStationTables(stationID);
+		}
 	}
 
 	/* (non-Javadoc)
@@ -207,12 +220,12 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		cleanExpiredSetEntries();
 		
 		//Create the messages
-		HelloIntervalEndEvent nexTriger = new HelloIntervalEndEvent(stationID, tcTrigerMsg.getTime() + ProtocolDefinitions.TCInterval);
+		TCIntervalEndEvent nexTriger = new TCIntervalEndEvent(stationID, tcTrigerMsg.getTime() + ProtocolDefinitions.TCInterval);
+		// This call already pushes the event in to the dispatcher
 		TCMessage newTCMsg = olsrLayer.generateTCMessage(tcTrigerMsg.getTime());
 		
 		// Send them to the dispatcher
 		Dispatcher dispacher = Dispatcher.getInstance();
-		dispacher.pushEvent(newTCMsg);
 		dispacher.pushEvent(nexTriger);
 	}
 

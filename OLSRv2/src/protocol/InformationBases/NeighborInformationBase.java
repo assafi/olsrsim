@@ -11,6 +11,7 @@
 package protocol.InformationBases;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -18,6 +19,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 import java.util.Map.Entry;
+
+import log.Log;
+import log.LogException;
+import data.SimEvents;
+import data.SimLabels;
+import dispatch.Dispatcher;
 
 /**
  * This Class contains the Neighbor Information Base and Interface Information Base
@@ -203,5 +210,33 @@ public class NeighborInformationBase {
 		}
 		keysToRemove.clear();
 		
+	}
+	
+	private void logEvent(String stationID, String tableName,Collection<String> logData) {
+		Log log = Log.getInstance();
+		String collNames = new String(tableName);
+		
+		// put all names in one string
+		for (String name : logData) {
+			collNames += " " + name;
+		}
+		
+		HashMap<String, String> data = new HashMap<String, String>();
+		data.put(SimLabels.NODE_ID.name(), stationID);
+		data.put(SimLabels.EVENT_TYPE.name(), SimEvents.LOG.name());
+		data.put(SimLabels.VIRTUAL_TIME.name(), Long.toString(Dispatcher.getInstance().getCurrentVirtualTime()));
+		data.put(SimLabels.DETAILS.name(), collNames);
+		try {
+			log.writeDown(data);
+		} catch (LogException le) {
+			System.out.println(le.getMessage());
+		}
+	}
+	
+	public void logStationTables(String StationID){
+		
+		logEvent(StationID,"neighborSet" , neighborSet.keySet());
+		logEvent(StationID,"lostNeighborSet", lostNeighborSet.keySet());
+		logEvent(StationID, "secondHopNeighbors", secondHopNeighbors.keySet());
 	}
 }

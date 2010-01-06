@@ -20,5 +20,5 @@ public enum SimEvents {
 	HELLO_SENT, HELLO_REACH,
 	TC_SENT, TC_REACH,
 	DATA_SENT, DATA_REACH, DATA_LOSS,
-	SIM_END //Can add more as needed
+	SIM_END, LOG //Can add more as needed
 }
