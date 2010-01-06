@@ -8,7 +8,7 @@
  * Date: Nov 23, 2009
  *
  */
-package protocol;
+package protocol.OLSRv2Protocol;
 
 /**
  * @author Eli Nazarov

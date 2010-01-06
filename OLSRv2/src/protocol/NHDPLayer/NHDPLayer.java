@@ -19,12 +19,12 @@ import messages.HelloMessage;
 import dispatch.Dispatcher;
 import events.HelloIntervalEndEvent;
 
-import protocol.ProtocolDefinitions;
-import protocol.ProtocolException;
 import protocol.InformationBases.LocalInformationBase;
 import protocol.InformationBases.NeighborInformationBase;
 import protocol.InformationBases.NeighborProperty;
 import protocol.OLSRv2Layer.IOLSRv2Layer;
+import protocol.OLSRv2Protocol.ProtocolDefinitions;
+import protocol.OLSRv2Protocol.ProtocolException;
 
 /**
  * @author Eli Nazarov

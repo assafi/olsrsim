@@ -13,7 +13,7 @@ package protocol.InformationBases;
 import java.util.HashMap;
 import java.util.Map;
 
-import protocol.ProtocolException;
+import protocol.OLSRv2Protocol.ProtocolException;
 
 /**
  * @author Eli Nazarov

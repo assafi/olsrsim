@@ -8,7 +8,7 @@
  * Date: Nov 16, 2009
  *
  */
-package protocol;
+package protocol.OLSRv2Protocol;
 
 import java.util.HashMap;
 
@@ -25,7 +25,7 @@ import protocol.NHDPLayer.INHDPLayer;
 import protocol.NHDPLayer.NHDPLayer;
 import protocol.OLSRv2Layer.IOLSRv2Layer;
 import protocol.OLSRv2Layer.OLSRv2Layer;
-import protocol.ProtocolDefinitions.ProtocolMprMpde;
+import protocol.OLSRv2Protocol.ProtocolDefinitions.ProtocolMprMpde;
 import events.HelloIntervalEndEvent;
 import events.IntervalEndEvent;
 import events.MessageEvent;

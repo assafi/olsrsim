@@ -13,7 +13,7 @@ package events;
 import java.util.Collection;
 
 
-import protocol.IOLSRv2Protocol;
+import protocol.OLSRv2Protocol.IOLSRv2Protocol;
 
 import topology.IStation;
 

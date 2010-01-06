@@ -4,7 +4,7 @@
 package protocol.NHDPLayer;
 
 import messages.HelloMessage;
-import protocol.ProtocolException;
+import protocol.OLSRv2Protocol.ProtocolException;
 
 /**
  * @author Eli Nazarov

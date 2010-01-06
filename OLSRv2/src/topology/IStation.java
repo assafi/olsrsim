@@ -12,7 +12,7 @@ package topology;
 
 import java.awt.Point;
 
-import protocol.IOLSRv2Protocol;
+import protocol.OLSRv2Protocol.IOLSRv2Protocol;
 
 /**
  * @author Asi

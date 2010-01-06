@@ -20,6 +20,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import protocol.InformationBases.LocalInformationBase;
+import protocol.OLSRv2Protocol.ProtocolException;
 
 /**
  * @author Eli Nazarov
