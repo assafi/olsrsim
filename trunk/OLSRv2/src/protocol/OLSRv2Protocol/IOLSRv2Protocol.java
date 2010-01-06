@@ -8,9 +8,9 @@
  * Date: 15/11/2009
  *
  */
-package protocol;
+package protocol.OLSRv2Protocol;
 
-import protocol.ProtocolDefinitions.ProtocolMprMpde;
+import protocol.OLSRv2Protocol.ProtocolDefinitions.ProtocolMprMpde;
 import events.*;
 
 /**

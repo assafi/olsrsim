@@ -12,7 +12,7 @@ package protocol.OLSRv2Layer;
 
 import messages.HelloMessage;
 import messages.TCMessage;
-import protocol.ProtocolException;
+import protocol.OLSRv2Protocol.ProtocolException;
 
 /**
  * @author Eli Nazarov

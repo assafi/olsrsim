@@ -15,8 +15,8 @@ import java.util.Map;
 
 import events.MessageEvent;
 
-import protocol.IOLSRv2Protocol;
 import protocol.InformationBases.NeighborProperty;
+import protocol.OLSRv2Protocol.IOLSRv2Protocol;
 import topology.IStation;
 
 /**

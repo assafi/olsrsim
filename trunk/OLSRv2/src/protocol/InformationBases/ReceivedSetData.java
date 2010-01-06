@@ -10,7 +10,7 @@
  */
 package protocol.InformationBases;
 
-import protocol.MessegeTypes;
+import protocol.OLSRv2Protocol.MessegeTypes;
 
 /**
  * @author Eli Nazarov

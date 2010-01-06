@@ -26,10 +26,10 @@ import dispatch.Dispatcher;
 import events.HelloIntervalEndEvent;
 import events.TCIntervalEndEvent;
 
-import protocol.MessegeTypes;
-import protocol.ProtocolDefinitions;
-import protocol.ProtocolDefinitions.ProtocolMprMpde;
-import protocol.ProtocolException;
+import protocol.OLSRv2Protocol.MessegeTypes;
+import protocol.OLSRv2Protocol.ProtocolDefinitions;
+import protocol.OLSRv2Protocol.ProtocolException;
+import protocol.OLSRv2Protocol.ProtocolDefinitions.ProtocolMprMpde;
 import protocol.InformationBases.LocalInformationBase;
 import protocol.InformationBases.NeighborInformationBase;
 import protocol.InformationBases.NeighborProperty;
