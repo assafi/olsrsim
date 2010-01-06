@@ -131,7 +131,8 @@ public class NHDPLayer implements INHDPLayer {
 		it = helloNeigbors.iterator();
 		while (it.hasNext()){
 			String secondHopNeighbor = it.next();
-			if (!neighborInfo.is1HopNeighbor(secondHopNeighbor)){
+			// if not my 1-hop neighbor and not me
+			if (!neighborInfo.is1HopNeighbor(secondHopNeighbor) && !secondHopNeighbor.equals(stationID)){
 				// If this neighbor already is in 2-hop set the 1-hop neighbor
 				// that we got the Hello message from will be added to the
 				// list of 1-hop nodes that we can reach it from

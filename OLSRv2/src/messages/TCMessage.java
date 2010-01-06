@@ -30,6 +30,7 @@ import topology.IStation;
  */
 public class TCMessage extends MessageEvent {
 
+	private String globalSrc = null;
 	/**
 	 * This list contains all the stations that selected 
 	 * the source station as MPR 
@@ -40,9 +41,10 @@ public class TCMessage extends MessageEvent {
 	 * @param src
 	 * @param time
 	 */
-	public TCMessage(String src, long time,
+	public TCMessage(String localSrc, String globalSrc, long time,
 					 Map<String, NeighborProperty> neighborSet){
-		super(src, time);
+		super(localSrc, time);
+		this.globalSrc = globalSrc;
 		
 		mprSelectors = new HashMap<String, NeighborProperty>();
 		
@@ -62,6 +64,37 @@ public class TCMessage extends MessageEvent {
 	public Map<String, NeighborProperty> getMprSelectors() {
 		return mprSelectors;
 	}
+	
+	
+
+	/**
+	 * @return the globalSrc
+	 */
+	public String getGlobalSrc() {
+		return globalSrc;
+	}
+
+	/**
+	 * @param globalSrc the globalSrc to set
+	 */
+	public void setGlobalSrc(String globalSrc) {
+		this.globalSrc = globalSrc;
+	}
+	
+	/**
+	 * @return the globalSrc
+	 */
+	public String getLocalSrc() {
+		return this.getSource();
+	}
+
+	/**
+	 * @param globalSrc the globalSrc to set
+	 */
+	public void setLocalSrc(String globalSrc) {
+		this.setSource(globalSrc);
+	}
+	
 
 	/* (non-Javadoc)
 	 * @see events.Event#execute(java.util.Map)
