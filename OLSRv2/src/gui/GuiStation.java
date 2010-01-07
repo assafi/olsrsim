@@ -17,7 +17,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import com.sun.swing.internal.plaf.synth.resources.synth;
 
 /**
  * @author Asi
@@ -25,6 +24,8 @@ import com.sun.swing.internal.plaf.synth.resources.synth;
  */
 public class GuiStation {
 	private static Map<String, GuiStation> stations = new HashMap<String, GuiStation>();
+	private static List<GuiStation> movingStations = new LinkedList<GuiStation>();
+	
 	// The max diameter size of a new station
 	private static final int MAX_DISPLAY_SIZE = 12;
 	// The normal diameter size of a station
@@ -35,6 +36,8 @@ public class GuiStation {
 	
 	private String stationID;
 	private Point stationPosition;
+	// in case the station is moving
+	private Point stationNewPosition;
 	private long creationTime;
 	private long destroyedTime;
 	private StationState state;
@@ -43,12 +46,18 @@ public class GuiStation {
 		NEW, DESTROYED, MOVING, NORMAL
 	}
 	
-	public synchronized static List<GuiStation> getAllStations() {
+	/**
+	 * @return
+	 */
+	public static List<GuiStation> getAllStations() {
 		List<GuiStation> ret = new LinkedList<GuiStation>();
-		Collection<GuiStation> values = stations.values();
-		for (GuiStation guiStation : values) {
-			ret.add(new GuiStation(guiStation));
+		synchronized (stations) {
+			Collection<GuiStation> values = stations.values();
+			for (GuiStation guiStation : values) {
+				ret.add(new GuiStation(guiStation));
+			}
 		}
+
 		return ret;
 	}
 	
@@ -63,47 +72,50 @@ public class GuiStation {
 	 * @param guiStation
 	 */
 	public GuiStation(GuiStation guiStation) {
-		this.stationID = new String(guiStation.stationID);
-		this.stationPosition = new Point(guiStation.getPosition());
-		this.creationTime = guiStation.creationTime;
-		this.state = guiStation.state;
+		synchronized (stations) {
+			this.stationID = new String(guiStation.stationID);
+			this.stationPosition = new Point(guiStation.getPosition());
+			this.creationTime = guiStation.creationTime;
+			this.state = guiStation.state;
+		}
 	}
 
 	public int getStationDisplaySize() {
+		
 		long currTickCount = GuiTick.getInstance().getTickCount();
 		long stationUpTime = currTickCount - creationTime;
 		
-		switch(this.state) {
-		case NEW:	
-			if(stationUpTime > NEW_STATION_DISPLAY_TIME) {
-				this.state = StationState.NORMAL;
-			}
-			break;
-		case DESTROYED:
-			if((currTickCount - destroyedTime) > DESTROY_STATION_DISPLAY_TIME) {
-				synchronized(this) {
-					stations.remove(stationID);
+		synchronized (stations) {
+			switch(this.state) {
+			case NEW:	
+				if(stationUpTime > NEW_STATION_DISPLAY_TIME) {
+					this.state = StationState.NORMAL;
 				}
-				return 0;
+				break;
+			case DESTROYED:
+				if((currTickCount - destroyedTime) > DESTROY_STATION_DISPLAY_TIME) {
+					stations.remove(stationID);
+					return 0;
+				}
+			case MOVING:
+			case NORMAL:
 			}
-		case MOVING:
-		case NORMAL:
-		}
-		
-		double midPoint;
-		double sizeFactor;
-		
-		switch(this.state) {
-		case NEW:	
-			midPoint = NEW_STATION_DISPLAY_TIME / 2.0;
-			sizeFactor = 1.0 - Math.abs((midPoint - (double)stationUpTime) / midPoint);
-			return (NORMAL_DISPLAY_SIZE + (int)Math.ceil((MAX_DISPLAY_SIZE - NORMAL_DISPLAY_SIZE) * sizeFactor));
-		case DESTROYED:
-			sizeFactor = (DESTROY_STATION_DISPLAY_TIME - (currTickCount - destroyedTime)) / (double)DESTROY_STATION_DISPLAY_TIME;
-			return (int)Math.ceil(NORMAL_DISPLAY_SIZE * sizeFactor);
-		case MOVING:
-		case NORMAL:
-			return NORMAL_DISPLAY_SIZE;
+			
+			double midPoint;
+			double sizeFactor;
+			
+			switch(this.state) {
+			case NEW:	
+				midPoint = NEW_STATION_DISPLAY_TIME / 2.0;
+				sizeFactor = 1.0 - Math.abs((midPoint - (double)stationUpTime) / midPoint);
+				return (NORMAL_DISPLAY_SIZE + (int)Math.ceil((MAX_DISPLAY_SIZE - NORMAL_DISPLAY_SIZE) * sizeFactor));
+			case DESTROYED:
+				sizeFactor = (DESTROY_STATION_DISPLAY_TIME - (currTickCount - destroyedTime)) / (double)DESTROY_STATION_DISPLAY_TIME;
+				return (int)Math.ceil(NORMAL_DISPLAY_SIZE * sizeFactor);
+			case MOVING:
+			case NORMAL:
+				return NORMAL_DISPLAY_SIZE;
+			}
 		}
 		
 		return 0;
@@ -113,24 +125,32 @@ public class GuiStation {
 	 * @return
 	 */
 	public Point getPosition() {
-		return stationPosition;
+		Point ret;
+		synchronized (stations) {
+			ret = new Point(stationPosition);
+		}
+		return ret;
 	}
 
 	/**
 	 * @param id
 	 * @param location
 	 */
-	public synchronized static void createStation(String id, Point location) {
-		stations.put(id, new GuiStation(id, location));
+	public static void createStation(String id, Point location) {
+		synchronized (stations) {
+			stations.put(id, new GuiStation(id, location));
+		}
 	}
 
 	/**
 	 * @param id
 	 */
-	public synchronized static void removeStation(String id) {
-		GuiStation gStation = stations.get(id);
-		gStation.state = StationState.DESTROYED;
-		gStation.destroyedTime = GuiTick.getInstance().getTickCount();
+	public static void removeStation(String id) {
+		synchronized (stations) {
+			GuiStation gStation = stations.get(id);
+			gStation.state = StationState.DESTROYED;
+			gStation.destroyedTime = GuiTick.getInstance().getTickCount();
+		}
 	}
 
 	/**
@@ -138,7 +158,46 @@ public class GuiStation {
 	 * @param location
 	 */
 	public static void moveStation(String id, Point location) {
-		
+		synchronized (stations) {
+			GuiStation gStation = stations.get(id);
+			gStation.state = StationState.MOVING;
+			gStation.stationNewPosition = new Point(location);
+			movingStations.add(gStation);
+		}	
 	}
 
+	/**
+	 * 
+	 */
+	public static void updateStationsAttributes() {
+		synchronized (stations) {
+			GuiStation gStation;
+			for(int i=0; i < movingStations.size(); ++i) {
+				gStation = movingStations.get(i);
+				if(gStation.stationPosition.equals(gStation.stationNewPosition)) {
+					gStation.state = StationState.NORMAL;
+					movingStations.remove(gStation);
+				}
+				else {
+					int newX = gStation.stationPosition.x;
+					int newY = gStation.stationPosition.y;
+					if(newX < gStation.stationNewPosition.x) {
+						newX++;
+					}
+					else if(newX > gStation.stationNewPosition.x) {
+						newX--;
+					}
+					
+					if(newY < gStation.stationNewPosition.y) {
+						newY++;
+					}
+					else if(newY > gStation.stationNewPosition.y) {
+						newY--;
+					}
+					gStation.stationPosition.setLocation(newX, newY);
+				}
+			}
+		}
+	}
+	
 }

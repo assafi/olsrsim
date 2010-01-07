@@ -59,7 +59,7 @@ public class GUIManager {
 	}
 	
 	public enum SimulationSpeed {
-		NORMAL, FAST, SLOW
+		NORMAL, FAST, SLOW, REAL_TIME
 	}
 	
 	public void createGUI() {

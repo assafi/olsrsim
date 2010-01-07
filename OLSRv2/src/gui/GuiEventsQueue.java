@@ -21,7 +21,7 @@ import events.Event;
  */
 public class GuiEventsQueue {
 	private static GuiEventsQueue instance = null;
-	private LinkedBlockingQueue<Event> eventsQueue;
+	private LinkedList<Event> eventsQueue;
 	
 	public static GuiEventsQueue getInstance() {
 		if(instance == null) {
@@ -31,15 +31,16 @@ public class GuiEventsQueue {
 	}
 	
 	private GuiEventsQueue() {
-		this.eventsQueue = new LinkedBlockingQueue<Event>();
+		this.eventsQueue = new LinkedList<Event>();
 	}
 	
 	/**
 	 * Non blocking method that adds an event to the queue.
 	 * @param event
 	 */
-	public void addEvent(Event event) {
+	public synchronized void addEvent(Event event) {
 		this.eventsQueue.add(event);
+		this.notify();
 	}
 	
 	/**
@@ -48,8 +49,11 @@ public class GuiEventsQueue {
 	 * @throws InterruptedException 
 	 * @throws Exception
 	 */
-	public Event popEvent() throws InterruptedException {
-		return this.eventsQueue.take();
+	public synchronized Event popEvent() throws InterruptedException {
+		while(eventsQueue.isEmpty()) {
+			this.wait();
+		}
+		return this.eventsQueue.remove();
 	}
 	
 	

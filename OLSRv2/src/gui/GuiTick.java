@@ -33,6 +33,7 @@ public class GuiTick {
 	public static final Map<SimulationSpeed, Integer> tickSpeeds = new HashMap<SimulationSpeed, Integer>() {
 		{
 			// number of milliseconds for a tick
+			put(SimulationSpeed.REAL_TIME, 1);
 			put(SimulationSpeed.FAST, 20);
 			put(SimulationSpeed.NORMAL, 50);
 			put(SimulationSpeed.SLOW, 100);
@@ -48,33 +49,30 @@ public class GuiTick {
 	
 	private void tick() {
 		currentTickCount++;
+		GuiStation.updateStationsAttributes();
 	}
 	
 	public long getTickCount() {
 		return currentTickCount;
 	}
 	
-	public void start() {
+	public synchronized void start() {
 		timer.start();
 	}
 
-	public void stop() {
+	public synchronized void stop() {
 		timer.stop();
 	}
 	
 	private GuiTick() {
-		timer = new Timer(tickSpeeds.get(GUIManager.getInstance().getSimulationSpeed()), new ActionListener() {
+		SimulationSpeed speed = GUIManager.getInstance().getSimulationSpeed();
+		currentTickSize = tickSpeeds.get(speed);
+		timer = new Timer(currentTickSize, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				tick();
 			}
 		});
-	}
-
-	/**
-	 * 
-	 */
-	public void stopTime() {
 	}
 
 	/**
@@ -86,7 +84,7 @@ public class GuiTick {
 		timer.setDelay(currentTickSize);
 	}
 	
-	public synchronized int getCurrentTickSize() {
+	public int getCurrentTickSize() {
 		return currentTickSize;
 	}
 	

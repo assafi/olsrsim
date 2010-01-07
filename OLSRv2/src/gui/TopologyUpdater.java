@@ -28,10 +28,15 @@ public class TopologyUpdater implements Runnable {
 		
 		try {
 			long timeDelta;
+			long tickCount;
+			long eventTime;
 			while (true) {		
 				currEvent = queue.popEvent();
-				timeDelta = currEvent.getTime() - GuiTick.getInstance().getTickCount();
-				System.out.println("Latest Event Time: " + currEvent.getTime());
+				tickCount = GuiTick.getInstance().getTickCount();
+				eventTime = currEvent.getTime();
+				timeDelta = eventTime - tickCount;
+				System.out.println("\nEvent Time: " + eventTime);
+				System.out.println("TickCount: " + tickCount);
 				if(timeDelta > 0) {
 					// In case it was stopped
 					GuiTick.getInstance().start();
@@ -39,12 +44,15 @@ public class TopologyUpdater implements Runnable {
 					Thread.sleep(timeDelta * GuiTick.getInstance().getCurrentTickSize());
 				}
 				else if(timeDelta < 0) {
+					System.out.println("Stoped timer at: " + GuiTick.getInstance().getTickCount());
 					GuiTick.getInstance().stop();
 				}
 				
 				if (currEvent.getClass() == TopologyEvent.class) {
 					TopologyEvent topologyEvent = (TopologyEvent)currEvent;
 					IStation station = topologyEvent.getStation();
+					
+					System.out.println("Event type: " + topologyEvent.getType().name());
 					switch (topologyEvent.getType()) {
 					case NODE_CREATE:	
 						GuiStation.createStation(station.getID(), station.getLocation());
