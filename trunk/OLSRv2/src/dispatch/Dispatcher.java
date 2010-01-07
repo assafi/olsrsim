@@ -29,6 +29,7 @@ import events.IntervalEndEvent;
 import events.MessageEvent;
 import events.StopEvent;
 import events.TopologyEvent;
+import gui.GuiEventsQueue;
 import topology.IStation;
 import topology.ITopologyManager;
 import topology.Station;
@@ -155,6 +156,7 @@ public class Dispatcher implements IDispatcher {
 			}
 						
 			Event currentEvent = tasksQueue.poll();
+			GuiEventsQueue.getInstance().addEvent(currentEvent);
 			if (currentEvent.getClass().equals(StopEvent.class)){
 				break;
 			}
