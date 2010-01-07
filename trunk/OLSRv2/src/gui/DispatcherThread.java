@@ -10,9 +10,13 @@
  */
 package gui;
 
+import java.sql.SQLException;
+
 import layout.LayoutException;
 import layout.UniformLayout;
 import log.Log;
+import log.dataserver.SqlWriter;
+import log.sqlproxy.SqlProxyException;
 import data.CsvWriter;
 import dispatch.Dispatcher;
 import dispatch.DispatcherException;
