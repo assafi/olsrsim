@@ -37,7 +37,7 @@ public class DispatcherThread implements Runnable {
 	public void run() {
 		try {
 			Log.getInstance().createLog(new CsvWriter());
-			dispatcher.startSimulation((float) 0.01, new UniformLayout(100,100),10,false, 3, 2500);
+			dispatcher.startSimulation((float) 0.01, new UniformLayout(500,500),10,false, 3, 2500);
 		} catch (DispatcherException e) {
 			e.printStackTrace();
 		} catch (LayoutException e) {
