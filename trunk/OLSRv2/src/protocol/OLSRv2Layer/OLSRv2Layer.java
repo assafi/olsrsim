@@ -355,9 +355,13 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 					
 					// remove from the neighbors2hop all the 2-hop neighbors that the selected MPR covers
 					// we can get it from the topology set
-					List<String> toAddresses = topologyInfo.getTopologySet().get(mprCandidates.get(0)).getToAddresses();
+					if (topologyInfo.getTopologySet().containsKey((mprCandidates.get(0)))){
+						List<String> toAddresses = topologyInfo.getTopologySet().get(mprCandidates.get(0)).getToAddresses();
 					
-					neighbors2hop.removeAll(toAddresses);
+						neighbors2hop.removeAll(toAddresses);
+					}
+					
+					neighbors2hop.remove(next2hopNeighbor);
 				}
 				else{
 					/* Find the MPR with max neighbors */
@@ -376,9 +380,13 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 					
 					// remove from the neighbors2hop all the 2-hop neighbors that the selected MPR covers
 					// we can get it from the topology set
-					List<String> toAddresses = topologyInfo.getTopologySet().get(mpr).getToAddresses();
+					if (topologyInfo.getTopologySet().containsKey(mpr)){
+						List<String> toAddresses = topologyInfo.getTopologySet().get(mpr).getToAddresses();
 					
-					neighbors2hop.removeAll(toAddresses);
+						neighbors2hop.removeAll(toAddresses);
+					}
+					
+					neighbors2hop.remove(next2hopNeighbor);
 				}
 			}
 			break;
@@ -392,9 +400,5 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 		default:
 			break;
 		}
-		
-		
-		
-		
 	}
 }

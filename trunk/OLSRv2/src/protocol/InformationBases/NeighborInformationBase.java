@@ -218,10 +218,56 @@ public class NeighborInformationBase {
 		
 		// put all names in one string
 		for (String name : logData) {
-			collNames += " " + name;
+			collNames += " " + name + ",";
 		}
 		
 		HashMap<String, String> data = new HashMap<String, String>();
+		data.put(SimLabels.NODE_ID.name(), stationID);
+		data.put(SimLabels.EVENT_TYPE.name(), SimEvents.LOG.name());
+		data.put(SimLabels.VIRTUAL_TIME.name(), Long.toString(Dispatcher.getInstance().getCurrentVirtualTime()));
+		data.put(SimLabels.DETAILS.name(), collNames);
+		try {
+			log.writeDown(data);
+		} catch (LogException le) {
+			System.out.println(le.getMessage());
+		}
+	}
+	
+	private void logMPRs(String stationID,Collection<String> logData) {
+		Log log = Log.getInstance();
+		/* log MPRs */
+		String collNames = new String("MPRs");
+		
+		// put all names in one string
+		for (String name : logData) {
+			if (neighborSet.get(name).isMpr()){
+				collNames += " " + name + ",";
+			}
+		}
+		
+		HashMap<String, String> data = new HashMap<String, String>();
+		data.put(SimLabels.NODE_ID.name(), stationID);
+		data.put(SimLabels.EVENT_TYPE.name(), SimEvents.LOG.name());
+		data.put(SimLabels.VIRTUAL_TIME.name(), Long.toString(Dispatcher.getInstance().getCurrentVirtualTime()));
+		data.put(SimLabels.DETAILS.name(), collNames);
+		try {
+			log.writeDown(data);
+		} catch (LogException le) {
+			System.out.println(le.getMessage());
+		}
+		
+		/* log mpr_selectors */
+		
+		collNames = new String("mpr_selectors");
+		
+		// put all names in one string
+		for (String name : logData) {
+			if (neighborSet.get(name).isMpr_selector()){
+				collNames += " " + name + ",";
+			}
+		}
+		
+		data = new HashMap<String, String>();
 		data.put(SimLabels.NODE_ID.name(), stationID);
 		data.put(SimLabels.EVENT_TYPE.name(), SimEvents.LOG.name());
 		data.put(SimLabels.VIRTUAL_TIME.name(), Long.toString(Dispatcher.getInstance().getCurrentVirtualTime()));
@@ -238,5 +284,6 @@ public class NeighborInformationBase {
 		logEvent(StationID,"neighborSet" , neighborSet.keySet());
 		logEvent(StationID,"lostNeighborSet", lostNeighborSet.keySet());
 		logEvent(StationID, "secondHopNeighbors", secondHopNeighbors.keySet());
+		logMPRs(StationID, neighborSet.keySet());
 	}
 }

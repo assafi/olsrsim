@@ -168,6 +168,8 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 					//if we need to calculate MPR sets do so 
 					olsrLayer.calculateMPRs();
 				}
+				// Proccess the message by OLSR layer
+				olsrLayer.processHelloMessage((HelloMessage)helloMsg);
 			}
 		} catch (ProtocolException e) {
 			//Shouldn't fail
@@ -175,10 +177,14 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		}
 		
 		//TODO remove
-		if(stationID.equals("1")){
+		//if(stationID.equals("8")){
 			neighborInfo.logStationTables(stationID);
 			topologyInfo.logStationTables(stationID);
-		}
+		//}
+//		if(stationID.equals("8")){
+//			neighborInfo.logStationTables(stationID);
+//			topologyInfo.logStationTables(stationID);
+//		}
 	}
 
 	/* (non-Javadoc)
@@ -200,10 +206,14 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		}
 		
 		//TODO remove
-		if(stationID.equals("1")){
+		//if(stationID.equals("8")){
 			neighborInfo.logStationTables(stationID);
 			topologyInfo.logStationTables(stationID);
-		}
+		//}
+//		if(stationID.equals("8")){
+//			neighborInfo.logStationTables(stationID);
+//			topologyInfo.logStationTables(stationID);
+//		}
 	}
 
 	/* (non-Javadoc)

@@ -10,12 +10,17 @@
  */
 package protocol.NHDPLayer;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import log.Log;
+import log.LogException;
 import messages.HelloMessage;
 
+import data.SimEvents;
+import data.SimLabels;
 import dispatch.Dispatcher;
 import events.HelloIntervalEndEvent;
 
@@ -65,6 +70,30 @@ public class NHDPLayer implements INHDPLayer {
 		if (null == helloMsg){
 			throw new ProtocolException("Wrong message!");
 		}
+		
+		
+//		//TODO remove
+//		if (stationID.equals("2")){
+//			String logDetails = new String("Hello neighbors");
+//
+//			for (String name : helloMsg.getNeighborSet().keySet()) {
+//				logDetails += " " + name;
+//			}
+//			
+//			Log log = Log.getInstance();
+//			HashMap<String, String> data = new HashMap<String, String>();
+//			data.put(SimLabels.VIRTUAL_TIME.name(), Long.toString(Dispatcher.getInstance().getCurrentVirtualTime()));
+//			data.put(SimLabels.NODE_ID.name(), stationID);
+//			data.put(SimLabels.EVENT_TYPE.name(), SimEvents.LOG.name());
+//			data.put(SimLabels.DETAILS.name(), logDetails);
+//			try {
+//				log.writeDown(data);
+//			} catch (LogException le) {
+//				System.out.println(le.getMessage());
+//			}
+//		}
+//		////////////////////////////////////////////////////////
+		
 		
 		// in case we have new symmetric 1-hop neighbor or new 2-hop neighbor 
 		// we should notify so that OLSRv2 layer can recalculate the MPRs

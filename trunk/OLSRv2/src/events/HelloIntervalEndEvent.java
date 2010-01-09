@@ -37,10 +37,10 @@ public class HelloIntervalEndEvent extends IntervalEndEvent {
 	@Override
 	public void execute(Object nodes) {
 		
-		logEvent();
-		
 		//we should receive only our-selves
 		IStation station = (IStation)nodes;
+		
+		logEvent(station.getID());
 		
 		IOLSRv2Protocol olsrProtocol = station.getOLSRv2Protocol();
 		olsrProtocol.helloIntervalTriger(this);
