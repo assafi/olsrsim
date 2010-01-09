@@ -37,13 +37,14 @@ public abstract class MessageEvent extends Event {
 		this.eventSource = src; 
 	}
 	
-	public void logEvent() {
+	public void logEvent(String localDst, String globalSrc) {
 		Log log = Log.getInstance();
 		HashMap<String, String> data = new HashMap<String, String>();
 		data.put(SimLabels.VIRTUAL_TIME.name(), Long.toString(this.getTime()));
 		data.put(SimLabels.EVENT_TYPE.name(), this.getClass().getName());
-		data.put(SimLabels.GLOBAL_SOURCE.name(),eventSource);
-		data.put(SimLabels.NODE_ID.name(), eventSource);
+		data.put(SimLabels.GLOBAL_SOURCE.name(),globalSrc);
+		data.put(SimLabels.LOCAL_SOURCE.name(), eventSource);
+		data.put(SimLabels.LOCAL_TARGET.name(), localDst);
 		try {
 			log.writeDown(data);
 		} catch (LogException le) {
