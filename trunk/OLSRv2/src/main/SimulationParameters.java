@@ -24,7 +24,7 @@ public class SimulationParameters {
 	/**
 	 * The validity period of the entry in the table 
 	 */
-	static public int EntryValidPeriod = 1000;
+	static public int entryValidPeriod = 1000;
 	
 	/**
 	 * The Interval that the Hello messages should be generated
@@ -41,19 +41,19 @@ public class SimulationParameters {
 	/**
 	 * The Delta of time after which the messages are being sent. 
 	 */
-	static public int TransmitionTime = 5; //TODO see that this is a correct interval
+	static public int transmitionTime = 5; //TODO see that this is a correct interval
 	
 	/**
 	 * This defines whether the protocol chooses its
 	 * MPRs regularly or all of the nodes are selected 
 	 * as MPRs 
 	 */
-	public enum ProtocolMprMpde{
+	public enum ProtocolMprMode{
 		NORMAL, /* Regular MPR selection */ 
 		ALL_MPRS /* All nodes are being chosen as MPRs*/
 	}
 	
-	static public ProtocolMprMpde mode = ProtocolMprMpde.NORMAL;
+	static public ProtocolMprMode protocolMode = ProtocolMprMode.NORMAL;
 	
 	
 }
