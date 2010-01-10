@@ -11,7 +11,6 @@
 package gui.input_pannels;
 
 import gui.GUIManager;
-import gui.Main;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -20,6 +19,8 @@ import java.awt.GridLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import main.Main;
 
 
 /**

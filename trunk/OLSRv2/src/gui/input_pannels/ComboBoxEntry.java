@@ -12,7 +12,6 @@ package gui.input_pannels;
 
 
 import gui.GUIManager;
-import gui.Main;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -22,6 +21,8 @@ import java.awt.event.ActionListener;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import main.Main;
 
 
 /**
