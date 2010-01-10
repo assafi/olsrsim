@@ -41,7 +41,7 @@ public class SimulationParameters {
 	/**
 	 * The Delta of time after which the messages are being sent. 
 	 */
-	static public int Delta = 5; //TODO see that this is a correct interval
+	static public int TransmitionTime = 5; //TODO see that this is a correct interval
 	
 	/**
 	 * This defines whether the protocol chooses its
@@ -54,7 +54,6 @@ public class SimulationParameters {
 	}
 	
 	static public ProtocolMprMpde mode = ProtocolMprMpde.NORMAL;
-	
 	
 	
 }
