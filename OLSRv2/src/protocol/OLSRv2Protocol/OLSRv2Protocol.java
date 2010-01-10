@@ -178,8 +178,8 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		
 		//TODO remove
 		//if(stationID.equals("8")){
-			neighborInfo.logStationTables(stationID);
-			topologyInfo.logStationTables(stationID);
+			//neighborInfo.logStationTables(stationID);
+			//topologyInfo.logStationTables(stationID);
 		//}
 //		if(stationID.equals("8")){
 //			neighborInfo.logStationTables(stationID);
@@ -207,8 +207,8 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		
 		//TODO remove
 		//if(stationID.equals("8")){
-			neighborInfo.logStationTables(stationID);
-			topologyInfo.logStationTables(stationID);
+			//neighborInfo.logStationTables(stationID);
+			//topologyInfo.logStationTables(stationID);
 		//}
 //		if(stationID.equals("8")){
 //			neighborInfo.logStationTables(stationID);
