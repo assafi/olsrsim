@@ -10,7 +10,6 @@
  */
 package main;
 
-import protocol.OLSRv2Protocol.ProtocolDefinitions.ProtocolMprMpde;
 
 /**
  * @author Asi
