@@ -85,7 +85,7 @@ public class DispatcherTestCase {
 	 */
 	@Test
 	public void testStartSimulation() throws DispatcherException, LayoutException {
-		dispatcher.startSimulation((float) 0.01, new UniformLayout(100,100), 10,true, 3, 2500);
+		dispatcher.startSimulation((float) 0.01, new UniformLayout(100,100), 100,true, 3, 10000);
 	}
 
 }
