@@ -13,6 +13,8 @@ package protocol.OLSRv2Protocol;
 import java.util.HashMap;
 
 import dispatch.Dispatcher;
+import main.SimulationParameters;
+import main.SimulationParameters.ProtocolMprMode;
 import messages.DataMessage;
 import messages.HelloMessage;
 import messages.TCMessage;
@@ -25,7 +27,6 @@ import protocol.NHDPLayer.INHDPLayer;
 import protocol.NHDPLayer.NHDPLayer;
 import protocol.OLSRv2Layer.IOLSRv2Layer;
 import protocol.OLSRv2Layer.OLSRv2Layer;
-import protocol.OLSRv2Protocol.ProtocolDefinitions.ProtocolMprMpde;
 import events.HelloIntervalEndEvent;
 import events.IntervalEndEvent;
 import events.MessageEvent;
@@ -78,7 +79,7 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 	 * @see protocol.IOLSRv2Protocol#start()
 	 */
 	@Override
-	public void start(ProtocolMprMpde mprMode) {
+	public void start(ProtocolMprMode mprMode) {
 		this.olsrLayer = new OLSRv2Layer(stationID, localInfo, neighborInfo, topologyInfo, receivedMsgInfo, mprMode);
 		this.nhdpLayer = new NHDPLayer(stationID, localInfo, neighborInfo, this.olsrLayer);
 	}
@@ -99,7 +100,7 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		cleanExpiredSetEntries();
 		
 		//Create the messages
-		HelloIntervalEndEvent nexTriger = new HelloIntervalEndEvent(stationID, helloTrigerMsg.getTime() + ProtocolDefinitions.HelloInterval);
+		HelloIntervalEndEvent nexTriger = new HelloIntervalEndEvent(stationID, helloTrigerMsg.getTime() + SimulationParameters.HelloInterval);
 		HelloMessage newHelloMsg = nhdpLayer.generateHelloMessage(helloTrigerMsg.getTime());
 		
 		// Send them to the dispatcher
@@ -126,7 +127,7 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 					// if the destination is my neighbor send him the message
 					msg.setLocalSrc(stationID);
 					msg.setLocalDst(msg.getGlobalDst());
-					msg.updateTime(dispatcher.getCurrentVirtualTime() + ProtocolDefinitions.Delta);
+					msg.updateTime(dispatcher.getCurrentVirtualTime() + SimulationParameters.transmitionTime);
 					dispatcher.pushEvent(msg);
 				}
 				else{
@@ -143,7 +144,7 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 					
 					RoutingSetData entryData = routingSet.get(msg.getGlobalDst());
 					msg.setLocalDst(entryData.getNextHop());
-					msg.updateTime(dispatcher.getCurrentVirtualTime() + ProtocolDefinitions.Delta);
+					msg.updateTime(dispatcher.getCurrentVirtualTime() + SimulationParameters.transmitionTime);
 					dispatcher.pushEvent(msg);
 				}
 			}
@@ -230,7 +231,7 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		cleanExpiredSetEntries();
 		
 		//Create the messages
-		TCIntervalEndEvent nexTriger = new TCIntervalEndEvent(stationID, tcTrigerMsg.getTime() + ProtocolDefinitions.TCInterval);
+		TCIntervalEndEvent nexTriger = new TCIntervalEndEvent(stationID, tcTrigerMsg.getTime() + SimulationParameters.TCInterval);
 		// This call already pushes the event in to the dispatcher
 		TCMessage newTCMsg = olsrLayer.generateTCMessage(tcTrigerMsg.getTime());
 		

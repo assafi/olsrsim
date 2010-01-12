@@ -14,7 +14,7 @@ import java.awt.Point;
 
 import protocol.OLSRv2Protocol.IOLSRv2Protocol;
 import protocol.OLSRv2Protocol.OLSRv2Protocol;
-import protocol.OLSRv2Protocol.ProtocolDefinitions;
+import main.SimulationParameters;
 
 /**
  * @author Asi
@@ -75,7 +75,7 @@ public class Station implements IStation {
 
 	@Override
 	public void start() {
-		protocolObject.start(ProtocolDefinitions.mode);
+		protocolObject.start(SimulationParameters.protocolMode);
 	}
 }
 
