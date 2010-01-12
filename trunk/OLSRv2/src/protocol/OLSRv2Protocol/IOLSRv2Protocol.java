@@ -10,7 +10,7 @@
  */
 package protocol.OLSRv2Protocol;
 
-import protocol.OLSRv2Protocol.ProtocolDefinitions.ProtocolMprMpde;
+import main.SimulationParameters.ProtocolMprMode;
 import events.*;
 
 /**
@@ -18,7 +18,7 @@ import events.*;
  *
  */
 public interface IOLSRv2Protocol {
-	public void start(ProtocolMprMpde mprMode);
+	public void start(ProtocolMprMode mprMode);
 	public void reciveHelloMessage(MessageEvent helloMsg);
 	public void reciveTCMessage(MessageEvent tcMsg);
 	public void reciveDataMessage(MessageEvent dataMsg);

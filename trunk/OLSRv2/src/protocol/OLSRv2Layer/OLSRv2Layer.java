@@ -19,6 +19,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import main.SimulationParameters;
+import main.SimulationParameters.ProtocolMprMode;
 import messages.HelloMessage;
 import messages.TCMessage;
 
@@ -27,9 +29,7 @@ import events.HelloIntervalEndEvent;
 import events.TCIntervalEndEvent;
 
 import protocol.OLSRv2Protocol.MessegeTypes;
-import protocol.OLSRv2Protocol.ProtocolDefinitions;
 import protocol.OLSRv2Protocol.ProtocolException;
-import protocol.OLSRv2Protocol.ProtocolDefinitions.ProtocolMprMpde;
 import protocol.InformationBases.LocalInformationBase;
 import protocol.InformationBases.NeighborInformationBase;
 import protocol.InformationBases.NeighborProperty;
@@ -47,7 +47,7 @@ import protocol.InformationBases.TopologySetData;
 public class OLSRv2Layer implements IOLSRv2Layer {
 
 	private String stationID;
-	private ProtocolMprMpde mprMode;
+	private ProtocolMprMode mprMode;
 	
 	/** OLSRv2 Protocol information bases **/
 	//TODO See if this base is really needed
@@ -62,7 +62,7 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 					 NeighborInformationBase neighborInfo,
 					 TopologyInformationBase topologyInfo,
 					 ReceivedMessageInformationBase receiveMsgInfo,
-					 ProtocolMprMpde mprMode){
+					 ProtocolMprMode mprMode){
 		this.stationID = stationID;
 		this.localInfo = localInfo;
 		this.neighborInfo = neighborInfo;
@@ -74,7 +74,7 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 		Dispatcher dispatcher = Dispatcher.getInstance();
 		
 		generateTCMessage(dispatcher.getCurrentVirtualTime());
-		dispatcher.pushEvent(new TCIntervalEndEvent(stationID, dispatcher.getCurrentVirtualTime() + ProtocolDefinitions.TCInterval));
+		dispatcher.pushEvent(new TCIntervalEndEvent(stationID, dispatcher.getCurrentVirtualTime() + SimulationParameters.TCInterval));
 	}
 	
 	/* (non-Javadoc)
@@ -83,7 +83,7 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 	@Override
 	public TCMessage generateTCMessage(long currentSimTime) {
 		// first time the local source = global source
-		TCMessage tcMsg = new TCMessage(stationID, stationID, currentSimTime + ProtocolDefinitions.Delta, neighborInfo.getAllNeighbors());
+		TCMessage tcMsg = new TCMessage(stationID, stationID, currentSimTime + SimulationParameters.transmitionTime, neighborInfo.getAllNeighbors());
 		Dispatcher dispatcher = Dispatcher.getInstance();
 		dispatcher.pushEvent(tcMsg);
 		return tcMsg;
@@ -100,7 +100,7 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 		Set<String> neighbors = neighborInfo.getAllNeighbors().keySet();
 		
 		for (String hop1Neighbor : neighbors) {
-			rData = new RoutingSetData(Dispatcher.getInstance().getCurrentVirtualTime() + ProtocolDefinitions.EntryValidPeriod,
+			rData = new RoutingSetData(Dispatcher.getInstance().getCurrentVirtualTime() + SimulationParameters.entryValidPeriod,
 													  hop1Neighbor, 
 													  1);
 			routingSet.put(hop1Neighbor, rData);
@@ -115,7 +115,7 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 				for (String station : topologyEntry.getValue().getToAddresses()) {
 					if (!routingSet.containsKey(station) && 
 						routingSet.containsKey(topologyEntry.getKey())){
-						rData = new RoutingSetData(Dispatcher.getInstance().getCurrentVirtualTime() + ProtocolDefinitions.EntryValidPeriod,
+						rData = new RoutingSetData(Dispatcher.getInstance().getCurrentVirtualTime() + SimulationParameters.entryValidPeriod,
 												   topologyEntry.getKey(), 
 												   hops);
 						routingSet.put(station, rData);
@@ -143,7 +143,7 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 			Dispatcher dispatcher = Dispatcher.getInstance();
 			//send the message after Delta time
 			tcMsg.setLocalSrc(stationID); // set the local source to be me the global source doesn't change
-			tcMsg.updateTime(dispatcher.getCurrentVirtualTime() + ProtocolDefinitions.Delta);
+			tcMsg.updateTime(dispatcher.getCurrentVirtualTime() + SimulationParameters.transmitionTime);
 			dispatcher.pushEvent(tcMsg);
 		}
 	}
@@ -205,14 +205,14 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 			// because this is the first time we receive a message from
 			// this originator we must allocate new receive message list.
 			ArrayList<ReceivedSetData> msgList = new ArrayList<ReceivedSetData>();
-			msgList.add(new ReceivedSetData(MessegeTypes.TC, tcMsg.hashCode(), tcMsg.getTime() + ProtocolDefinitions.EntryValidPeriod));
+			msgList.add(new ReceivedSetData(MessegeTypes.TC, tcMsg.hashCode(), tcMsg.getTime() + SimulationParameters.entryValidPeriod));
 			
 			receivedMsgInfo.getReceivedSet().put(globalSrc, msgList);
 		}
 		
 		// 1.1 Populating the Advertising Remote Router Set
 		if (!topologyInfo.getAdvertisingRemoteRouterSet().containsKey(globalSrc)){
-			TopologyCommonData entryData = new TopologyCommonData(tcMsg.getTime() + ProtocolDefinitions.EntryValidPeriod);
+			TopologyCommonData entryData = new TopologyCommonData(tcMsg.getTime() + SimulationParameters.entryValidPeriod);
 			topologyInfo.getAdvertisingRemoteRouterSet().put(globalSrc, entryData);
 		}
 		
@@ -223,7 +223,7 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 		
 		//if this station is not in the Topology Set
 		if (!topologyInfo.getTopologySet().containsKey(globalSrc)){
-			TopologySetData entryData = new TopologySetData(tcMsg.getTime() + ProtocolDefinitions.EntryValidPeriod);
+			TopologySetData entryData = new TopologySetData(tcMsg.getTime() + SimulationParameters.entryValidPeriod);
 			
 			for (String mprSelector : mprSelectorsInTcMsg) {
 				entryData.addToAddress(mprSelector);
@@ -239,7 +239,7 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 			}
 			
 			// update validity time of the entry
-			entryData.setTTL(tcMsg.getTime() + ProtocolDefinitions.EntryValidPeriod);
+			entryData.setTTL(tcMsg.getTime() + SimulationParameters.entryValidPeriod);
 		}
 		
 		// 2. Update the routingSet in Topology Base
@@ -253,7 +253,7 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 			// because this is the first time we forward a message from
 			// this originator we must allocate new message list.
 			ArrayList<ReceivedSetData> msgList = new ArrayList<ReceivedSetData>();
-			msgList.add(new ReceivedSetData(MessegeTypes.TC, tcMsg.hashCode(), tcMsg.getTime() + ProtocolDefinitions.EntryValidPeriod));
+			msgList.add(new ReceivedSetData(MessegeTypes.TC, tcMsg.hashCode(), tcMsg.getTime() + SimulationParameters.entryValidPeriod));
 			
 			receivedMsgInfo.getForwardSet().put(globalSrc, msgList);
 		}
@@ -274,7 +274,7 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 				floodTCMsg(tcMsg);// flood message
 				
 				// add to the list
-				forwardMsgList.add(new ReceivedSetData(MessegeTypes.TC, tcMsg.hashCode(), tcMsg.getTime() + ProtocolDefinitions.EntryValidPeriod));
+				forwardMsgList.add(new ReceivedSetData(MessegeTypes.TC, tcMsg.hashCode(), tcMsg.getTime() + SimulationParameters.entryValidPeriod));
 			}
 			
 		}	

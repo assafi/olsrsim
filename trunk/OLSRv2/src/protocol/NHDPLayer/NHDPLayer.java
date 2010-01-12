@@ -17,6 +17,7 @@ import java.util.Set;
 
 import log.Log;
 import log.LogException;
+import main.SimulationParameters;
 import messages.HelloMessage;
 
 import data.SimEvents;
@@ -28,7 +29,6 @@ import protocol.InformationBases.LocalInformationBase;
 import protocol.InformationBases.NeighborInformationBase;
 import protocol.InformationBases.NeighborProperty;
 import protocol.OLSRv2Layer.IOLSRv2Layer;
-import protocol.OLSRv2Protocol.ProtocolDefinitions;
 import protocol.OLSRv2Protocol.ProtocolException;
 
 /**
@@ -59,7 +59,7 @@ public class NHDPLayer implements INHDPLayer {
 		this.olsrLayer = olsrLayer;
 		
 		dispatcher.pushEvent(generateHelloMessage(dispatcher.getCurrentVirtualTime()));
-		dispatcher.pushEvent(new HelloIntervalEndEvent(stationID, dispatcher.getCurrentVirtualTime() + ProtocolDefinitions.HelloInterval));
+		dispatcher.pushEvent(new HelloIntervalEndEvent(stationID, dispatcher.getCurrentVirtualTime() + SimulationParameters.HelloInterval));
 	}
 	
 	/* (non-Javadoc)
@@ -112,7 +112,7 @@ public class NHDPLayer implements INHDPLayer {
 				property.setQuality(helloMsg.getNeighborSet().get(stationID).getQuality());
 				property.setSymetricLink(true);
 				newSemmerticOr2hop = true;
-				property.setValideTime(simTime + ProtocolDefinitions.EntryValidPeriod); 
+				property.setValideTime(simTime + SimulationParameters.entryValidPeriod); 
 				//TODO insert event that the validity time has passed or check in other ways
 				//dispatcher.pushEvent(new );
 				neighborInfo.addNeighbor(msgSrc, property);
@@ -120,7 +120,7 @@ public class NHDPLayer implements INHDPLayer {
 			else{
 				property.setQuality(1);/*TODO calculate the quality*/
 				property.setSymetricLink(false);
-				property.setValideTime(simTime + ProtocolDefinitions.EntryValidPeriod);
+				property.setValideTime(simTime + SimulationParameters.entryValidPeriod);
 				neighborInfo.addNeighbor(msgSrc, property);
 				//TODO insert event that the validity time has passed or check in other ways
 			}
@@ -139,7 +139,7 @@ public class NHDPLayer implements INHDPLayer {
 		while (it.hasNext()){
 			String lostNeighbor = it.next();
 			if (neighborInfo.is1HopNeighbor(lostNeighbor)){
-				neighborInfo.addToLostNeighbors(lostNeighbor, simTime + ProtocolDefinitions.EntryValidPeriod);
+				neighborInfo.addToLostNeighbors(lostNeighbor, simTime + SimulationParameters.entryValidPeriod);
 				neighborInfo.removeNeighbor(lostNeighbor);
 				//if this was a symmetric neighbor must sent HELLO message
 				NeighborProperty lostNeighborProp = neighborInfo.getNeighborProperty(lostNeighbor);
@@ -179,7 +179,7 @@ public class NHDPLayer implements INHDPLayer {
 	@Override
 	public HelloMessage generateHelloMessage(long currentSimTime) {
 		// Create new Hello message
-		HelloMessage msg = new HelloMessage(stationID, currentSimTime + ProtocolDefinitions.Delta, neighborInfo.getAllNeighbors(), neighborInfo.getAllLostNeighborSet());
+		HelloMessage msg = new HelloMessage(stationID, currentSimTime + SimulationParameters.transmitionTime, neighborInfo.getAllNeighbors(), neighborInfo.getAllLostNeighborSet());
 		// Pass it to OLSR layer for update
 		msg = olsrLayer.helloMessageModification(msg);
 		return msg;
