@@ -12,7 +12,11 @@ package protocol.OLSRv2Protocol;
 
 import java.util.HashMap;
 
+import data.SimEvents;
+import data.SimLabels;
 import dispatch.Dispatcher;
+import log.Log;
+import log.LogException;
 import main.SimulationParameters;
 import main.SimulationParameters.ProtocolMprMode;
 import messages.DataMessage;
@@ -120,7 +124,7 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		if (msg.getLocalDst().equals(stationID)){// check if this message is for me
 			if(msg.getGlobalDst().equals(stationID)){
 				//we got the message!!!
-				//TODO write to log that finished
+				logEvent(SimEvents.DATA_REACH.name(), null, msg.getLocalDst(),false, null);
 			}
 			else{
 				if(neighborInfo.is1HopNeighbor(msg.getGlobalDst())){
@@ -138,7 +142,7 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 					
 					HashMap<String, RoutingSetData>  routingSet =  topologyInfo.getRoutingSet();
 					if (!routingSet.containsKey(msg.getGlobalDst())){
-						//TODO log error: we can't fined the destination station or next hop
+						logEvent(SimEvents.DATA_LOSS.name(), msg.getLocalSrc(), msg.getLocalDst(), true, "Cann't find route.");
 						return;
 					}
 					
@@ -149,6 +153,22 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 				}
 			}
 		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see protocol.OLSRv2Protocol.IOLSRv2Protocol#sendDataMessage(java.lang.String)
+	 */
+	@Override
+	public void sendDataMessage(String dst) {
+		
+		//log
+		logEvent(SimEvents.DATA_SENT.name(), stationID, dst, false, null);
+		
+		//Create new data message from me to me
+		DataMessage dataMsg = new DataMessage(stationID, stationID, stationID, dst, Dispatcher.getInstance().getCurrentVirtualTime() + SimulationParameters.transmitionTime);
+		
+		//Receive the message this will triger to forward the message in the network 
+		reciveDataMessage(dataMsg);
 	}
 
 	/* (non-Javadoc)
@@ -238,6 +258,23 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		// Send them to the dispatcher
 		Dispatcher dispacher = Dispatcher.getInstance();
 		dispacher.pushEvent(nexTriger);
+	}
+	
+	public void logEvent(String eventType, String globalSrc, String globalDst, boolean error, String errorDetails) {
+		Log log = Log.getInstance();
+		HashMap<String, String> data = new HashMap<String, String>();
+		data.put(SimLabels.VIRTUAL_TIME.name(), Long.toString(Dispatcher.getInstance().getCurrentVirtualTime()));
+		data.put(SimLabels.EVENT_TYPE.name(), eventType);
+		data.put(SimLabels.NODE_ID.name(),stationID);
+		data.put(SimLabels.GLOBAL_SOURCE.name(), globalSrc);
+		data.put(SimLabels.GLOBAL_TARGET.name(),globalDst);
+		data.put(SimLabels.ERROR.name(), (error ? "1" : "0"));
+		data.put(SimLabels.DETAILS.name(), errorDetails);
+		try {
+			log.writeDown(data);
+		} catch (LogException le) {
+			System.out.println(le.getMessage());
+		}
 	}
 
 }

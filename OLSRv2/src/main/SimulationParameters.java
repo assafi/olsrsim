@@ -30,13 +30,13 @@ public class SimulationParameters {
 	 * The Interval that the Hello messages should be generated
 	 * periodically. 
 	 */
-	static public int TCInterval = 100; //TODO see that this is a correct interval
+	static public int TCInterval = 200; //TODO see that this is a correct interval
 	
 	/**
 	 * The Interval that the Hello messages should be generated
 	 * periodically. 
 	 */
-	static public int HelloInterval = 100; //TODO see that this is a correct interval
+	static public int HelloInterval = 200; //TODO see that this is a correct interval
 	
 	/**
 	 * The Delta of time after which the messages are being sent. 
