@@ -14,6 +14,7 @@ import static org.junit.Assert.*;
 
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.Random;
 
 import log.dataserver.SqlWriter;
 import log.sqlproxy.SqlProxyException;
@@ -94,7 +95,6 @@ public class LogTestCase {
 	public void testSqlLog() throws ClassNotFoundException, SQLException, SqlProxyException {
 		testLog(new SqlWriter());
 	}
-	
 	
 	private void testLog(IDataWriter writer) {
 		Log log = null;

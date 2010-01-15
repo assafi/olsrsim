@@ -11,7 +11,10 @@
 package eventGen;
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
@@ -26,6 +29,7 @@ import topology.TopologyManager;
 import data.SimLabels;
 import dispatch.Dispatcher;
 import events.Event;
+import events.SendDataEvent;
 import events.TopologyEvent;
 import events.TopologyEvent.TopologyEventType;
 
@@ -35,13 +39,15 @@ import events.TopologyEvent.TopologyEventType;
  */
 public class EventGenerator {
 
+	private static final double DEFAULT_FACTOR = 0.011;
+
 	private float factor;
-	private static final float MAX_DELAY = 2; 
+
 	private long nextEventTime;
+	private Map<Long, List<IStation>> dataTime2stations = new HashMap<Long, List<IStation>>();
 	private Dispatcher dispatcher = null;
 	private static EventGenerator instance = null;
 	private int maxStations;
-	private static boolean firstIteration = true;
 	private static boolean staticMode = false;
 	
 	/*
@@ -76,13 +82,14 @@ public class EventGenerator {
 	 * @param layout The Layout object representing the layout by which station will be
 	 * generated.
 	 * @param maxStations The maximum number of simulated stations
+	 * @param staticMode false to enable nodes mobility
 	 * @return The EventGenerator singleton
 	 */
 	public static EventGenerator getInstance(Float factor, Layout layout, int maxStations, 
 			boolean staticMode){
 		
 		if (null == factor){
-			factor = new Float(0.5);
+			factor = new Float(DEFAULT_FACTOR);
 		}
 		
 		if (null == instance){
@@ -95,7 +102,18 @@ public class EventGenerator {
 	 * Virtual time tick
 	 */
 	public void tick(){
-		if (dispatcher.getCurrentVirtualTime() == this.nextEventTime){
+		long currentTime = dispatcher.getCurrentVirtualTime();
+		
+		if (currentTime == 0) {
+			phase1();
+			return;
+		}
+		
+		
+		/*
+		 * Handling topology events
+		 */
+		if (currentTime == this.nextEventTime){
 			generateEvent();
 			
 			/*
@@ -103,6 +121,88 @@ public class EventGenerator {
 			 */
 			this.nextEventTime += getExpDelay(factor);
 		}
+		
+		/*
+		 * Handling send data events
+		 */
+		if (this.dataTime2stations.containsKey(currentTime)) {
+			generateDataEvents(currentTime);
+		}
+	}
+
+	/**
+	 * At the first phase we create all the stations (until the maximum).
+	 * for each station we also schedule the next time in which the data event
+	 * will be created.
+	 */
+	private void phase1() {
+
+		int i = this.maxStations;
+		while (i-- != 0) {
+			try {
+				TopologyEvent event = createStation();
+				dispatcher.pushEvent(event);
+				IStation station = event.getStation();
+				setNextDataEvent(station,0);
+			} catch (Exception e) {
+				logEvGenError(TopologyEvent.TopologyEventType.NODE_CREATE, e);
+			}
+		}
+	}
+
+	/**
+	 * @param station The station for which we want to schedule a send data event
+	 */
+	private void setNextDataEvent(IStation station, long baseTime) {
+		
+		long eventTime;
+		do {
+			eventTime = getExpDelay(factor) + baseTime;
+		} while (eventTime != baseTime);
+		updateTable(eventTime, station);
+	}
+
+	/**
+	 * @param currentTime The Current simulation time
+	 * 
+	 */
+	private void generateDataEvents(long currentTime) {
+		
+		List<IStation> stationsThatWantsToSendDataPackets = dataTime2stations.remove(currentTime);
+		for (IStation station : stationsThatWantsToSendDataPackets) {
+			SendDataEvent dataEvent = new SendDataEvent(currentTime);
+			dataEvent.setSrc(station.getID());
+			
+			String trgID;
+			do {
+				trgID = topologyManager.getRandomStation();
+			} while (trgID != station.getID());
+			dataEvent.setDst(trgID);
+			dispatcher.pushEvent(dataEvent);
+			
+			/*
+			 * Next event time for the station.
+			 */
+			long nextTime;
+			do {
+				nextTime = getExpDelay(factor) + currentTime;
+			} while (nextTime != currentTime);
+			updateTable(nextTime, station);
+		}
+	}
+
+	/**
+	 * @param nextTime The next SendData event time
+	 * @param station The station that will be the source of the event
+	 */
+	private void updateTable(long nextTime, IStation station) {
+		List<IStation> stationsThatWantsToSendDataPackets;
+		if (dataTime2stations.containsKey(nextTime)) {
+			stationsThatWantsToSendDataPackets = dataTime2stations.get(nextTime);
+		} else {
+			stationsThatWantsToSendDataPackets = new ArrayList<IStation>();
+		}
+		stationsThatWantsToSendDataPackets.add(station);
 	}
 
 	/**
@@ -110,8 +210,6 @@ public class EventGenerator {
 	 */
 	public void generateEvent() {
 		
-		Dispatcher dispatcher = Dispatcher.getInstance();
-	
 		TopologyEventType type = randomAction();
 
 		if (null == type) {
@@ -121,35 +219,32 @@ public class EventGenerator {
 		try{
 			switch (type){
 			case NODE_CREATE:
-				dispatcher.pushEvent(createStation());
+				TopologyEvent event = createStation();
+				dispatcher.pushEvent(event);
+				IStation station = event.getStation();
+				setNextDataEvent(station, dispatcher.getCurrentVirtualTime());
 				break;
 			case NODE_MOVE:
 				dispatcher.pushEvent(moveStation());
 				break;
 			case NODE_DESTROY:
 				dispatcher.pushEvent(removeStation());
+				/*
+				 * SendData events for station that don't exist will be discarded at the
+				 * Dispatcher.
+				 */
 				break;
 			}
 		} catch (Exception e){
 			logEvGenError(type, e);
 		}
-		
-		
 	}
 
 
 	/**
 	 * @return
 	 */
-	private TopologyEventType randomAction() {
-		if (firstIteration && topologyManager.count() == maxStations) {
-			firstIteration = false;
-		}
-		
-		if (firstIteration){
-			return TopologyEventType.NODE_CREATE;
-		} 
-		
+	private TopologyEventType randomAction() {		
 		if (staticMode){
 			return null;
 		}
@@ -178,7 +273,7 @@ public class EventGenerator {
 	 * @return a new TopologyEvent which describes a new station creation
 	 * @throws Exception 
 	 */
-	private Event createStation() throws Exception {
+	private TopologyEvent createStation() throws Exception {
 		
 		String stationID = UUID.randomUUID().toString();
 		
@@ -205,19 +300,17 @@ public class EventGenerator {
 		return new TopologyEvent(this.nextEventTime, TopologyEventType.NODE_MOVE, station);
 	}
 	
-	/**
-	 * @return
-	 * @throws Exception 
-	 */
 	private Event removeStation() throws Exception {
 		IStation station = this.topologyManager.removeStation(topologyManager.getRandomStation());
 		return new TopologyEvent(this.nextEventTime, TopologyEventType.NODE_DESTROY, station);
 	}
-
-	private float getExpDelay(float factor){
-		float u = (new Random().nextFloat())/(MAX_DELAY);
-		return (float) ((-1/factor)*Math.log(1-u));
+	
+	private static long getExpDelay(double poissonicRate) {
+	    double U = new Random().nextDouble();
+		return (long) (((-1/poissonicRate)*Math.log(1-U))*10);
 	}
+	
+	
 	
 	/**
 	 * @param e logs the exception in the system log
