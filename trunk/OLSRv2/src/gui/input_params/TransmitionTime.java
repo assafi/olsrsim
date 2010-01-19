@@ -30,15 +30,13 @@ public class TransmitionTime extends TextEntry {
 	}
 
 	@Override
-	public void updateParamValue() {
+	public void updateParamValue() throws InputException {
 		int transmitionTime;
 		try {
 			transmitionTime = Integer.valueOf(this.getInputValue());
 		}
 		catch (NumberFormatException e) {
-			GUIManager.getInstance().popAlertMessage("Transmition time must be of type integer", 
-					AlertType.ERROR);
-			return;
+			throw new InputException("Transmition time must be of type integer");
 		}
 		SimulationParameters.transmitionTime = transmitionTime;
 	}

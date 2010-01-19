@@ -30,15 +30,13 @@ public class HelloInterval extends TextEntry {
 	}
 	
 	@Override
-	public void updateParamValue() {
+	public void updateParamValue() throws InputException {
 		int helloInterval;
 		try {
 			helloInterval = Integer.valueOf(this.getInputValue());
 		}
 		catch (NumberFormatException e) {
-			GUIManager.getInstance().popAlertMessage("Hello message interval must be of type integer", 
-					AlertType.ERROR);
-			return;
+			throw new InputException("Hello message interval must be of type integer");
 		}
 		SimulationParameters.HelloInterval = helloInterval;
 	}

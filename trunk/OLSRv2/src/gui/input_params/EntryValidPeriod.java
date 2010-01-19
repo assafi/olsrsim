@@ -30,15 +30,13 @@ public class EntryValidPeriod extends TextEntry {
 	}
 	
 	@Override
-	public void updateParamValue() {
+	public void updateParamValue() throws InputException {
 		int entryValidPeriod;
 		try {
 			entryValidPeriod = Integer.valueOf(this.getInputValue());
 		}
 		catch (NumberFormatException e) {
-			GUIManager.getInstance().popAlertMessage("Entry validity period must be of type integer", 
-					AlertType.ERROR);
-			return;
+			throw new InputException("Entry validity period must be of type integer");
 		}
 		SimulationParameters.entryValidPeriod = entryValidPeriod;
 	}
