@@ -129,7 +129,9 @@ public class Dispatcher implements IDispatcher {
 			throw new DispatcherException(e);
 		}
 		
-		float factor = SimulationParameters.factor;
+		float topologyPoissonicRate = SimulationParameters.topologyPoissonicRate;
+		
+		float dataEventsPoissonicRate = SimulationParameters.dataEventsPoissonicRate;
 		
 		int maxStations = SimulationParameters.maxStations;
 		
@@ -137,7 +139,7 @@ public class Dispatcher implements IDispatcher {
 		
 		int timeout = SimulationParameters.simulationEndTime;
 		
-		this.eventGen = EventGenerator.getInstance(factor,layout, maxStations,staticMode);
+		this.eventGen = EventGenerator.getInstance(topologyPoissonicRate,dataEventsPoissonicRate, layout, maxStations,staticMode);
 
 		/*
 		 * Generating the first event

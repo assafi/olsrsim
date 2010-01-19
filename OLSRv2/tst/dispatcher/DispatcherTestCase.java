@@ -88,15 +88,16 @@ public class DispatcherTestCase {
 	@Test
 	public void testStartSimulation() throws DispatcherException, LayoutException {
 		
-		SimulationParameters.factor = (float) 0.2;
+		SimulationParameters.topologyPoissonicRate = (float) 0.2;
+		SimulationParameters.dataEventsPoissonicRate = (float) 0.2;
 		SimulationParameters.layoutMode = LayoutMode.UNIFORM;
-		SimulationParameters.xBoundry = 100;
-		SimulationParameters.yBoundry = 100;
-		SimulationParameters.receptionRadius = 40;
+		SimulationParameters.xBoundry = 300;
+		SimulationParameters.yBoundry = 300;
+		SimulationParameters.receptionRadius = 100;
 		SimulationParameters.staticMode = true;
-		SimulationParameters.clusterRadius = 20;
-		SimulationParameters.maxStations = 10;
-		SimulationParameters.simulationEndTime = 3000;
+		SimulationParameters.clusterRadius = 50;
+		SimulationParameters.maxStations = 100;
+		SimulationParameters.simulationEndTime = 10000;
 		
 		dispatcher.startSimulation();
 	}
