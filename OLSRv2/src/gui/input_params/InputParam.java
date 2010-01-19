@@ -10,20 +10,23 @@
  */
 package gui.input_params;
 
+import javax.swing.JPanel;
+
 /**
  * @author Asi
  *
  */
-public interface IInputParam {
+public abstract class InputParam extends JPanel{
+	private static final long serialVersionUID = -4313663317577581584L;
 	
 	/**
 	 * Updates the value that was entered by the user into the correct
 	 * parameter.
 	 */
-	public void updateParamValue();
-	/**
-	 * @return the input given by the user as a string
-	 */
-	public String getInputValue();
+	public abstract void updateParamValue();
 	
+	/**
+	 * @return the input given by the user as a string.
+	 */
+	public abstract String getInputValue();
 }
