@@ -10,14 +10,8 @@
  */
 package gui;
 
-import java.sql.SQLException;
-
-import layout.ClustersLayout;
-import layout.LayoutException;
-import layout.UniformLayout;
+import gui.GUIManager.AlertType;
 import log.Log;
-import log.dataserver.SqlWriter;
-import log.sqlproxy.SqlProxyException;
 import data.CsvWriter;
 import dispatch.Dispatcher;
 import dispatch.DispatcherException;
@@ -30,6 +24,9 @@ public class DispatcherThread implements Runnable {
 
 	private Dispatcher dispatcher;
 	
+	/**
+	 * 
+	 */
 	public DispatcherThread() {
 		dispatcher = Dispatcher.getInstance();
 	}
@@ -40,9 +37,7 @@ public class DispatcherThread implements Runnable {
 			Log.getInstance().createLog(new CsvWriter());
 			dispatcher.startSimulation();
 		} catch (DispatcherException e) {
-			e.printStackTrace();
-		} catch (LayoutException e) {
-			e.printStackTrace();
+			GUIManager.getInstance().popAlertMessage(e.getMessage(), AlertType.ERROR);
 		}
 	}
 

@@ -10,6 +10,7 @@
  */
 package gui.input_params;
 
+import main.SimulationParameters;
 import gui.GUIManager;
 import gui.GUIManager.AlertType;
 
@@ -25,7 +26,7 @@ public class WorldSize extends TextEntry {
 	 * 
 	 */
 	public WorldSize() {
-		super(labelText, "500x500"); // [asi] - change to the correct simulator parameter
+		super(labelText, SimulationParameters.xBoundry + "x" + SimulationParameters.yBoundry);
 	}
 
 	@Override
@@ -62,6 +63,8 @@ public class WorldSize extends TextEntry {
 		}
 
 		GUIManager.getInstance().setWorldDimension(width, height);
+		SimulationParameters.xBoundry = width;
+		SimulationParameters.yBoundry = height;
 	}
 
 }

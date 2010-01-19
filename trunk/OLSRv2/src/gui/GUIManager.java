@@ -28,6 +28,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
+import main.SimulationParameters;
+
 /**
  * @author Asi
  * 
@@ -108,7 +110,7 @@ public class GUIManager {
 		worldOuterPanel.setPreferredSize(new Dimension(MAX_WORLD_SIZE.width, MAX_WORLD_SIZE.width));
 		worldFlowLayout = new FlowLayout(FlowLayout.CENTER);
 		worldPanel = new WorldTopology();
-		setWorldDimension(MAX_WORLD_SIZE.width, MAX_WORLD_SIZE.height);
+		setWorldDimension(SimulationParameters.xBoundry, SimulationParameters.yBoundry);
 		worldOuterPanel.add(worldPanel);
 		
 		// Creating the Start and stop simulation buttons
