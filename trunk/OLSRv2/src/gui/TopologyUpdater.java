@@ -27,9 +27,7 @@ public class TopologyUpdater implements Runnable {
 		Event currEvent = null;
 		
 		try {
-			long timeDelta;
-			long tickCount;
-			long eventTime;
+			long eventTime, timeDelta, tickCount;
 			while (true) {		
 				currEvent = queue.popEvent();
 				tickCount = GuiTick.getInstance().getTickCount();

@@ -26,7 +26,7 @@ import javax.swing.JPanel;
  * @author Asi
  *
  */
-public abstract class ComboBoxEntry extends InputParam {
+public class ComboBoxEntry extends InputParam {
 	private static final long serialVersionUID = -6286788893563544325L;
 	
 	JComboBox comboBox;
@@ -40,7 +40,6 @@ public abstract class ComboBoxEntry extends InputParam {
 		setLayout(new FlowLayout(FlowLayout.LEFT));
 		JLabel label = new JLabel(parameterText);
 		comboBox = new JComboBox(values);
-		comboBox.setPreferredSize(GUIManager.ENTRY_SIZE);
 		
 		JPanel innerPanel;
 		if(vertical) {
@@ -66,6 +65,9 @@ public abstract class ComboBoxEntry extends InputParam {
 	public String getInputValue() {
 		return (String)comboBox.getSelectedItem();
 	}
+
+	@Override
+	public void updateParamValue() {}
 
 
 }

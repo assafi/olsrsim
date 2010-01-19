@@ -11,7 +11,6 @@
 package gui;
 
 import java.util.LinkedList;
-import java.util.concurrent.LinkedBlockingQueue;
 
 import events.Event;
 
@@ -23,6 +22,9 @@ public class GuiEventsQueue {
 	private static GuiEventsQueue instance = null;
 	private LinkedList<Event> eventsQueue;
 	
+	/**
+	 * @return
+	 */
 	public static GuiEventsQueue getInstance() {
 		if(instance == null) {
 			instance = new GuiEventsQueue();

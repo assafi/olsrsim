@@ -42,7 +42,6 @@ public abstract class TextEntry extends InputParam {
 		label = new JLabel(parameterText);
 		innerPanel.add(label);
 		field = new JTextField(defaultValue);
-		field.setPreferredSize(GUIManager.ENTRY_SIZE);
 		innerPanel.add(field);
 		this.add(innerPanel);
 	}
