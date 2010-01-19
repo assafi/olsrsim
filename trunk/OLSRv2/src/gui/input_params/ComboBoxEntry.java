@@ -63,7 +63,7 @@ public class ComboBoxEntry extends InputParam {
 
 	@Override
 	public String getInputValue() {
-		return (String)comboBox.getSelectedItem();
+		return comboBox.getSelectedItem().toString();
 	}
 
 	@Override
