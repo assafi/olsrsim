@@ -17,7 +17,10 @@ import java.util.PriorityQueue;
 
 import data.SimLabels;
 
+import layout.ClustersLayout;
 import layout.Layout;
+import layout.LayoutException;
+import layout.UniformLayout;
 import log.Log;
 import log.LogException;
 import messages.HelloMessage;
@@ -27,6 +30,7 @@ import eventGen.EventGenerator;
 import events.Event;
 import events.IntervalEndEvent;
 import events.MessageEvent;
+import events.SendDataEvent;
 import events.StopEvent;
 import events.TopologyEvent;
 import gui.GuiEventsQueue;
@@ -34,6 +38,8 @@ import topology.IStation;
 import topology.ITopologyManager;
 import topology.Station;
 import topology.TopologyManager;
+
+import main.SimulationParameters;
 
 /**
  * @author Assaf
@@ -105,33 +111,34 @@ public class Dispatcher implements IDispatcher {
 	}
 	
 	/**
-	 * @param factor An optional parameter specify a factor to take into consideration 
-	 * @param layout The Layout object representing the layout by which station will be
-	 * generated.
-	 * @param maxStations The maximum number of stations.
-	 * @param staticMode 
-	 * @param radius The stations reception radius
-	 * @param timeout 
 	 * @throws DispatcherException
 	 */
-	public void startSimulation(float factor, Layout layout, int maxStations
-			,boolean staticMode , int radius, long timeout) throws DispatcherException {
-		
-		/*
-		 * Comment this out in release
-		 */
-		
-		Station.defaultReceptionRadius = radius;
-		
-		/*
-		 * 
-		 */
+	public void startSimulation() throws DispatcherException {
 		
 		if (null != this.eventGen){
 			throw new DispatcherException("Can only start the dispatcher once...");
 		}
 		
+		Station.defaultReceptionRadius = SimulationParameters.receptionRadius;
+		
+		Layout layout;
+		
+		try {
+			layout = createLayout();
+		} catch (LayoutException e) {
+			throw new DispatcherException(e);
+		}
+		
+		float factor = SimulationParameters.factor;
+		
+		int maxStations = SimulationParameters.maxStations;
+		
+		boolean staticMode = SimulationParameters.staticMode;
+		
+		int timeout = SimulationParameters.simulationEndTime;
+		
 		this.eventGen = EventGenerator.getInstance(factor,layout, maxStations,staticMode);
+
 		/*
 		 * Generating the first event
 		 */
@@ -176,7 +183,7 @@ public class Dispatcher implements IDispatcher {
 				}
 			}
 
-			if (TopologyEvent.class.isAssignableFrom(currentEvent.getClass())){
+			if (currentEvent instanceof TopologyEvent){
 				
 				TopologyEvent te = (TopologyEvent)currentEvent;
 				try {
@@ -186,12 +193,23 @@ public class Dispatcher implements IDispatcher {
 				}
 			}
 			
-			if (IntervalEndEvent.class.isAssignableFrom(currentEvent.getClass())){
-				
+			if (currentEvent instanceof IntervalEndEvent){
 				IntervalEndEvent ie = (IntervalEndEvent)currentEvent;
 				try {
 					IStation station = this.topologyManager.getStationById(ie.getSource());
 					ie.execute(station);
+				} catch (Exception e) {
+					logDispError(currentEvent,e);
+				}
+			}
+			
+			if (currentEvent instanceof SendDataEvent) {
+				SendDataEvent sde = (SendDataEvent)currentEvent;
+				try {
+					IStation station = this.topologyManager.getStationById(sde.getSrc());
+					if (null != station) {
+						sde.execute(station);
+					}
 				} catch (Exception e) {
 					logDispError(currentEvent,e);
 				}
@@ -205,6 +223,28 @@ public class Dispatcher implements IDispatcher {
 		}
 	}
 	
+	/**
+	 * @return
+	 * @throws LayoutException 
+	 */
+	private Layout createLayout() throws LayoutException {
+		
+		int xBoundry = SimulationParameters.xBoundry;
+		int yBoundry = SimulationParameters.yBoundry;
+		
+		switch (SimulationParameters.layoutMode) {
+		case UNIFORM: 
+			return new UniformLayout(xBoundry,yBoundry);
+		case CLUSTER:
+			
+			int clusterNum = SimulationParameters.clusterNum;
+			int clusterRadius = SimulationParameters.clusterRadius;
+			return new ClustersLayout(clusterNum, xBoundry, yBoundry, clusterRadius);
+		}
+		
+		throw new LayoutException("Undefined layout");
+	}
+
 	/**
 	 * @param currentEvent
 	 * @param e 

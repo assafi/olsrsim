@@ -18,6 +18,8 @@ import layout.LayoutException;
 import layout.UniformLayout;
 import log.Log;
 import log.dataserver.SqlWriter;
+import main.SimulationParameters;
+import main.SimulationParameters.LayoutMode;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -85,7 +87,18 @@ public class DispatcherTestCase {
 	 */
 	@Test
 	public void testStartSimulation() throws DispatcherException, LayoutException {
-		dispatcher.startSimulation((float) 0.01, new UniformLayout(100,100), 100,true, 3, 10000);
+		
+		SimulationParameters.factor = (float) 0.2;
+		SimulationParameters.layoutMode = LayoutMode.UNIFORM;
+		SimulationParameters.xBoundry = 100;
+		SimulationParameters.yBoundry = 100;
+		SimulationParameters.receptionRadius = 40;
+		SimulationParameters.staticMode = true;
+		SimulationParameters.clusterRadius = 20;
+		SimulationParameters.maxStations = 10;
+		SimulationParameters.simulationEndTime = 100;
+		
+		dispatcher.startSimulation();
 	}
 
 }

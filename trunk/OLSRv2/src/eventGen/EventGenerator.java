@@ -156,9 +156,7 @@ public class EventGenerator {
 	private void setNextDataEvent(IStation station, long baseTime) {
 		
 		long eventTime;
-		do {
-			eventTime = getExpDelay(factor) + baseTime;
-		} while (eventTime != baseTime);
+		eventTime = Math.max(getExpDelay(factor),1) + baseTime;
 		updateTable(eventTime, station);
 	}
 
@@ -175,6 +173,7 @@ public class EventGenerator {
 			
 			String trgID;
 			do {
+				/* Will not send data to itself */
 				trgID = topologyManager.getRandomStation();
 			} while (trgID != station.getID());
 			dataEvent.setDst(trgID);
@@ -184,9 +183,7 @@ public class EventGenerator {
 			 * Next event time for the station.
 			 */
 			long nextTime;
-			do {
-				nextTime = getExpDelay(factor) + currentTime;
-			} while (nextTime != currentTime);
+			nextTime = Math.max(getExpDelay(factor),1) + currentTime;
 			updateTable(nextTime, station);
 		}
 	}
