@@ -75,7 +75,7 @@ public class Station implements IStation {
 
 	@Override
 	public void start() {
-		protocolObject.start(SimulationParameters.mode);
+		protocolObject.start(SimulationParameters.protocolMode);
 	}
 }
 
