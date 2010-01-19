@@ -24,7 +24,7 @@ import javax.swing.JTextField;
  * @author Asi
  *
  */
-public abstract class TextEntry extends JPanel implements IInputParam {
+public abstract class TextEntry extends InputParam {
 	private static final long serialVersionUID = -748916497644881582L;
 	
 	private JTextField field;

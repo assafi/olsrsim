@@ -26,7 +26,7 @@ import javax.swing.JPanel;
  * @author Asi
  *
  */
-public abstract class ComboBoxEntry extends JPanel implements IInputParam {
+public abstract class ComboBoxEntry extends InputParam {
 	private static final long serialVersionUID = -6286788893563544325L;
 	
 	JComboBox comboBox;
