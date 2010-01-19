@@ -12,7 +12,6 @@ package gui.input_pannels;
 
 import gui.GUIManager;
 
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 
@@ -20,14 +19,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import main.Main;
-
 
 /**
  * @author Asi
  *
  */
-public class TextEntry extends InputEntry {
+public abstract class TextEntry extends JPanel implements IInputParam {
 	private static final long serialVersionUID = -748916497644881582L;
 	
 	private JTextField field;
@@ -35,10 +32,9 @@ public class TextEntry extends InputEntry {
 	
 	/**
 	 * @param parameterText
-	 * @param fieldSize
 	 * @param defaultValue
 	 */
-	public TextEntry(String parameterText, Dimension fieldSize, String defaultValue) {
+	public TextEntry(String parameterText, String defaultValue) {
 		setLayout(new FlowLayout(FlowLayout.LEFT));
 		setBackground(GUIManager.BACKGROUND);
 		JPanel innerPanel = new JPanel(new GridLayout(2, 1));
@@ -46,14 +42,12 @@ public class TextEntry extends InputEntry {
 		label = new JLabel(parameterText);
 		innerPanel.add(label);
 		field = new JTextField(defaultValue);
-		field.setPreferredSize(fieldSize);
-		
+		field.setPreferredSize(GUIManager.ENTRY_SIZE);
 		innerPanel.add(field);
 		this.add(innerPanel);
 	}
 	
-	@Override
-	public String getEntryValue() {
+	public String getInputValue() {
 		return field.getText();
 	}
 }

@@ -29,7 +29,7 @@ import main.Main;
  * @author Asi
  *
  */
-public class ComboBoxEntry extends InputEntry {
+public abstract class ComboBoxEntry extends JPanel implements IInputParam {
 	private static final long serialVersionUID = -6286788893563544325L;
 	
 	JComboBox comboBox;
@@ -39,11 +39,11 @@ public class ComboBoxEntry extends InputEntry {
 	 * @param fieldSize
 	 * @param values
 	 */
-	public ComboBoxEntry(String parameterText, Dimension fieldSize, Object[] values, boolean vertical) {
+	public ComboBoxEntry(String parameterText, Object[] values, boolean vertical) {
 		setLayout(new FlowLayout(FlowLayout.LEFT));
 		JLabel label = new JLabel(parameterText);
 		comboBox = new JComboBox(values);
-		comboBox.setPreferredSize(fieldSize);
+		comboBox.setPreferredSize(GUIManager.ENTRY_SIZE);
 		
 		JPanel innerPanel;
 		if(vertical) {
@@ -60,13 +60,15 @@ public class ComboBoxEntry extends InputEntry {
 		}
 	}
 
-	@Override
-	public Object getEntryValue() {
-		return comboBox.getSelectedItem();
-	}
 	
 	public void addListener(ActionListener listener) {
 		comboBox.addActionListener(listener);
 	}
+
+	@Override
+	public String getInputValue() {
+		return (String)comboBox.getSelectedItem();
+	}
+
 
 }
