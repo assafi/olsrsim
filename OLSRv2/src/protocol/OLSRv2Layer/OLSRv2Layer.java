@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.Map.Entry;
 
@@ -73,8 +74,12 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 		// generate first TC message and massage for TC Interval finish
 		Dispatcher dispatcher = Dispatcher.getInstance();
 		
-		generateTCMessage(dispatcher.getCurrentVirtualTime());
-		dispatcher.pushEvent(new TCIntervalEndEvent(stationID, dispatcher.getCurrentVirtualTime() + SimulationParameters.TCInterval));
+		// calculate jitter for the first TC Interval event
+		int rand = new Random().nextInt(SimulationParameters.TCInterval);
+		long jitter = rand / SimulationParameters.maxStations;
+		
+		generateTCMessage(dispatcher.getCurrentVirtualTime() + jitter);
+		dispatcher.pushEvent(new TCIntervalEndEvent(stationID, dispatcher.getCurrentVirtualTime() + SimulationParameters.TCInterval + jitter));
 	}
 	
 	/* (non-Javadoc)
