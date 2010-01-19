@@ -82,8 +82,11 @@ public class SimulationParameters {
 	
 	static public int simulationEndTime = 2500;
 	
-	static public float factor = (float) 0.011; /* This factor is taken into account when creating
-												topology event. should not be larger then 0.015 */
+	static public float topologyPoissonicRate = (float) 0.011; /* This topologyPoissonicRate is taken into account when creating
+												topology event. */
+	
+	static public float dataEventsPoissonicRate = (float) 0.2; /* This dataEventsPoissonicRate is taken into account when creating
+												Send data events. */
 	
 	static public int maxStations = 100;
 	

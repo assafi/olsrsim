@@ -39,9 +39,8 @@ import events.TopologyEvent.TopologyEventType;
  */
 public class EventGenerator {
 
-	private static final double DEFAULT_FACTOR = 0.011;
-
-	private float factor;
+	private float topologyPoissonicRate;
+	private float dataChangePoissonicRate;
 
 	private long nextEventTime;
 	private Map<Long, List<IStation>> dataTime2stations = new HashMap<Long, List<IStation>>();
@@ -66,7 +65,7 @@ public class EventGenerator {
 	 * 
 	 */
 	private EventGenerator(float factor, Layout layout, int maxStations, boolean staticMod) {
-		this.factor = factor;
+		this.topologyPoissonicRate = factor;
 		this.dispatcher = Dispatcher.getInstance();
 		this.nextEventTime = 0;
 		this.topologyManager = new TopologyManager();
@@ -77,7 +76,8 @@ public class EventGenerator {
 	}
 	
 	/**
-	 * @param factor An optional parameter specify a factor to take into consideration 
+	 * @param dataEventsPoissonicRate 
+	 * @param topologyPoissonicRate An optional parameter specify a topologyPoissonicRate to take into consideration 
 	 * while determine when to generate events. 
 	 * @param layout The Layout object representing the layout by which station will be
 	 * generated.
@@ -85,17 +85,16 @@ public class EventGenerator {
 	 * @param staticMode false to enable nodes mobility
 	 * @return The EventGenerator singleton
 	 */
-	public static EventGenerator getInstance(Float factor, Layout layout, int maxStations, 
+	public static EventGenerator getInstance(float topologyPoissonicRate, float dataEventsPoissonicRate, Layout layout, int maxStations, 
 			boolean staticMode){
 		
-		if (null == factor){
-			factor = new Float(DEFAULT_FACTOR);
-		}
-		
 		if (null == instance){
-			instance = new EventGenerator(factor, layout,maxStations,staticMode);
+			instance = new EventGenerator(topologyPoissonicRate, layout,maxStations,staticMode);
 		}
-		return instance;
+		EventGenerator eventGen = instance;
+		eventGen.topologyPoissonicRate = topologyPoissonicRate;
+		eventGen.dataChangePoissonicRate = dataEventsPoissonicRate;
+		return eventGen;
 	}
 
 	/**
@@ -119,7 +118,7 @@ public class EventGenerator {
 			/*
 			 * Update the time in which the next event will be created 
 			 */
-			this.nextEventTime += getExpDelay(factor);
+			this.nextEventTime += getExpDelay(topologyPoissonicRate);
 		}
 		
 		/*
@@ -156,7 +155,7 @@ public class EventGenerator {
 	private void setNextDataEvent(IStation station, long baseTime) {
 		
 		long eventTime;
-		eventTime = Math.max(getExpDelay(factor),1) + baseTime;
+		eventTime = Math.max(getExpDelay(dataChangePoissonicRate),1) + baseTime;
 		updateTable(eventTime, station);
 	}
 
@@ -183,7 +182,7 @@ public class EventGenerator {
 			 * Next event time for the station.
 			 */
 			long nextTime;
-			nextTime = Math.max(getExpDelay(factor),1) + currentTime;
+			nextTime = Math.max(getExpDelay(dataChangePoissonicRate),1) + currentTime;
 			updateTable(nextTime, station);
 		}
 	}
