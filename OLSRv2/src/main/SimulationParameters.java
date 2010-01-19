@@ -53,7 +53,7 @@ public class SimulationParameters {
 		ALL_MPRS /* All nodes are being chosen as MPRs*/
 	}
 	
-	static public ProtocolMprMode mode = ProtocolMprMode.NORMAL;
+	static public ProtocolMprMode protocolMode = ProtocolMprMode.NORMAL;
 	
 	///////////////////////////////////////////////////////////////////////////
 	// Layout Definitions
