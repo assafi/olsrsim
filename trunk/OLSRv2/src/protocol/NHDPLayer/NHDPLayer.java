@@ -13,6 +13,7 @@ package protocol.NHDPLayer;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 import log.Log;
@@ -58,8 +59,12 @@ public class NHDPLayer implements INHDPLayer {
 		this.neighborInfo = neighborInfo;
 		this.olsrLayer = olsrLayer;
 		
-		dispatcher.pushEvent(generateHelloMessage(dispatcher.getCurrentVirtualTime()));
-		dispatcher.pushEvent(new HelloIntervalEndEvent(stationID, dispatcher.getCurrentVirtualTime() + SimulationParameters.HelloInterval));
+		// calculate jitter for the first Hello Interval event
+		int rand = new Random().nextInt(SimulationParameters.HelloInterval);
+		long jitter = rand / SimulationParameters.maxStations;
+		
+		dispatcher.pushEvent(generateHelloMessage(dispatcher.getCurrentVirtualTime() + jitter));
+		dispatcher.pushEvent(new HelloIntervalEndEvent(stationID, dispatcher.getCurrentVirtualTime() + SimulationParameters.HelloInterval + jitter));
 	}
 	
 	/* (non-Javadoc)
