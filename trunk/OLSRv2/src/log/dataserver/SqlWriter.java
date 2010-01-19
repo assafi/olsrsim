@@ -39,12 +39,15 @@ public class SqlWriter implements IDataSqlWriter {
 	private static String database = SqlProxyDefinitions.database;
 	private static String dbUsername = SqlProxyDefinitions.user;
 	private static String dbPassword = SqlProxyDefinitions.password;
+	private static String[] labels = null;
+	private static int numLabels;
 	
 	/*
 	 * The name of the table is defined by the creation date & time
 	 * of the server proxy.
 	 */
 	private String tableName = "Default_table"; 
+	private boolean tableExists = false;
 
 	/**
 	 * @throws ClassNotFoundException
@@ -75,6 +78,9 @@ public class SqlWriter implements IDataSqlWriter {
 		labelTypes.put(SimLabels.LOST, "BOOLEAN DEFAULT false");
 		labelTypes.put(SimLabels.ERROR, "BOOLEAN DEFAULT false");
 		labelTypes.put(SimLabels.DETAILS, "VARCHAR(4096)");
+		
+		labels = SimLabels.stringify();
+		numLabels = labels.length;
 	}
 	
 	@Override
@@ -126,6 +132,7 @@ public class SqlWriter implements IDataSqlWriter {
 			createTableStmt.executeUpdate();
 		} finally {
 			SqlProxy.closeAllSQLConnections(new Object[] { createTableStmt });
+			this.tableExists = true;
 		}
 				
 	}
@@ -152,7 +159,7 @@ public class SqlWriter implements IDataSqlWriter {
 		 * Checks that table exists
 		 */
 		try {
-			if (!tableExists(tableName)){
+			if (!tableExists){
 				createTable(tableName);
 			}
 			
@@ -168,9 +175,9 @@ public class SqlWriter implements IDataSqlWriter {
 			 */
 			
 			String query = "INSERT INTO " + tableName + " (";
-			for (String label : SimLabels.stringify()) {
+			for (String label : labels) {
 				query += label;
-				if (!label.equals(SimLabels.stringify()[SimLabels.stringify().length - 1])){
+				if (!label.equals(labels[numLabels - 1])){
 					query += ", ";
 				}
 			}

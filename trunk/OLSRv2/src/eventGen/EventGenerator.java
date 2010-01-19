@@ -175,7 +175,7 @@ public class EventGenerator {
 			do {
 				/* Will not send data to itself */
 				trgID = topologyManager.getRandomStation();
-			} while (trgID != station.getID());
+			} while (trgID == station.getID());
 			dataEvent.setDst(trgID);
 			dispatcher.pushEvent(dataEvent);
 			
@@ -195,11 +195,12 @@ public class EventGenerator {
 	private void updateTable(long nextTime, IStation station) {
 		List<IStation> stationsThatWantsToSendDataPackets;
 		if (dataTime2stations.containsKey(nextTime)) {
-			stationsThatWantsToSendDataPackets = dataTime2stations.get(nextTime);
+			stationsThatWantsToSendDataPackets = dataTime2stations.remove(nextTime);
 		} else {
 			stationsThatWantsToSendDataPackets = new ArrayList<IStation>();
 		}
 		stationsThatWantsToSendDataPackets.add(station);
+		dataTime2stations.put(nextTime, stationsThatWantsToSendDataPackets);
 	}
 
 	/**
@@ -304,7 +305,7 @@ public class EventGenerator {
 	
 	private static long getExpDelay(double poissonicRate) {
 	    double U = new Random().nextDouble();
-		return (long) (((-1/poissonicRate)*Math.log(1-U))*10);
+		return (long) (((-1/poissonicRate)*Math.log(1-U))); //*10
 	}
 	
 	

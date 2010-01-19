@@ -67,7 +67,7 @@ public class DispatcherTestCase {
 	@Before
 	public void setUp() throws Exception {
 		log = Log.getInstance();
-		log.createLog(new SqlWriter());	
+		log.createLog(new CsvWriter());	
 		dispatcher = Dispatcher.getInstance();
 	}
 
@@ -96,7 +96,7 @@ public class DispatcherTestCase {
 		SimulationParameters.staticMode = true;
 		SimulationParameters.clusterRadius = 20;
 		SimulationParameters.maxStations = 10;
-		SimulationParameters.simulationEndTime = 100;
+		SimulationParameters.simulationEndTime = 3000;
 		
 		dispatcher.startSimulation();
 	}
