@@ -10,6 +10,7 @@
  */
 package gui;
 
+import gui.input_params.InputException;
 import gui.input_params.InputParam;
 import gui.input_params.WorldSize;
 
@@ -52,9 +53,10 @@ public class LayoutParameters extends JPanel {
 	}
 	
 	/**
+	 * @throws InputException 
 	 * 
 	 */
-	public void updateParams() {
+	public void updateParams() throws InputException {
 		for (InputParam param : parameters) {
 			param.updateParamValue();
 		}

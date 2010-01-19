@@ -30,15 +30,13 @@ public class TCInterval extends TextEntry {
 	}
 
 	@Override
-	public void updateParamValue() {
+	public void updateParamValue() throws InputException {
 		int TCInterval;
 		try {
 			TCInterval = Integer.valueOf(this.getInputValue());
 		}
 		catch (NumberFormatException e) {
-			GUIManager.getInstance().popAlertMessage("TC message interval must be of type integer", 
-					AlertType.ERROR);
-			return;
+			throw new InputException("TC message interval must be of type integer");
 		}
 		SimulationParameters.TCInterval = TCInterval;
 	}

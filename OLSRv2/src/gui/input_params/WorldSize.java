@@ -30,14 +30,10 @@ public class WorldSize extends TextEntry {
 	}
 
 	@Override
-	public void updateParamValue() {
-		GUIManager GUIManagerInstance = GUIManager.getInstance();
+	public void updateParamValue() throws InputException {
 		String[] worldAttributes = this.getInputValue().split("x");
 		if((worldAttributes.length != 2)) {
-			GUIManagerInstance.popAlertMessage(
-					"World size input should be in the form of <width>x<height>", 
-					AlertType.ERROR);
-			return;
+			throw new InputException("World size input should be in the form of <width>x<height>");
 		}
 		int width = 0, height = 0;
 		try {
@@ -45,21 +41,17 @@ public class WorldSize extends TextEntry {
 			height = Integer.valueOf(worldAttributes[1]);
 		}
 		catch (NumberFormatException e) {
-			GUIManagerInstance.popAlertMessage("World size width or height are not numeric", 
-					AlertType.ERROR);
-			return;
+			throw new InputException("World size width or height are not numeric");
 		}
 		if((width > GUIManager.MAX_WORLD_SIZE.width) || (width < GUIManager.MIN_WORLD_SIZE.width)) {
-			GUIManagerInstance.popAlertMessage("World width must be between " +
-					GUIManager.MIN_WORLD_SIZE.width + " and " + GUIManager.MAX_WORLD_SIZE.width, 
-					AlertType.ERROR);
-			return;
+			throw new InputException("World width must be between " +
+					GUIManager.MIN_WORLD_SIZE.width + " and " + 
+					GUIManager.MAX_WORLD_SIZE.width);
 		}
-		if((height > GUIManager.MAX_WORLD_SIZE.width) || (height < GUIManager.MIN_WORLD_SIZE.width)) {
-			GUIManagerInstance.popAlertMessage("World height must be between " +
-					GUIManager.MIN_WORLD_SIZE.height + " and " + GUIManager.MAX_WORLD_SIZE.height, 
-					AlertType.ERROR);
-			return;
+		if((height > GUIManager.MAX_WORLD_SIZE.height) || (height < GUIManager.MIN_WORLD_SIZE.height)) {
+			throw new InputException("World height must be between " +
+					GUIManager.MIN_WORLD_SIZE.height + " and " + 
+					GUIManager.MAX_WORLD_SIZE.height);
 		}
 
 		GUIManager.getInstance().setWorldDimension(width, height);

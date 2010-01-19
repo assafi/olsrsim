@@ -11,6 +11,7 @@
 package gui;
 
 import gui.input_params.HelloInterval;
+import gui.input_params.InputException;
 import gui.input_params.InputParam;
 import gui.input_params.MPRMode;
 import gui.input_params.TCInterval;
@@ -53,9 +54,10 @@ public class ProtocolParameters extends JPanel {
 	}
 	
 	/**
+	 * @throws InputException 
 	 * 
 	 */
-	public void updateParams() {
+	public void updateParams() throws InputException {
 		for (InputParam param : parameters) {
 			param.updateParamValue();
 		}

@@ -11,6 +11,7 @@
 package gui;
 
 import gui.input_params.ComboBoxEntry;
+import gui.input_params.InputException;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -117,7 +118,9 @@ public class GUIManager {
 		JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 40, 0));
 		applyParametersButton = new JButton("Apply Parameters");
 		startSimulationButton = new JButton("Start Simulation");
+		startSimulationButton.setEnabled(false);
 		stopSimulationButton = new JButton("Stop Simulation");
+		stopSimulationButton.setEnabled(false);
 		
 		simulationSpeedBox = new ComboBoxEntry("Simulation speed:",
 				SimulationSpeed.values(), false);
@@ -178,8 +181,14 @@ public class GUIManager {
 	 */
 	public void applyParameters() {
 		System.out.println("Applying parameters!!!");
-		protocolParams.updateParams();
-		layoutParams.updateParams();
+		try {
+			protocolParams.updateParams();
+			layoutParams.updateParams();
+		} catch (InputException e) {
+			popAlertMessage(e.getMessage(), AlertType.ERROR);
+			return;
+		}
+		startSimulationButton.setEnabled(true);
 	}
 
 	/**
@@ -189,6 +198,7 @@ public class GUIManager {
 		System.out.println("Simulation started!!!");
 		topologyUpdaterThread.start();
 		dispatcherThread.start();
+		stopSimulationButton.setEnabled(true);
 	}
 	
 	/**
