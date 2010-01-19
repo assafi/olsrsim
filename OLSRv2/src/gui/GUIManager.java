@@ -22,6 +22,9 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 
 import dispatch.Dispatcher;
 import dispatch.DispatcherException;
@@ -32,7 +35,7 @@ import layout.UniformLayout;
 import topology.IStation;
 import events.Event;
 import events.TopologyEvent;
-import gui.input_pannels.ComboBoxEntry;
+import gui.input_params.ComboBoxEntry;
 
 /**
  * @author Asi
@@ -45,11 +48,18 @@ public class GUIManager {
 	private Thread topologyUpdaterThread;
 	private Thread dispatcherThread;
 	
+	private WorldTopology worldPanel;
+	private int worldWidth = 500;
+	private int worldHeight = 500;
+	
 	private JFrame mainFrame;
 	private SimulationSpeed simulationSpeed = SimulationSpeed.NORMAL;
 	private JButton startSimulationButton;
 	private JButton stopSimulationButton;
 	private ComboBoxEntry simulationSpeedBox;
+	
+	private LayoutParameters layoutParams;
+	private ProtocolParameters protocolParams;
 	
 	public static GUIManager getInstance() {
 		if(instance == null) {
@@ -76,13 +86,28 @@ public class GUIManager {
 		JPanel leftPanel = new JPanel();
 		leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.PAGE_AXIS));
 		SimulatorTime timerPanel = new SimulatorTime(200, 30);
-		InputsPanel inputsPanel = new InputsPanel(200, 450);
+		
+		JTabbedPane inputsTabbedPane = new JTabbedPane();
+		inputsTabbedPane.setPreferredSize(new Dimension(200,450));
+		
+		layoutParams = new LayoutParameters();
+		protocolParams = new ProtocolParameters();
+		inputsTabbedPane.addTab("layout", layoutParams);
+		inputsTabbedPane.addTab("protocol", protocolParams);
 		leftPanel.add(timerPanel);
 		leftPanel.add(Box.createRigidArea(new Dimension(0,20)));
-		leftPanel.add(inputsPanel);
+		leftPanel.add(inputsTabbedPane);
 		
 		// Creating the world topology panel
-		WorldTopology worldPanel = new WorldTopology(500, 500);
+		JPanel rightPanel = new JPanel();
+		rightPanel.setPreferredSize(new Dimension(500, 500));
+		FlowLayout rfLayout = new FlowLayout(FlowLayout.CENTER);
+		worldPanel = new WorldTopology();
+		setWorldDimension(500, 500);
+		rfLayout.setHgap((500 - this.worldHeight)/2);
+		rfLayout.setVgap((500 - this.worldWidth)/2);
+		rightPanel.setLayout(rfLayout);
+		rightPanel.add(worldPanel);
 		
 		// Creating the Start and stop simulation buttons
 		JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 40, 0));
@@ -90,14 +115,14 @@ public class GUIManager {
 		stopSimulationButton = new JButton("Stop Simulation");
 		
 		simulationSpeedBox = new ComboBoxEntry("Simulation speed:",
-				stopSimulationButton.getPreferredSize(), SimulationSpeed.values(), false);
+				SimulationSpeed.values(), false);
 		
 		bottomPanel.add(simulationSpeedBox);
 		bottomPanel.add(startSimulationButton);
 		bottomPanel.add(stopSimulationButton);
 
 		mainPanel.add(leftPanel, BorderLayout.LINE_START);
-		mainPanel.add(worldPanel, BorderLayout.CENTER);
+		mainPanel.add(rightPanel, BorderLayout.CENTER);
 		mainPanel.add(bottomPanel, BorderLayout.PAGE_END);
 		
 		mainFrame.pack();
@@ -113,7 +138,7 @@ public class GUIManager {
 		simulationSpeedBox.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				SimulationSpeed speed = (SimulationSpeed) simulationSpeedBox.getEntryValue();
+				SimulationSpeed speed = SimulationSpeed.valueOf(simulationSpeedBox.getInputValue());
 				GUIManager.getInstance().setSimulationSpeed(speed);
 			}
 		});
@@ -168,6 +193,17 @@ public class GUIManager {
 	public void initDispatcherThread() {
 		Runnable dispatcher = new DispatcherThread();
 		dispatcherThread = new Thread(dispatcher);
+	}
+	
+	public void setWorldDimension(int width, int height) {
+		this.worldWidth = width;
+		this.worldHeight = height;
+		worldPanel.setWorldSize(width, height);
+	}
+	
+	public void updateAllParameters() {
+		protocolParams.updateParams();
+		layoutParams.updateParams();
 	}
 	
 	

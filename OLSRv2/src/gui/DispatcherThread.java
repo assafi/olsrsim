@@ -12,6 +12,7 @@ package gui;
 
 import java.sql.SQLException;
 
+import layout.ClustersLayout;
 import layout.LayoutException;
 import layout.UniformLayout;
 import log.Log;
@@ -37,7 +38,7 @@ public class DispatcherThread implements Runnable {
 	public void run() {
 		try {
 			Log.getInstance().createLog(new CsvWriter());
-			dispatcher.startSimulation((float) 0.01, new UniformLayout(500,500),10,false, 3, 2500);
+			dispatcher.startSimulation((float) 0.01, new ClustersLayout(500,500, 100),100,false, 3, 10000);
 		} catch (DispatcherException e) {
 			e.printStackTrace();
 		} catch (LayoutException e) {
