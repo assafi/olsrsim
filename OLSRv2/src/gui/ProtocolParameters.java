@@ -14,7 +14,7 @@ import gui.input_params.HelloInterval;
 import gui.input_params.InputParam;
 import gui.input_params.MPRMode;
 import gui.input_params.TCInterval;
-import gui.input_params.TableEntryValidPeriod;
+import gui.input_params.EntryValidPeriod;
 import gui.input_params.TransmitionTime;
 
 import java.awt.Color;
@@ -63,7 +63,7 @@ public class ProtocolParameters extends JPanel {
 
 	private void setInputEntries() {
 		parameters = new LinkedList<InputParam>();
-		parameters.add(new TableEntryValidPeriod());
+		parameters.add(new EntryValidPeriod());
 		parameters.add(new HelloInterval());
 		parameters.add(new TCInterval());
 		parameters.add(new TransmitionTime());

@@ -10,6 +10,8 @@
  */
 package gui.input_params;
 
+import gui.GUIManager;
+import gui.GUIManager.AlertType;
 import main.SimulationParameters;
 
 /**
@@ -29,6 +31,15 @@ public class HelloInterval extends TextEntry {
 	
 	@Override
 	public void updateParamValue() {
-		SimulationParameters.HelloInterval = Integer.valueOf(this.getInputValue());
+		int helloInterval;
+		try {
+			helloInterval = Integer.valueOf(this.getInputValue());
+		}
+		catch (NumberFormatException e) {
+			GUIManager.getInstance().popAlertMessage("Hello message interval must be of type integer", 
+					AlertType.ERROR);
+			return;
+		}
+		SimulationParameters.HelloInterval = helloInterval;
 	}
 }
