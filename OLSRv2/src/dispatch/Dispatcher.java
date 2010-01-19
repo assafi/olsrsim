@@ -183,7 +183,7 @@ public class Dispatcher implements IDispatcher {
 				}
 			}
 
-			if (currentEvent instanceof TopologyEvent){
+			if (TopologyEvent.class.isAssignableFrom(currentEvent.getClass())){
 				
 				TopologyEvent te = (TopologyEvent)currentEvent;
 				try {
@@ -193,7 +193,7 @@ public class Dispatcher implements IDispatcher {
 				}
 			}
 			
-			if (currentEvent instanceof IntervalEndEvent){
+			if (IntervalEndEvent.class.isAssignableFrom(currentEvent.getClass())){
 				IntervalEndEvent ie = (IntervalEndEvent)currentEvent;
 				try {
 					IStation station = this.topologyManager.getStationById(ie.getSource());
@@ -203,8 +203,9 @@ public class Dispatcher implements IDispatcher {
 				}
 			}
 			
-			if (currentEvent instanceof SendDataEvent) {
+			if (SendDataEvent.class.isAssignableFrom(currentEvent.getClass())) {
 				SendDataEvent sde = (SendDataEvent)currentEvent;
+				System.out.println("Data event at " + currentVirtualTime + ", from " + sde.getSrc() + ",to " + sde.getDst());
 				try {
 					IStation station = this.topologyManager.getStationById(sde.getSrc());
 					if (null != station) {
