@@ -60,8 +60,8 @@ public class SendDataEvent extends Event {
 	 * @see events.Event#execute(java.lang.Object)
 	 */
 	@Override
-	public void execute(Object nodes) throws Exception {
-		IStation station = (IStation)nodes;
+	public void execute(Object node) throws Exception {
+		IStation station = (IStation)node;
 		station.getOLSRv2Protocol().sendDataMessage(dst);
 	}
 

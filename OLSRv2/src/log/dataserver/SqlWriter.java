@@ -74,7 +74,7 @@ public class SqlWriter implements IDataSqlWriter {
 		labelTypes.put(SimLabels.RADIUS, "INTEGER");
 		labelTypes.put(SimLabels.LOST, "BOOLEAN DEFAULT false");
 		labelTypes.put(SimLabels.ERROR, "BOOLEAN DEFAULT false");
-		labelTypes.put(SimLabels.DETAILS, "VARCHAR(128)");
+		labelTypes.put(SimLabels.DETAILS, "VARCHAR(4096)");
 	}
 	
 	@Override

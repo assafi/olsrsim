@@ -53,7 +53,42 @@ public class SimulationParameters {
 		ALL_MPRS /* All nodes are being chosen as MPRs*/
 	}
 	
-	static public ProtocolMprMode protocolMode = ProtocolMprMode.NORMAL;
+	static public ProtocolMprMode mode = ProtocolMprMode.NORMAL;
+	
+	///////////////////////////////////////////////////////////////////////////
+	// Layout Definitions
+	///////////////////////////////////////////////////////////////////////////
+	
+	public enum LayoutMode{
+		UNIFORM, /* Nodes will be created in a uniform fashion in the simulation grid */
+		CLUSTER  /* Nodes will be created in a cluster fashion in the simulation grid */
+	}
+	
+	static public LayoutMode layoutMode = LayoutMode.UNIFORM;
+	
+	static public int clusterRadius = 100; /* This value is needed in Cluster mode */
+	
+	static public boolean staticMode = false; /* Should the station be static or movable */
+	
+	static public int xBoundry = 500;
+	
+	static public int yBoundry = 500;
+	
+	///////////////////////////////////////////////////////////////////////////
+	// Simulation Definitions
+	///////////////////////////////////////////////////////////////////////////
+	
+	static public int receptionRadius = 30;
+	
+	static public int simulationEndTime = 2500;
+	
+	static public float factor = (float) 0.011; /* This factor is taken into account when creating
+												topology event. should not be larger then 0.015 */
+	
+	static public int maxStations = 100;
+	
+	static public int clusterNum = 10;
+	
 	
 	
 }
