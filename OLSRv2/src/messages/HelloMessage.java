@@ -76,7 +76,7 @@ public class HelloMessage extends MessageEvent {
 	public void execute(Object nodes) {
 		Collection<IStation> stations = (Collection<IStation>)nodes;
 		for (IStation station : stations) {
-			logEvent(station.getID(), null);
+			logEvent(station.getID(), null, null);
 			IOLSRv2Protocol olsrProtocol = station.getOLSRv2Protocol();
 			olsrProtocol.reciveHelloMessage(this);
 		}

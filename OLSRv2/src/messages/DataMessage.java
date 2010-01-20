@@ -57,6 +57,7 @@ public class DataMessage extends MessageEvent {
 	public void execute(Object nodes) {
 		Collection<IStation> stations = (Collection<IStation>)nodes;
 		for (IStation station : stations) {
+			logEvent(station.getID(), globalSrc, globalDst);
 			IOLSRv2Protocol olsrProtocol = station.getOLSRv2Protocol();
 			olsrProtocol.reciveDataMessage(this);
 		}

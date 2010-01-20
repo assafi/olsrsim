@@ -113,6 +113,7 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 		
 		HashMap<String, TopologySetData> topologySet = topologyInfo.getTopologySet();
 		
+
 		int hops = 1;
 		while(true){
 			boolean routingSetChanged = false;
@@ -120,14 +121,24 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 				for (String station : topologyEntry.getValue().getToAddresses()) {
 					if (!routingSet.containsKey(station) && 
 						routingSet.containsKey(topologyEntry.getKey())){
-						rData = new RoutingSetData(Dispatcher.getInstance().getCurrentVirtualTime() + SimulationParameters.entryValidPeriod,
-												   topologyEntry.getKey(), 
-												   hops);
-						routingSet.put(station, rData);
-						routingSetChanged = true;
+						
+						// find next hop that is one of my neughbors
+						String newNextHop =  routingSet.get(topologyEntry.getKey()).getNextHop();
+						while (null != newNextHop && !neighborInfo.is1HopNeighbor(newNextHop)){
+							newNextHop =  routingSet.get(newNextHop).getNextHop();
+						}
+						
+						if(null != newNextHop){
+							rData = new RoutingSetData(Dispatcher.getInstance().getCurrentVirtualTime() + SimulationParameters.entryValidPeriod,
+													   newNextHop, 
+													   hops);
+							routingSet.put(station, rData);
+							routingSetChanged = true;
+						}
 					}
 				}
 			}
+			
 			hops++;
 			if(!routingSetChanged){// if there was no change then stop
 				break;

@@ -141,12 +141,14 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 					 */
 					
 					HashMap<String, RoutingSetData>  routingSet =  topologyInfo.getRoutingSet();
+					
 					if (!routingSet.containsKey(msg.getGlobalDst())){
 						logEvent(SimEvents.DATA_LOSS.name(), msg.getLocalSrc(), msg.getLocalDst(), true, "Cann't find route.");
 						return;
 					}
 					
 					RoutingSetData entryData = routingSet.get(msg.getGlobalDst());
+					msg.setSource(stationID);
 					msg.setLocalDst(entryData.getNextHop());
 					msg.updateTime(dispatcher.getCurrentVirtualTime() + SimulationParameters.transmitionTime);
 					dispatcher.pushEvent(msg);
