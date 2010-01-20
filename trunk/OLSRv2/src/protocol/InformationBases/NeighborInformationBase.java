@@ -212,20 +212,20 @@ public class NeighborInformationBase {
 		
 	}
 	
-	private void logEvent(String stationID, String tableName,Collection<String> logData) {
+	private void log(String stationID, String dataToLog) {
 		Log log = Log.getInstance();
-		String collNames = new String(tableName);
-		
-		// put all names in one string
-		for (String name : logData) {
-			collNames += " " + name + ",";
-		}
+//		String collNames = new String(tableName);
+//		
+//		// put all names in one string
+//		for (String name : logData) {
+//			collNames += " " + name + ",";
+//		}
 		
 		HashMap<String, String> data = new HashMap<String, String>();
 		data.put(SimLabels.NODE_ID.name(), stationID);
 		data.put(SimLabels.EVENT_TYPE.name(), SimEvents.LOG.name());
 		data.put(SimLabels.VIRTUAL_TIME.name(), Long.toString(Dispatcher.getInstance().getCurrentVirtualTime()));
-		data.put(SimLabels.DETAILS.name(), collNames);
+		data.put(SimLabels.DETAILS.name(), dataToLog);
 		try {
 			log.writeDown(data);
 		} catch (LogException le) {
@@ -233,10 +233,10 @@ public class NeighborInformationBase {
 		}
 	}
 	
-	private void logMPRs(String stationID,Collection<String> logData) {
+	private String logMPRs(Collection<String> logData) {
 		Log log = Log.getInstance();
 		/* log MPRs */
-		String collNames = new String("MPRs");
+		String collNames = new String("MPRs:");
 		
 		// put all names in one string
 		for (String name : logData) {
@@ -245,20 +245,20 @@ public class NeighborInformationBase {
 			}
 		}
 		
-		HashMap<String, String> data = new HashMap<String, String>();
-		data.put(SimLabels.NODE_ID.name(), stationID);
-		data.put(SimLabels.EVENT_TYPE.name(), SimEvents.LOG.name());
-		data.put(SimLabels.VIRTUAL_TIME.name(), Long.toString(Dispatcher.getInstance().getCurrentVirtualTime()));
-		data.put(SimLabels.DETAILS.name(), collNames);
-		try {
-			log.writeDown(data);
-		} catch (LogException le) {
-			System.out.println(le.getMessage());
-		}
+//		HashMap<String, String> data = new HashMap<String, String>();
+//		data.put(SimLabels.NODE_ID.name(), stationID);
+//		data.put(SimLabels.EVENT_TYPE.name(), SimEvents.LOG.name());
+//		data.put(SimLabels.VIRTUAL_TIME.name(), Long.toString(Dispatcher.getInstance().getCurrentVirtualTime()));
+//		data.put(SimLabels.DETAILS.name(), collNames);
+//		try {
+//			log.writeDown(data);
+//		} catch (LogException le) {
+//			System.out.println(le.getMessage());
+//		}
 		
 		/* log mpr_selectors */
 		
-		collNames = new String("mpr_selectors");
+		collNames += " mpr_selectors:";
 		
 		// put all names in one string
 		for (String name : logData) {
@@ -267,23 +267,44 @@ public class NeighborInformationBase {
 			}
 		}
 		
-		data = new HashMap<String, String>();
-		data.put(SimLabels.NODE_ID.name(), stationID);
-		data.put(SimLabels.EVENT_TYPE.name(), SimEvents.LOG.name());
-		data.put(SimLabels.VIRTUAL_TIME.name(), Long.toString(Dispatcher.getInstance().getCurrentVirtualTime()));
-		data.put(SimLabels.DETAILS.name(), collNames);
-		try {
-			log.writeDown(data);
-		} catch (LogException le) {
-			System.out.println(le.getMessage());
-		}
+		return collNames;
+		
+//		data = new HashMap<String, String>();
+//		data.put(SimLabels.NODE_ID.name(), stationID);
+//		data.put(SimLabels.EVENT_TYPE.name(), SimEvents.LOG.name());
+//		data.put(SimLabels.VIRTUAL_TIME.name(), Long.toString(Dispatcher.getInstance().getCurrentVirtualTime()));
+//		data.put(SimLabels.DETAILS.name(), collNames);
+//		try {
+//			log.writeDown(data);
+//		} catch (LogException le) {
+//			System.out.println(le.getMessage());
+//		}
 	}
 	
 	public void logStationTables(String StationID){
 		
-		logEvent(StationID,"neighborSet" , neighborSet.keySet());
-		logEvent(StationID,"lostNeighborSet", lostNeighborSet.keySet());
-		logEvent(StationID, "secondHopNeighbors", secondHopNeighbors.keySet());
-		logMPRs(StationID, neighborSet.keySet());
+		String logData = new String(
+				         " neighborSet:" + tableContenet(neighborSet.keySet())+
+		 				 " lostNeighborSet:" + tableContenet(lostNeighborSet.keySet())+
+		 				 " secondHopNeighbors:" + tableContenet(secondHopNeighbors.keySet())+
+		 				 logMPRs(neighborSet.keySet()));
+		log(StationID, logData); 
 	}
+
+	/**
+	 * @param keySet
+	 * @return
+	 */
+	private String tableContenet(Set<String> set) {
+		String collNames = new String();
+		
+		// put all names in one string
+		for (String name : set) {
+			collNames += " " + name + ",";
+		}
+		
+		return collNames;
+	}
+	
+	
 }

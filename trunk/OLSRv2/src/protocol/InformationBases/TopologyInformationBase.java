@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.Map.Entry;
 
 import log.Log;
@@ -116,20 +117,14 @@ public class TopologyInformationBase {
 		keysToRemove.clear();
 	}
 	
-	private void logEvent(String stationID, String tableName,Collection<String> logData) {
+	private void log(String stationID, String dataToLog) {
 		Log log = Log.getInstance();
-		String collNames = new String(tableName);
-		
-		// put all names in one string
-		for (String name : logData) {
-			collNames += " " + name;
-		}
 		
 		HashMap<String, String> data = new HashMap<String, String>();
 		data.put(SimLabels.NODE_ID.name(), stationID);
 		data.put(SimLabels.EVENT_TYPE.name(), SimEvents.LOG.name());
 		data.put(SimLabels.VIRTUAL_TIME.name(), Long.toString(Dispatcher.getInstance().getCurrentVirtualTime()));
-		data.put(SimLabels.DETAILS.name(), collNames);
+		data.put(SimLabels.DETAILS.name(), dataToLog);
 		try {
 			log.writeDown(data);
 		} catch (LogException le) {
@@ -137,11 +132,24 @@ public class TopologyInformationBase {
 		}
 	}
 	
-	public void logStationTables(String StationID){
+	private String tableContenet(Set<String> set) {
+		String collNames = new String();
 		
-		logEvent(StationID, "advertisingRemoteRouterSet", advertisingRemoteRouterSet.keySet());
-		logEvent(StationID, "topologySet", topologySet.keySet());
-		logEvent(StationID, "routingSet", routingSet.keySet());
+		// put all names in one string
+		for (String name : set) {
+			collNames += " " + name + ",";
+		}
+		
+		return collNames;
+	}
+	
+	public void logStationTables(String StationID){
+		String logData = new String (
+				         " advertisingRemoteRouterSet:" + tableContenet(advertisingRemoteRouterSet.keySet())+
+		 				 " topologySet:" + tableContenet(topologySet.keySet())+
+		 				 " routingSet:" + tableContenet(routingSet.keySet()));
+		log(StationID, logData); 
+		
 	}
 	
 }
