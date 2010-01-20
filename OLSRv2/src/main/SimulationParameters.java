@@ -55,6 +55,18 @@ public class SimulationParameters {
 	
 	static public ProtocolMprMode protocolMode = ProtocolMprMode.NORMAL;
 	
+	/**
+	 * This defines whether the protocol sends
+	 * data messages only through MPRs
+	 * or through all neighbors
+	 */
+	public enum ProtocolDataSendMode{
+		NORMAL, /* through all neighbors */ 
+		MPRS /* only through MPRs */
+	}
+	
+	static public ProtocolDataSendMode protocolDataSendMode = ProtocolDataSendMode.NORMAL;
+	
 	///////////////////////////////////////////////////////////////////////////
 	// Layout Definitions
 	///////////////////////////////////////////////////////////////////////////

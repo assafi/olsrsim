@@ -21,6 +21,7 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import main.SimulationParameters;
+import main.SimulationParameters.ProtocolDataSendMode;
 import main.SimulationParameters.ProtocolMprMode;
 import messages.HelloMessage;
 import messages.TCMessage;
@@ -129,6 +130,13 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 						}
 						
 						if(null != newNextHop){
+							
+							// if we transfer only through the MPRs set the next hop only if it is an MPR
+							if (SimulationParameters.protocolDataSendMode == ProtocolDataSendMode.MPRS){
+								if (!neighborInfo.getAllNeighbors().get(newNextHop).isMpr()){
+									continue;
+								}
+							}
 							rData = new RoutingSetData(Dispatcher.getInstance().getCurrentVirtualTime() + SimulationParameters.entryValidPeriod,
 													   newNextHop, 
 													   hops);
