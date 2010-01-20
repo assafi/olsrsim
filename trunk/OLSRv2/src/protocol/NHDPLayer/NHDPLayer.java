@@ -135,6 +135,9 @@ public class NHDPLayer implements INHDPLayer {
 			if (neighborInfo.is2HopNeighbor(msgSrc)){
 				neighborInfo.remove2hoptNeighbor(msgSrc);
 			}
+		}else{
+			// update the validity time of the entry
+			neighborInfo.getNeighborProperty(msgSrc).setValideTime(simTime + SimulationParameters.entryValidPeriod);
 		}
 		
 		/* Update the lost neighbor set */
