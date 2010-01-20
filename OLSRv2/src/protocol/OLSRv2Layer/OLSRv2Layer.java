@@ -231,6 +231,9 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 			TopologyCommonData entryData = new TopologyCommonData(tcMsg.getTime() + SimulationParameters.entryValidPeriod);
 			topologyInfo.getAdvertisingRemoteRouterSet().put(globalSrc, entryData);
 		}
+		else{
+			topologyInfo.getAdvertisingRemoteRouterSet().get(globalSrc).setTTL(tcMsg.getTime() + SimulationParameters.entryValidPeriod);
+		}
 		
 		//1.2 Populating the Router Topology Set
 		
