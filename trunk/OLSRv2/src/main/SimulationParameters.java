@@ -80,7 +80,12 @@ public class SimulationParameters {
 	
 	static public int clusterRadius = 100; /* This value is needed in Cluster mode */
 	
-	static public boolean staticMode = false; /* Should the station be static or movable */
+	public enum StationsMode{
+		STATIC, 
+		DYNAMIC  
+	}
+	
+	static public StationsMode stationsMode = StationsMode.STATIC;
 	
 	static public int xBoundry = 500;
 	
