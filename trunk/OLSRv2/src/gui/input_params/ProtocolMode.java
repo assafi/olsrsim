@@ -16,14 +16,14 @@ import main.SimulationParameters;
  * @author Asi
  *
  */
-public class MPRMode extends ComboBoxEntry {
+public class ProtocolMode extends ComboBoxEntry {
 	private static final long serialVersionUID = -8804483062884521743L;
-	private static final String labelText = "MPR mode:";
+	private static final String labelText = "Protocol mode:";
 
 	/**
 	 * 
 	 */
-	public MPRMode() {
+	public ProtocolMode() {
 		super(labelText, SimulationParameters.ProtocolMprMode.values(), true);
 	}
 

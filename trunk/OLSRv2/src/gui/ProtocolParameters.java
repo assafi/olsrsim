@@ -13,7 +13,8 @@ package gui;
 import gui.input_params.HelloInterval;
 import gui.input_params.InputException;
 import gui.input_params.InputParam;
-import gui.input_params.MPRMode;
+import gui.input_params.ProtocolDataSendMode;
+import gui.input_params.ProtocolMode;
 import gui.input_params.TCInterval;
 import gui.input_params.EntryValidPeriod;
 import gui.input_params.TransmitionTime;
@@ -69,6 +70,7 @@ public class ProtocolParameters extends JPanel {
 		parameters.add(new HelloInterval());
 		parameters.add(new TCInterval());
 		parameters.add(new TransmitionTime());
-		parameters.add(new MPRMode());
+		parameters.add(new ProtocolMode());
+		parameters.add(new ProtocolDataSendMode());
 	}
 }
