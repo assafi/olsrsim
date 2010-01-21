@@ -51,7 +51,6 @@ public class GUIManager {
 	
 	private JFrame mainFrame;
 	private SimulationTab simulationParams;
-	private LayoutTab layoutParams;
 	private ProtocolTab protocolParams;
 	
 	private SimulationSpeed simulationSpeed = SimulationSpeed.NORMAL;
@@ -100,10 +99,9 @@ public class GUIManager {
 		inputsTabbedPane.setPreferredSize(new Dimension(220,450));
 		
 		simulationParams = new SimulationTab();
-		layoutParams = new LayoutTab();
 		protocolParams = new ProtocolTab();
 		inputsTabbedPane.addTab("simulation", simulationParams);
-		inputsTabbedPane.addTab("layout", layoutParams);
+		inputsTabbedPane.addTab("layout", LayoutTab.getInstance());
 		inputsTabbedPane.addTab("protocol", protocolParams);
 		leftPanel.add(timerPanel);
 		leftPanel.add(Box.createRigidArea(new Dimension(0,20)));
@@ -186,7 +184,7 @@ public class GUIManager {
 		System.out.println("Applying parameters!!!");
 		try {
 			protocolParams.updateParams();
-			layoutParams.updateParams();
+			LayoutTab.getInstance().updateParams();
 		} catch (InputException e) {
 			popAlertMessage(e.getMessage(), AlertType.ERROR);
 			return;
