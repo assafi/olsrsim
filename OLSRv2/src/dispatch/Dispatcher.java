@@ -40,6 +40,7 @@ import topology.Station;
 import topology.TopologyManager;
 
 import main.SimulationParameters;
+import main.SimulationParameters.StationsMode;
 
 /**
  * @author Assaf
@@ -135,7 +136,7 @@ public class Dispatcher implements IDispatcher {
 		
 		int maxStations = SimulationParameters.maxStations;
 		
-		boolean staticMode = (SimulationParameters.stationsMode == SimulationParameters.StationsMode.STATIC);
+		boolean staticMode = (SimulationParameters.stationsMode == StationsMode.STATIC);
 		
 		int timeout = SimulationParameters.simulationEndTime;
 		
