@@ -10,9 +10,11 @@
  */
 package gui;
 
+import gui.input_params.ClusterRadius;
 import gui.input_params.InputException;
 import gui.input_params.InputParam;
 import gui.input_params.LayoutMode;
+import gui.input_params.StationsMode;
 import gui.input_params.WorldSize;
 
 import java.awt.Color;
@@ -66,6 +68,8 @@ public class LayoutParameters extends JPanel {
 	private void setInputEntries() {
 		parameters = new LinkedList<InputParam>();
 		parameters.add(new WorldSize());
+		parameters.add(new StationsMode());
 		parameters.add(new LayoutMode());
+		parameters.add(new ClusterRadius());
 	}
 }
