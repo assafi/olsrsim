@@ -10,6 +10,11 @@
  */
 package gui.input_params;
 
+import gui.LayoutTab;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import main.SimulationParameters;
 
 /**
@@ -25,6 +30,19 @@ public class LayoutMode extends ComboBoxEntry {
 	 */
 	public LayoutMode() {
 		super(labelText, SimulationParameters.LayoutMode.values(), true);
+		this.addListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(SimulationParameters.LayoutMode.valueOf(getInputValue()) == 
+					SimulationParameters.LayoutMode.CLUSTER) {
+					LayoutTab.getInstance().setClusterEntries(true);
+				}
+				else {
+					LayoutTab.getInstance().setClusterEntries(false);
+				}
+			}
+		});
 	}
 	
 	@Override

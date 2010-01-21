@@ -18,7 +18,7 @@ import main.SimulationParameters;
  */
 public class ClusterRadius extends TextEntry {
 	private static final long serialVersionUID = 5055566070743448684L;
-	private static final String labelText = "Cluster radius (Cluster mode):";
+	private static final String labelText = "Cluster radius:";
 	
 	/**
 	 * 
