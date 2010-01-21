@@ -1,0 +1,75 @@
+/**
+ * OLSRv2
+ * 
+ * Team members: Assaf Israel, Eli Nazarov, Asi Bross
+ *
+ * File: InputsPanel.java
+ * Author: Asi
+ * Date: 01/01/2010
+ *
+ */
+package gui;
+
+import gui.input_params.ClusterNum;
+import gui.input_params.ClusterRadius;
+import gui.input_params.InputException;
+import gui.input_params.InputParam;
+import gui.input_params.LayoutMode;
+import gui.input_params.StationsMode;
+import gui.input_params.WorldSize;
+
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import java.util.LinkedList;
+import java.util.List;
+
+import javax.swing.JPanel;
+import javax.swing.border.LineBorder;
+
+/**
+ * @author Asi
+ *
+ */
+public class LayoutTab extends JPanel {
+	private static final long serialVersionUID = -8962273795833586231L;
+
+	private List<InputParam> parameters;
+	
+	/**
+	 * 
+	 */
+	public LayoutTab() {
+		this.setBackground(GUIManager.BACKGROUND);
+		this.setBorder(new LineBorder(Color.black));
+		this.setInputEntries();
+		this.setLayout(new FlowLayout(FlowLayout.LEFT));
+		
+		JPanel innerPanel = new JPanel();
+		innerPanel.setLayout(new GridLayout(parameters.size(), 1));
+		this.add(innerPanel);
+		for (InputParam entry : parameters) {
+			innerPanel.add(entry);
+		}
+	}
+	
+	/**
+	 * @throws InputException 
+	 * 
+	 */
+	public void updateParams() throws InputException {
+		for (InputParam param : parameters) {
+			param.updateParamValue();
+		}
+	}
+
+	private void setInputEntries() {
+		parameters = new LinkedList<InputParam>();
+		parameters.add(new WorldSize());
+		parameters.add(new StationsMode());
+		parameters.add(new LayoutMode());
+		parameters.add(new ClusterRadius());
+		parameters.add(new ClusterNum());
+	}
+}
