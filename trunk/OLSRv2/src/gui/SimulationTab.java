@@ -3,20 +3,26 @@
  * 
  * Team members: Assaf Israel, Eli Nazarov, Asi Bross
  *
- * File: ProtocolParameters.java
+ * File: SimulationParameters.java
  * Author: Asi
- * Date: 10/01/2010
+ * Date: 21/01/2010
  *
  */
 package gui;
 
+import gui.input_params.DataEventsPoissonicRate;
+import gui.input_params.EntryValidPeriod;
 import gui.input_params.HelloInterval;
 import gui.input_params.InputException;
 import gui.input_params.InputParam;
+import gui.input_params.MaxStations;
 import gui.input_params.ProtocolDataSendMode;
 import gui.input_params.ProtocolMode;
+import gui.input_params.ReceptionRadius;
+import gui.input_params.SimulationEndTime;
+import gui.input_params.StationsMode;
 import gui.input_params.TCInterval;
-import gui.input_params.EntryValidPeriod;
+import gui.input_params.TopologyPoissonicRate;
 import gui.input_params.TransmitionTime;
 
 import java.awt.Color;
@@ -32,15 +38,15 @@ import javax.swing.border.LineBorder;
  * @author Asi
  *
  */
-public class ProtocolParameters extends JPanel {
-	private static final long serialVersionUID = -4190880490292837168L;;
+public class SimulationTab extends JPanel {
+	private static final long serialVersionUID = 5537757885135458185L;
 	
 	private List<InputParam> parameters;
 	
 	/**
 	 * 
 	 */
-	public ProtocolParameters() {
+	public SimulationTab() {
 		this.setBackground(GUIManager.BACKGROUND);
 		this.setBorder(new LineBorder(Color.black));
 		this.setInputEntries();
@@ -66,11 +72,11 @@ public class ProtocolParameters extends JPanel {
 
 	private void setInputEntries() {
 		parameters = new LinkedList<InputParam>();
-		parameters.add(new EntryValidPeriod());
-		parameters.add(new HelloInterval());
-		parameters.add(new TCInterval());
-		parameters.add(new TransmitionTime());
-		parameters.add(new ProtocolMode());
-		parameters.add(new ProtocolDataSendMode());
+		parameters.add(new SimulationEndTime());
+		parameters.add(new MaxStations());
+		parameters.add(new ReceptionRadius());
+		parameters.add(new TopologyPoissonicRate());
+		parameters.add(new DataEventsPoissonicRate());
 	}
+
 }

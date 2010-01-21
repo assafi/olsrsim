@@ -50,8 +50,9 @@ public class GUIManager {
 	private FlowLayout worldFlowLayout;
 	
 	private JFrame mainFrame;
-	private LayoutParameters layoutParams;
-	private ProtocolParameters protocolParams;
+	private SimulationTab simulationParams;
+	private LayoutTab layoutParams;
+	private ProtocolTab protocolParams;
 	
 	private SimulationSpeed simulationSpeed = SimulationSpeed.NORMAL;
 	private JButton applyParametersButton;
@@ -93,13 +94,15 @@ public class GUIManager {
 		// simulation time and the parameters entries.
 		JPanel leftPanel = new JPanel();
 		leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.PAGE_AXIS));
-		SimulatorTime timerPanel = new SimulatorTime(200, 30);
+		SimulatorTime timerPanel = new SimulatorTime(220, 30);
 		
 		JTabbedPane inputsTabbedPane = new JTabbedPane();
-		inputsTabbedPane.setPreferredSize(new Dimension(200,450));
+		inputsTabbedPane.setPreferredSize(new Dimension(220,450));
 		
-		layoutParams = new LayoutParameters();
-		protocolParams = new ProtocolParameters();
+		simulationParams = new SimulationTab();
+		layoutParams = new LayoutTab();
+		protocolParams = new ProtocolTab();
+		inputsTabbedPane.addTab("simulation", simulationParams);
 		inputsTabbedPane.addTab("layout", layoutParams);
 		inputsTabbedPane.addTab("protocol", protocolParams);
 		leftPanel.add(timerPanel);

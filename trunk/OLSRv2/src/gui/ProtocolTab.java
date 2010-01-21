@@ -3,22 +3,23 @@
  * 
  * Team members: Assaf Israel, Eli Nazarov, Asi Bross
  *
- * File: InputsPanel.java
+ * File: ProtocolParameters.java
  * Author: Asi
- * Date: 01/01/2010
+ * Date: 10/01/2010
  *
  */
 package gui;
 
-import gui.input_params.ClusterRadius;
+import gui.input_params.HelloInterval;
 import gui.input_params.InputException;
 import gui.input_params.InputParam;
-import gui.input_params.LayoutMode;
-import gui.input_params.StationsMode;
-import gui.input_params.WorldSize;
+import gui.input_params.ProtocolDataSendMode;
+import gui.input_params.ProtocolMode;
+import gui.input_params.TCInterval;
+import gui.input_params.EntryValidPeriod;
+import gui.input_params.TransmitionTime;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.util.LinkedList;
@@ -31,17 +32,15 @@ import javax.swing.border.LineBorder;
  * @author Asi
  *
  */
-public class LayoutParameters extends JPanel {
-	private static final long serialVersionUID = -8962273795833586231L;
-
-	private static final Dimension ENTRY_SIZE = new Dimension(100, 25);
+public class ProtocolTab extends JPanel {
+	private static final long serialVersionUID = -4190880490292837168L;;
 	
 	private List<InputParam> parameters;
 	
 	/**
 	 * 
 	 */
-	public LayoutParameters() {
+	public ProtocolTab() {
 		this.setBackground(GUIManager.BACKGROUND);
 		this.setBorder(new LineBorder(Color.black));
 		this.setInputEntries();
@@ -67,9 +66,11 @@ public class LayoutParameters extends JPanel {
 
 	private void setInputEntries() {
 		parameters = new LinkedList<InputParam>();
-		parameters.add(new WorldSize());
-		parameters.add(new StationsMode());
-		parameters.add(new LayoutMode());
-		parameters.add(new ClusterRadius());
+		parameters.add(new EntryValidPeriod());
+		parameters.add(new HelloInterval());
+		parameters.add(new TCInterval());
+		parameters.add(new TransmitionTime());
+		parameters.add(new ProtocolMode());
+		parameters.add(new ProtocolDataSendMode());
 	}
 }
