@@ -181,11 +181,12 @@ public class GUIManager {
 	 * 
 	 */
 	public void applyParameters() {
-		System.out.println("Applying parameters!!!");
 		try {
-			protocolParams.updateParams();
+			simulationParams.updateParams();
 			LayoutTab.getInstance().updateParams();
+			protocolParams.updateParams();
 		} catch (InputException e) {
+			startSimulationButton.setEnabled(false);
 			popAlertMessage(e.getMessage(), AlertType.ERROR);
 			return;
 		}
@@ -196,7 +197,7 @@ public class GUIManager {
 	 * 
 	 */
 	public void startSimulation() {
-		System.out.println("Simulation started!!!");
+		startSimulationButton.setEnabled(false);
 		topologyUpdaterThread.start();
 		dispatcherThread.start();
 		stopSimulationButton.setEnabled(true);
@@ -206,7 +207,7 @@ public class GUIManager {
 	 * 
 	 */
 	public void stopSimulation() {
-		System.out.println("Simulation stoped!!!");
+		System.out.println("Simulation stoped!!! - not implemented yet");
 	}
 
 	/**
