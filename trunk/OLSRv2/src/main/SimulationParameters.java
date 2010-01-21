@@ -80,6 +80,8 @@ public class SimulationParameters {
 	
 	static public int clusterRadius = 100; /* This value is needed in Cluster mode */
 	
+	static public int clusterNum = 10;
+	
 	public enum StationsMode{
 		STATIC, 
 		DYNAMIC  
@@ -106,9 +108,6 @@ public class SimulationParameters {
 												Send data events. */
 	
 	static public int maxStations = 100;
-	
-	static public int clusterNum = 10;
-	
-	
+		
 	
 }
