@@ -20,6 +20,7 @@ import log.Log;
 import log.dataserver.SqlWriter;
 import main.SimulationParameters;
 import main.SimulationParameters.LayoutMode;
+import main.SimulationParameters.StationsMode;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -94,7 +95,7 @@ public class DispatcherTestCase {
 		SimulationParameters.xBoundry = 300;
 		SimulationParameters.yBoundry = 300;
 		SimulationParameters.receptionRadius = 100;
-		SimulationParameters.staticMode = true;
+		SimulationParameters.stationsMode = StationsMode.STATIC;
 		SimulationParameters.clusterRadius = 50;
 		SimulationParameters.maxStations = 100;
 		SimulationParameters.simulationEndTime = 10000;
