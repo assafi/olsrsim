@@ -135,7 +135,7 @@ public class Dispatcher implements IDispatcher {
 		
 		int maxStations = SimulationParameters.maxStations;
 		
-		boolean staticMode = SimulationParameters.staticMode;
+		boolean staticMode = (SimulationParameters.stationsMode == SimulationParameters.StationsMode.STATIC);
 		
 		int timeout = SimulationParameters.simulationEndTime;
 		
