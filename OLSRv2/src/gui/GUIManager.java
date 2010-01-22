@@ -28,6 +28,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.UIManager;
 
 import main.SimulationParameters;
 
@@ -37,7 +38,8 @@ import main.SimulationParameters;
  */
 public class GUIManager {
 
-	public static final Color BACKGROUND = new Color(200,230,250);
+	public static final Color BACKGROUND = Color.black;
+	public static final Color FONT_COLOR = Color.white;
 	public static final Dimension MAX_WORLD_SIZE = new Dimension(500,500);
 	public static final Dimension MIN_WORLD_SIZE = new Dimension(100,100);
 	private static GUIManager instance = null;
@@ -95,7 +97,14 @@ public class GUIManager {
 		leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.PAGE_AXIS));
 		SimulatorTime timerPanel = new SimulatorTime(220, 30);
 		
+		UIManager.put("TabbedPane.selected", new Color(248, 217, 133));
+		UIManager.put("TabbedPane.borderHightlightColor", Color.white);
+		
 		JTabbedPane inputsTabbedPane = new JTabbedPane();
+		inputsTabbedPane.setBackground(BACKGROUND);
+		inputsTabbedPane.setForeground(Color.white);
+		
+
 		inputsTabbedPane.setPreferredSize(new Dimension(220,450));
 		
 		simulationParams = new SimulationTab();

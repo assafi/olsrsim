@@ -26,7 +26,7 @@ import javax.swing.border.LineBorder;
  */
 public class SimulatorTime extends JPanel {
 	private static final long serialVersionUID = -3249725079459887708L;
-	private static final Color background = new Color(60,100,180);
+	private static final Color background = Color.blue;
 	private JLabel timeLabel;
 
 	public SimulatorTime(int width, int height) {
@@ -35,6 +35,7 @@ public class SimulatorTime extends JPanel {
 		this.setBackground(background);
 		this.setBorder( new LineBorder(Color.black));
 		this.timeLabel = new JLabel("0");
+		timeLabel.setForeground(Color.yellow);
 		timeLabel.setFont(new Font("Ariel", Font.BOLD, 16));
 		this.add(timeLabel);
 	}
