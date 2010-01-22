@@ -15,7 +15,10 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
@@ -27,11 +30,7 @@ import javax.swing.border.LineBorder;
 public class WorldTopology extends JPanel {
 	private static final long serialVersionUID = -4369922278122645088L;
 	private static final Color pointColor = new Color(255,0,0);
-
-	/**
-	 * @param width
-	 * @param height
-	 */
+	
 	public WorldTopology() {
 		this.setBackground(GUIManager.BACKGROUND);
 		this.setBorder(new LineBorder(Color.black));
@@ -53,12 +52,27 @@ public class WorldTopology extends JPanel {
 		for (GuiStation station : stations) {
 			drawCircle(station.getPosition(), station.getStationDisplaySize(), g2d);
 		}
+		List<DataSendAttributes> dataSends = DataSendAttributes.getAllDataSends();
+		for (DataSendAttributes dataSend : dataSends) {
+			drawLine(dataSend.getSource(), dataSend.getDestination(), g2d);
+		}
 		this.repaint();
 	}
 	
-	private void drawCircle(Point p, int diameter, Graphics2D g) {
-		g.drawOval(p.x, p.y, diameter, diameter);
-		g.fillOval(p.x, p.y, diameter, diameter);
+
+	/**
+	 * @param src
+	 * @param dst
+	 * @param g2d
+	 */
+	private void drawLine(Point src, Point dst, Graphics2D g2d) {
+		g2d.drawLine(src.x, src.y, dst.x, dst.y);
 	}
+
+	private void drawCircle(Point p, int diameter, Graphics2D g) {
+		g.drawOval(p.x - diameter/2, p.y - diameter/2, diameter, diameter);
+		g.fillOval(p.x - diameter/2, p.y - diameter/2, diameter, diameter);
+	}
+
 	
 }

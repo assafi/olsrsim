@@ -50,10 +50,15 @@ public class GuiTick {
 	private void tick() {
 		currentTickCount++;
 		GuiStation.updateStationsAttributes();
+		DataSendAttributes.updateDataSend();
 	}
 	
 	public long getTickCount() {
 		return currentTickCount;
+	}
+	
+	public void setTickCount(long tickCount) {
+		this.currentTickCount = tickCount;
 	}
 	
 	public synchronized void start() {

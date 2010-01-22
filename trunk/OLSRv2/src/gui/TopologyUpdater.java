@@ -11,6 +11,8 @@
 package gui;
 
 import events.Event;
+import events.SendDataEvent;
+import events.StopEvent;
 import events.TopologyEvent;
 import topology.IStation;
 
@@ -19,7 +21,6 @@ import topology.IStation;
  *
  */
 public class TopologyUpdater implements Runnable {
-	private WorldTopology graphicalTopology;
 
 	@Override
 	public void run() {
@@ -28,13 +29,13 @@ public class TopologyUpdater implements Runnable {
 		
 		try {
 			long eventTime, timeDelta, tickCount;
-			while (true) {		
-				currEvent = queue.popEvent();
+			
+			// pop the first event
+			currEvent = queue.popEvent();
+			while (currEvent.getClass() != StopEvent.class) {		
 				tickCount = GuiTick.getInstance().getTickCount();
 				eventTime = currEvent.getTime();
 				timeDelta = eventTime - tickCount;
-				System.out.println("\nEvent Time: " + eventTime);
-				System.out.println("TickCount: " + tickCount);
 				if(timeDelta > 0) {
 					// In case it was stopped
 					GuiTick.getInstance().start();
@@ -42,10 +43,9 @@ public class TopologyUpdater implements Runnable {
 					Thread.sleep(timeDelta * GuiTick.getInstance().getCurrentTickSize());
 				}
 				else if(timeDelta < 0) {
-					System.out.println("Stoped timer at: " + GuiTick.getInstance().getTickCount());
 					GuiTick.getInstance().stop();
 				}
-				
+							
 				if (currEvent.getClass() == TopologyEvent.class) {
 					TopologyEvent topologyEvent = (TopologyEvent)currEvent;
 					IStation station = topologyEvent.getStation();
@@ -63,7 +63,17 @@ public class TopologyUpdater implements Runnable {
 						break;
 					}
 				}
+				
+				if(currEvent.getClass() == SendDataEvent.class) {
+					SendDataEvent event = (SendDataEvent)currEvent;
+					DataSendAttributes.addDataSend(event.getSrcLocation(), event.getDstLocation());
+				}
+				// pop next event
+				currEvent = queue.popEvent();
 			}
+			// making sure the timer stops and the simulation time displays the correct end time
+			GuiTick.getInstance().stop();
+			GuiTick.getInstance().setTickCount(currEvent.getTime());
 		}
 		catch (Exception e) {
 			e.printStackTrace();

@@ -45,11 +45,11 @@ public class GUIManager {
 	private Thread topologyUpdaterThread;
 	private Thread dispatcherThread;
 	
-	private WorldTopology worldPanel;
 	private JPanel worldOuterPanel;
 	private FlowLayout worldFlowLayout;
 	
 	private JFrame mainFrame;
+	private WorldTopology worldTopology;
 	private SimulationTab simulationParams;
 	private ProtocolTab protocolParams;
 	
@@ -111,9 +111,9 @@ public class GUIManager {
 		worldOuterPanel = new JPanel();
 		worldOuterPanel.setPreferredSize(new Dimension(MAX_WORLD_SIZE.width, MAX_WORLD_SIZE.width));
 		worldFlowLayout = new FlowLayout(FlowLayout.CENTER);
-		worldPanel = new WorldTopology();
+		worldTopology = new WorldTopology();
 		setWorldDimension(SimulationParameters.xBoundry, SimulationParameters.yBoundry);
-		worldOuterPanel.add(worldPanel);
+		worldOuterPanel.add(worldTopology);
 		
 		// Creating the Start and stop simulation buttons
 		JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 40, 0));
@@ -250,7 +250,7 @@ public class GUIManager {
 	 * @param height
 	 */
 	public void setWorldDimension(int width, int height) {
-		worldPanel.setWorldSize(width, height);
+		worldTopology.setWorldSize(width, height);
 		worldFlowLayout.setHgap((MAX_WORLD_SIZE.width - width)/2);
 		worldFlowLayout.setVgap((MAX_WORLD_SIZE.height - height)/2);
 		worldOuterPanel.setLayout(worldFlowLayout);
