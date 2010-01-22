@@ -28,6 +28,7 @@ public class HelloIntervalEndEvent extends IntervalEndEvent {
 	
 	public HelloIntervalEndEvent(String src, long time) {
 		super(src, time);
+		this.eventType = "HELLO_INTERVAL_END_EVENT";
 	}
 
 	/* (non-Javadoc)

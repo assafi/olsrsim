@@ -1,2 +1,3 @@
-﻿SELECT num_sent, num_reach, num_loss, num_sent - num_reach - num_loss as diff FROM (Select count(*) as num_reach from sim_19012010_191550 s1 where EVENT_TYPE='DATA_LOSS') a, (Select count(*) as num_sent from sim_19012010_191550 s2 where EVENT_TYPE='DATA_SENT') b, (Select count(*) as num_loss from sim_19012010_191550 s2 where EVENT_TYPE='DATA_LOSS') c
- ;
+﻿SELECT * FROM sim_23012010_002902 s
+WHERE EVENT_TYPE='NODE_CREATE' or EVENT_TYPE='NODE_DESTROY' or
+EVENT_TYPE='NODE_MOVE' or EVENT_TYPE='NOOP';

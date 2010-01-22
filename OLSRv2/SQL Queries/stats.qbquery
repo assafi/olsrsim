@@ -1,2 +1,4 @@
-﻿SELECT num_reach/num_sent*100 as delivery_percentage FROM (Select count(*) as num_reach from sim_19012010_184329 s1 where EVENT_TYPE='DATA_REACH') a, (Select count(*) as num_sent from sim_19012010_184329 s2 where EVENT_TYPE='DATA_SENT') b
+﻿SELECT num_reach/num_sent*100 as delivery_percentage FROM
+  (Select count(*) as num_reach from sim_23012010_010038 s1 where EVENT_TYPE='DATA_REACH') a,
+  (Select count(*) as num_sent from sim_23012010_010038 s2 where EVENT_TYPE='DATA_SENT') b
  ;

@@ -10,14 +10,8 @@
  */
 package dispatcher;
 
-import static org.junit.Assert.*;
-
-import java.awt.Point;
-
 import layout.LayoutException;
-import layout.UniformLayout;
 import log.Log;
-import log.dataserver.SqlWriter;
 import main.SimulationParameters;
 import main.SimulationParameters.LayoutMode;
 import main.SimulationParameters.StationsMode;
@@ -28,15 +22,9 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import topology.Station;
-
 import data.CsvWriter;
 import dispatch.Dispatcher;
 import dispatch.DispatcherException;
-import events.Event;
-import events.StopEvent;
-import events.TopologyEvent;
-import events.TopologyEvent.TopologyEventType;
 
 
 /**
@@ -77,6 +65,7 @@ public class DispatcherTestCase {
 	 */
 	@After
 	public void tearDown() throws Exception {
+		log.updateDB();
 		log.close();
 		log = null;
 		dispatcher = null;
@@ -91,14 +80,14 @@ public class DispatcherTestCase {
 		
 		SimulationParameters.topologyPoissonicRate = (float) 0.2;
 		SimulationParameters.dataEventsPoissonicRate = (float) 0.2;
-		SimulationParameters.layoutMode = LayoutMode.UNIFORM;
+		SimulationParameters.layoutMode = LayoutMode.CLUSTER;
 		SimulationParameters.xBoundry = 300;
 		SimulationParameters.yBoundry = 300;
-		SimulationParameters.receptionRadius = 100;
-		SimulationParameters.stationsMode = StationsMode.STATIC;
+		SimulationParameters.receptionRadius = 50;
+		SimulationParameters.stationsMode = StationsMode.DYNAMIC;
 		SimulationParameters.clusterRadius = 50;
-		SimulationParameters.maxStations = 100;
-		SimulationParameters.simulationEndTime = 10000;
+		SimulationParameters.maxStations = 150;
+		SimulationParameters.simulationEndTime = 1000;
 		
 		dispatcher.startSimulation();
 	}

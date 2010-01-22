@@ -16,6 +16,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import data.SimEvents;
+
 import events.MessageEvent;
 
 import protocol.InformationBases.NeighborProperty;
@@ -56,6 +58,7 @@ public class TCMessage extends MessageEvent {
 				mprSelectors.put(entry.getKey(), entry.getValue());
 			}
 		}
+		this.messageType = SimEvents.TC_SENT.name();
 	}
 
 	/**

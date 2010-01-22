@@ -31,6 +31,7 @@ public class TCIntervalEndEvent extends IntervalEndEvent {
 	 */
 	public TCIntervalEndEvent(String src, long time) {
 		super(src, time);
+		this.eventType = "TC_INTERVAL_END_EVENT";
 	}
 
 	/* (non-Javadoc)
