@@ -40,6 +40,7 @@ public abstract class TextEntry extends InputParam {
 		JPanel innerPanel = new JPanel(new GridLayout(2, 1));
 		innerPanel.setBackground(GUIManager.BACKGROUND);
 		label = new JLabel(parameterText);
+		label.setForeground(GUIManager.FONT_COLOR);
 		innerPanel.add(label);
 		field = new JTextField(defaultValue);
 		innerPanel.add(field);
