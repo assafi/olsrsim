@@ -27,8 +27,6 @@ public class SqlWriter implements IDataSqlWriter {
 	
 	private Map<SimLabels,String> labelTypes = new Hashtable<SimLabels, String>();
 	
-	private static final String INDEX = "Indx";
-	
 	private SqlProxy proxy = null;
 
 	/*
@@ -65,6 +63,7 @@ public class SqlWriter implements IDataSqlWriter {
 	}
 
 	private void init() {	
+		labelTypes.put(SimLabels.INDX, "INTEGER PRIMARY KEY"); //AUTO_INCREMENT
 		labelTypes.put(SimLabels.VIRTUAL_TIME, "INTEGER NOT NULL");
 		labelTypes.put(SimLabels.NODE_ID, "VARCHAR(64)");
 		labelTypes.put(SimLabels.EVENT_TYPE, "VARCHAR(32) NOT NULL");
@@ -116,8 +115,7 @@ public class SqlWriter implements IDataSqlWriter {
 	private void createTable(String table) throws SqlProxyException, SQLException {
 		PreparedStatement createTableStmt = null;
 		try {
-			String query = "create table " + table + " ("
-					+ INDEX + " INTEGER PRIMARY KEY AUTO_INCREMENT, ";
+			String query = "create table " + table + " (";
 		
 			for (SimLabels label : SimLabels.values()) {
 				query += label.name() + " " + labelTypes.get(label);	
@@ -176,13 +174,16 @@ public class SqlWriter implements IDataSqlWriter {
 			
 			String query = "INSERT INTO " + tableName + " (";
 			for (String label : labels) {
+				if (label.equals(SimLabels.INDX.name())){
+					continue;
+				}
 				query += label;
 				if (!label.equals(labels[numLabels - 1])){
 					query += ", ";
 				}
 			}
 			query += ") VALUES(";
-			query += qMarks(labelTypes.size());
+			query += qMarks(labelTypes.size() - 1);
 			query += ")";
 			
 			PreparedStatement stmt = this.proxy.preparedStatement(query);
@@ -200,6 +201,8 @@ public class SqlWriter implements IDataSqlWriter {
 				case LOST: setBoolean(key, data, stmt, 1);
 					break;
 				case ERROR: setBoolean(key, data, stmt, 1);
+					break;
+				case INDX: //Do nothing 
 					break;
 				default: setString(key, data, stmt, 1);
 				}

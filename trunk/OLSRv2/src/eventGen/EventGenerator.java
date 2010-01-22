@@ -47,7 +47,7 @@ public class EventGenerator {
 	private Dispatcher dispatcher = null;
 	private static EventGenerator instance = null;
 	private int maxStations;
-	private static boolean staticMode = false;
+	private boolean staticMode = false;
 	
 	/*
 	 * This map of nodes will be updated before the Topology
@@ -72,7 +72,7 @@ public class EventGenerator {
 		this.layout = layout;
 		this.maxStations = maxStations;
 		this.log = Log.getInstance();
-		staticMode = staticMod;
+		this.staticMode = staticMod;
 	}
 	
 	/**
@@ -118,7 +118,7 @@ public class EventGenerator {
 			/*
 			 * Update the time in which the next event will be created 
 			 */
-			this.nextEventTime += getExpDelay(topologyPoissonicRate);
+			this.nextEventTime += Math.max(getExpDelay(topologyPoissonicRate),1);
 		}
 		
 		/*
@@ -147,6 +147,8 @@ public class EventGenerator {
 				logEvGenError(TopologyEvent.TopologyEventType.NODE_CREATE, e);
 			}
 		}
+		
+		this.nextEventTime = Math.max(getExpDelay(topologyPoissonicRate),1);
 	}
 
 	/**

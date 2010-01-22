@@ -12,11 +12,16 @@ package log;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
+import log.dataserver.SqlWriter;
+import log.sqlproxy.SqlProxy;
+import log.sqlproxy.SqlProxyDefinitions;
 import log.sqlproxy.SqlProxyException;
 
 import data.IDataFileWriter;
@@ -33,6 +38,9 @@ public class Log implements ILog {
 	private static Log instance = null; 
 	private IDataWriter writer = null; 
 	private boolean newLog = true;
+	private String fileIdentifier = null;
+	private String tableIdentifier = null;
+	private String simulationTime = null;
 	
 	private enum Mode { FILE, SQL } ;
 	
@@ -46,6 +54,7 @@ public class Log implements ILog {
 	}
 	
 	private Log() {
+		simulationTime = currentTime();
 	}
 	
 	/**
@@ -105,7 +114,8 @@ public class Log implements ILog {
 			fileExtension = defaultFileExtension;
 		}
 		
-		File logFile = new File(ILog.basePath + ILog.fileName + currentTime() + "." + fileExtension);
+		fileIdentifier = ILog.basePath + ILog.fileName + simulationTime + "." + fileExtension;
+		File logFile = new File(fileIdentifier);
 		try {
 			logFile.createNewFile();			
 			dataWriter.openFile(logFile, null);
@@ -116,9 +126,9 @@ public class Log implements ILog {
 	
 	private void createSqlLog(IDataSqlWriter dataWriter) {
 		
-		String tableName = ILog.fileName + currentTime();
+		tableIdentifier = ILog.fileName + simulationTime;
 		try {
-			dataWriter.open(tableName);
+			dataWriter.open(tableIdentifier);
 		} catch (Exception e) {
 			handleDWError(e);
 		} 
@@ -165,4 +175,83 @@ public class Log implements ILog {
 			throw new LogException("Error while trying to write data to log - " + e.getMessage(),e);
 		}
 	}
+
+	/**
+	 * 
+	 */
+	public void updateDB() {
+		SqlProxy proxy = new SqlProxy();
+		close();
+		try {
+			this.writer = new SqlWriter();
+			createSqlLog((IDataSqlWriter)writer);
+			writer.writeLabels(SimLabels.stringify());
+			close();
+			proxy.connect(SqlProxyDefinitions.host , SqlProxyDefinitions.port,
+					SqlProxyDefinitions.user, SqlProxyDefinitions.password, SqlProxyDefinitions.database);
+			
+			String newIdentifier = ((new File("").getAbsolutePath()) + "/" + fileIdentifier).replace("\\", "/");
+			String query = "LOAD DATA INFILE '" + newIdentifier + "' " + 
+			"INTO TABLE " + tableIdentifier + " FIELDS TERMINATED BY ',' ENCLOSED BY '\"' " +
+					"LINES TERMINATED BY '" + System.getProperty("line.separator") + "'" +
+							" IGNORE 1 LINES;";
+			PreparedStatement stmt = proxy.preparedStatement(query);
+			stmt.execute();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (SqlProxyException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		/*
+		 * Delete the csv file since, we have all data backed
+		 * up on the SQL server
+		 */
+		File csvFile = new File(fileIdentifier);
+		if (csvFile.exists()) {
+			csvFile.deleteOnExit();
+		}
+	}
+	
+//	private boolean tableExists(SqlProxy proxy, String tableName) throws SqlProxyException, SQLException {
+//		
+//		PreparedStatement statement = null;
+//		ResultSet result = null;
+//		try {
+//			statement = proxy.preparedStatement("SELECT table_name FROM information_schema.tables " +
+//					"WHERE table_schema=? AND table_name='" + tableName + "'");
+//			statement.setString(1, "olsr");
+//			result = statement.executeQuery();
+//			
+//			/*
+//			 * If table exists, results are not empty.
+//			 */
+//			return result.first();
+//		} finally {
+//			SqlProxy.closeAllSQLConnections(new Object[] {statement,result});
+//		}
+//	}
+//	
+//	private void createUsersTable() throws SqlProxyException, SQLException {
+//		PreparedStatement createTableStmt = null;
+//		try {
+//			createTableStmt = this.proxy.preparedStatement("create table " + USERS_TABLE + "("
+//					+ ID + " INTEGER PRIMARY KEY AUTO_INCREMENT, " // PRIMARY KEY == KEY + NOT NULL
+//					+ USERNAME + " VARCHAR(32) NOT NULL UNIQUE, "
+//					+ PASSWORD + " VARCHAR(32) NOT NULL, "
+//					+ FIRST_NAME + " VARCHAR(32) NOT NULL, "
+//					+ MIDDLE_NAME + " VARCHAR(32) ,"
+//					+ LAST_NAME + " VARCHAR(32) NOT NULL, "
+//					+ ADDRESS + " VARCHAR(128), "
+//					+ DOB + " DATE NOT NULL, "
+//					+ IS_ADMIN + " BOOLEAN NOT NULL DEFAULT " + DEFAULT_ADMIN_VAL + ")");
+//			createTableStmt.executeUpdate();
+//		} finally {
+//			SqlProxy.closeAllSQLConnections(new Object[] { createTableStmt });
+//		}
+//				
+//	}
 }

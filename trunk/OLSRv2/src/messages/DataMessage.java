@@ -12,6 +12,8 @@ package messages;
 
 import java.util.Collection;
 
+import data.SimEvents;
+
 import protocol.OLSRv2Protocol.IOLSRv2Protocol;
 
 import topology.IStation;
@@ -48,6 +50,7 @@ public class DataMessage extends MessageEvent {
 		this.localDst = localDst;
 		this.globalSrc = globalSrc;
 		this.globalDst = globalDst;
+		this.messageType = SimEvents.DATA_SENT.name();
 	}
 
 	/* (non-Javadoc)

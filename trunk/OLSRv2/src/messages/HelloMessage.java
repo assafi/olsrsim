@@ -13,6 +13,8 @@ package messages;
 import java.util.Collection;
 import java.util.Map;
 
+import data.SimEvents;
+
 import events.MessageEvent;
 
 import protocol.InformationBases.NeighborProperty;
@@ -38,6 +40,7 @@ public class HelloMessage extends MessageEvent {
 		super(src, time);
 		this.neighborSet = neighborSet;
 		this.lostNeighborSet = lostNeighborSet;
+		this.messageType = SimEvents.HELLO_SENT.name();
 	}
 
 	/**

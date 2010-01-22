@@ -208,7 +208,6 @@ public class Dispatcher implements IDispatcher {
 			
 			if (SendDataEvent.class.isAssignableFrom(currentEvent.getClass())) {
 				SendDataEvent sde = (SendDataEvent)currentEvent;
-//				System.out.println("Data event at " + currentVirtualTime + ", from " + sde.getSrc() + ",to " + sde.getDst());
 				try {
 					IStation station = this.topologyManager.getStationById(sde.getSrcName());
 					if (null != station) {
@@ -219,6 +218,7 @@ public class Dispatcher implements IDispatcher {
 				}
 			}
 		}
+		
 		// Alerts the GUI that the simulation is over
 		GuiEventsQueue.getInstance().addEvent(new StopEvent(timeout));
 		try {

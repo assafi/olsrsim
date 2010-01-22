@@ -64,10 +64,6 @@ public class SqlProxy {
 	}
 	
 	//TODO Probably need to add SSH public key (SSL) - Later iteration
-	/**
-	 * @param host
-	 * @param port
-	 */
 	public void secureConnect(String host, int port){
 		throw new NotImplementedException();
 	}

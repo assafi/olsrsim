@@ -27,6 +27,7 @@ public class CsvWriter implements IDataFileWriter {
 	private String[] labels = null;
 	private int nbrCols = 0;
 	private int nbrRows = 0;
+	private int index = 0;
 
 	/**
 	 * 
@@ -69,14 +70,23 @@ public class CsvWriter implements IDataFileWriter {
 		}
 
 		String[] row = new String[nbrCols];
-
-		for (int i = 0; i < row.length; i++) {
+		for (int i = 0; i < labels.length; i++) {
 			if (data.containsKey(labels[i])) {
 				row[i] = data.get(labels[i]);
+				if (row[i] != null && row[i].equals("true")){
+					row[i] = "1";
+				}
+				if (row[i] != null && row[i].equals("false")){
+					row[i] = "0";
+				}
 			} else {
-				row[i] = "";
+				row[i] = "0";
 			}
 		}
+		/*
+		 * Index
+		 */
+		row[0] = Integer.toString(index++);
 
 		writeData(row);
 	}

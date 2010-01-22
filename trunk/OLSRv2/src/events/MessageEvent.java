@@ -13,6 +13,7 @@ import data.SimLabels;
 public abstract class MessageEvent extends Event {
 
 	private String eventSource;
+	protected String messageType = null;
 	
 	/**
 	 * @param src The originator of the current Message event
@@ -40,8 +41,8 @@ public abstract class MessageEvent extends Event {
 	public void logEvent(String localDst, String globalSrc, String globalDst) {
 		Log log = Log.getInstance();
 		HashMap<String, String> data = new HashMap<String, String>();
-		data.put(SimLabels.VIRTUAL_TIME.name(), Long.toString(this.getTime()));
-		data.put(SimLabels.EVENT_TYPE.name(), this.getClass().getName());
+		data.put(SimLabels.VIRTUAL_TIME.name(), Long.toString(getTime()));
+		data.put(SimLabels.EVENT_TYPE.name(), messageType);
 		data.put(SimLabels.GLOBAL_SOURCE.name(),globalSrc);
 		data.put(SimLabels.GLOBAL_TARGET.name(),globalDst);
 		data.put(SimLabels.LOCAL_SOURCE.name(), eventSource);
