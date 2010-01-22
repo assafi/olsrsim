@@ -56,7 +56,7 @@ public class SendDataEvent extends Event {
 	 * @param loc
 	 */
 	public void setSrcLocation(Point loc) {
-		this.srcLocation = new Point(loc);
+		this.srcLocation = loc;
 	}
 
 
@@ -85,7 +85,7 @@ public class SendDataEvent extends Event {
 	 * @param loc
 	 */
 	public void setDstLocation(Point loc) {
-		this.dstLocation = new Point(loc);
+		this.dstLocation = loc;
 	}
 
 	/* (non-Javadoc)
