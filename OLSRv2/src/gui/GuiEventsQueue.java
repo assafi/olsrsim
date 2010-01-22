@@ -23,7 +23,7 @@ public class GuiEventsQueue {
 	private LinkedList<Event> eventsQueue;
 	
 	/**
-	 * @return
+	 * @return An instance of GuiEventsQueue
 	 */
 	public static GuiEventsQueue getInstance() {
 		if(instance == null) {
@@ -57,6 +57,5 @@ public class GuiEventsQueue {
 		}
 		return this.eventsQueue.remove();
 	}
-	
 	
 }
