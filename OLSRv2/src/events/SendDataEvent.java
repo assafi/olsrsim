@@ -10,6 +10,8 @@
  */
 package events;
 
+import java.awt.Point;
+
 import topology.IStation;
 
 /**
@@ -18,8 +20,10 @@ import topology.IStation;
  */
 public class SendDataEvent extends Event {
 
-	private String src;
-	private String dst;
+	private String srcName;
+	private Point srcLocation;
+	private String dstName;
+	private Point dstLocation;
 	/**
 	 * @param time
 	 */
@@ -30,30 +34,58 @@ public class SendDataEvent extends Event {
 	/**
 	 * @return the src
 	 */
-	public String getSrc() {
-		return src;
+	public String getSrcName() {
+		return srcName;
+	}
+	
+	/**
+	 * @return the location
+	 */
+	public Point getSrcLocation() {
+		return srcLocation;
 	}
 
 	/**
-	 * @param src the src to set
+	 * @param srcName the src to set
 	 */
-	public void setSrc(String src) {
-		this.src = src;
+	public void setSrcName(String srcName) {
+		this.srcName = srcName;
+	}
+	
+	/**
+	 * @param loc
+	 */
+	public void setSrcLocation(Point loc) {
+		this.srcLocation = loc;
 	}
 
 
 	/**
 	 * @return the dst
 	 */
-	public String getDst() {
-		return dst;
+	public String getDstName() {
+		return dstName;
+	}
+	
+	/**
+	 * @return the loc
+	 */
+	public Point getDstLocation() {
+		return dstLocation;
 	}
 
 	/**
-	 * @param dst the dst to set
+	 * @param dstName 
 	 */
-	public void setDst(String dst) {
-		this.dst = dst;
+	public void setDstName(String dstName) {
+		this.dstName = dstName;
+	}
+	
+	/**
+	 * @param loc
+	 */
+	public void setDstLocation(Point loc) {
+		this.dstLocation = loc;
 	}
 
 	/* (non-Javadoc)
@@ -62,7 +94,7 @@ public class SendDataEvent extends Event {
 	@Override
 	public void execute(Object node) throws Exception {
 		IStation station = (IStation)node;
-		station.getOLSRv2Protocol().sendDataMessage(dst);
+		station.getOLSRv2Protocol().sendDataMessage(dstName);
 	}
 
 }
