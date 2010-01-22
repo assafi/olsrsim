@@ -168,14 +168,14 @@ public class EventGenerator {
 		List<IStation> stationsThatWantsToSendDataPackets = dataTime2stations.remove(currentTime);
 		for (IStation station : stationsThatWantsToSendDataPackets) {
 			SendDataEvent dataEvent = new SendDataEvent(currentTime);
-			dataEvent.setSrc(station.getID());
+			dataEvent.setSrcName(station.getID());
 			
 			String trgID;
 			do {
 				/* Will not send data to itself */
 				trgID = topologyManager.getRandomStation();
 			} while (trgID == station.getID());
-			dataEvent.setDst(trgID);
+			dataEvent.setDstName(trgID);
 			dispatcher.pushEvent(dataEvent);
 			
 			/*
