@@ -210,7 +210,7 @@ public class Dispatcher implements IDispatcher {
 				SendDataEvent sde = (SendDataEvent)currentEvent;
 //				System.out.println("Data event at " + currentVirtualTime + ", from " + sde.getSrc() + ",to " + sde.getDst());
 				try {
-					IStation station = this.topologyManager.getStationById(sde.getSrc());
+					IStation station = this.topologyManager.getStationById(sde.getSrcName());
 					if (null != station) {
 						sde.execute(station);
 					}
