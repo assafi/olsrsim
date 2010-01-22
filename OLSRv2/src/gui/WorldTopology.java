@@ -14,12 +14,13 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.io.IOException;
+import java.net.URL;
 import java.util.List;
-import java.util.Map;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
@@ -29,11 +30,20 @@ import javax.swing.border.LineBorder;
  */
 public class WorldTopology extends JPanel {
 	private static final long serialVersionUID = -4369922278122645088L;
-	private static final Color pointColor = new Color(255,0,0);
+	private static final Color STATION_COLOR = Color.blue;
+	private static final Color DATA_MESSAGE_COLOR = Color.yellow;
+	private Image backgroundImage;
 	
 	public WorldTopology() {
 		this.setBackground(GUIManager.BACKGROUND);
 		this.setBorder(new LineBorder(Color.black));
+		try {
+			URL imageURL = getClass().getResource("../world_background.jpg");
+			this.backgroundImage = ImageIO.read(imageURL);
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(-1);
+		}
 	}
 	
 	/**
@@ -46,12 +56,14 @@ public class WorldTopology extends JPanel {
 	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		g.drawImage(backgroundImage, 0, 0, null);
 		Graphics2D g2d= (Graphics2D)g.create();
-		g2d.setColor(pointColor);
+		g2d.setColor(STATION_COLOR);
 		List<GuiStation> stations = GuiStation.getAllStations();
 		for (GuiStation station : stations) {
 			drawCircle(station.getPosition(), station.getStationDisplaySize(), g2d);
 		}
+		g2d.setColor(DATA_MESSAGE_COLOR);
 		List<DataSendAttributes> dataSends = DataSendAttributes.getAllDataSends();
 		for (DataSendAttributes dataSend : dataSends) {
 			drawLine(dataSend.getSource(), dataSend.getDestination(), g2d);
