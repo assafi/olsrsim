@@ -50,7 +50,8 @@ public class TopologyUpdater implements Runnable {
 					TopologyEvent topologyEvent = (TopologyEvent)currEvent;
 					IStation station = topologyEvent.getStation();
 					
-					System.out.println("Event type: " + topologyEvent.getType().name());
+					System.out.println(topologyEvent.getType().toString());
+					
 					switch (topologyEvent.getType()) {
 					case NODE_CREATE:	
 						GuiStation.createStation(station.getID(), station.getLocation());
@@ -74,6 +75,8 @@ public class TopologyUpdater implements Runnable {
 			// making sure the timer stops and the simulation time displays the correct end time
 			GuiTick.getInstance().stop();
 			GuiTick.getInstance().setTickCount(currEvent.getTime());
+			GuiStation.simulationFinished();
+			DataSendAttributes.simulationFinished();
 		}
 		catch (Exception e) {
 			e.printStackTrace();

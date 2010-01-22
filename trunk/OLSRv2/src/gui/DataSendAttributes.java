@@ -83,5 +83,14 @@ public class DataSendAttributes {
 	public Point getSource() {
 		return src;
 	}
+
+	/**
+	 * 
+	 */
+	public static void simulationFinished() {
+		synchronized (allDataSends) {
+			allDataSends.clear();
+		}
+	}
 	
 }
