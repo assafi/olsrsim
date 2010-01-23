@@ -10,7 +10,6 @@
  */
 package gui;
 
-import gui.input_params.ComboBoxEntry;
 import gui.input_params.InputException;
 
 import java.awt.BorderLayout;
@@ -58,7 +57,6 @@ public class GUIManager {
 	private SimulationSpeed simulationSpeed = SimulationSpeed.NORMAL;
 	private JButton applyParametersButton;
 	private JButton startSimulationButton;
-	private ComboBoxEntry simulationSpeedBox;
 	
 	public enum AlertType {
 		NORMAL, ERROR, WARNING, FATAL
@@ -82,29 +80,27 @@ public class GUIManager {
 	 * 
 	 */
 	public void createGUI() {
-		mainFrame = new JFrame();
+		try { // Trying to set the windows look and feel
+			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+		} catch (Exception e) {}
+		
+		mainFrame = new JFrame("OLSRv2 Simulator ");
+		
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		FlowLayout fLayout = new FlowLayout(FlowLayout.CENTER, 20, 20);
 		mainFrame.setLayout(fLayout);
 		
-		JPanel mainPanel = new JPanel(new BorderLayout(20, 10));
+		JPanel mainPanel = new JPanel(new BorderLayout(20, 20));
 		mainFrame.getContentPane().add(mainPanel);
 		
 		// Creating the left part of the GUI, this part includes the
 		// simulation time and the parameters entries.
 		JPanel leftPanel = new JPanel();
 		leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.PAGE_AXIS));
-		SimulatorTime timerPanel = new SimulatorTime(220, 30);
-		
-		UIManager.put("TabbedPane.selected", new Color(248, 217, 133));
-		UIManager.put("TabbedPane.borderHightlightColor", Color.white);
+		SimulatorTime timerPanel = new SimulatorTime(180, 30);
 		
 		JTabbedPane inputsTabbedPane = new JTabbedPane();
-		inputsTabbedPane.setBackground(BACKGROUND);
-		inputsTabbedPane.setForeground(Color.white);
-		
-
-		inputsTabbedPane.setPreferredSize(new Dimension(220,450));
+		inputsTabbedPane.setPreferredSize(new Dimension(180,450));
 		
 		simulationParams = new SimulationTab();
 		protocolParams = new ProtocolTab();
@@ -124,17 +120,13 @@ public class GUIManager {
 		worldOuterPanel.add(worldTopology);
 		
 		// Creating the Start and stop simulation buttons
-		JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 40, 0));
+		JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 100, 0));
 		applyParametersButton = new JButton("Apply Parameters");
 		startSimulationButton = new JButton("Start Simulation");
 		startSimulationButton.setEnabled(false);
 		
-		simulationSpeedBox = new ComboBoxEntry("Simulation speed:",
-				SimulationSpeed.values(), false);
-		
 		bottomPanel.add(applyParametersButton);
 		bottomPanel.add(startSimulationButton);
-		bottomPanel.add(simulationSpeedBox);
 		
 		mainPanel.add(leftPanel, BorderLayout.LINE_START);
 		mainPanel.add(worldOuterPanel, BorderLayout.CENTER);
@@ -155,14 +147,6 @@ public class GUIManager {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				GUIManager.getInstance().applyParameters();
-			}
-		});
-		
-		simulationSpeedBox.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				SimulationSpeed speed = SimulationSpeed.valueOf(simulationSpeedBox.getInputValue());
-				GUIManager.getInstance().setSimulationSpeed(speed);
 			}
 		});
 		
