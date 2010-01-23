@@ -89,7 +89,7 @@ public class DataMessage extends MessageEvent {
 	 */
 	public void setGlobalSrc(String globalSrc) {
 		this.globalSrc = globalSrc;
-		}
+	}
 	
 
 	/**
