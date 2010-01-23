@@ -10,9 +10,8 @@
  */
 package gui.input_params;
 
-import main.SimulationParameters;
 import gui.GUIManager;
-import gui.GUIManager.AlertType;
+import main.SimulationParameters;
 
 /**
  * @author Asi

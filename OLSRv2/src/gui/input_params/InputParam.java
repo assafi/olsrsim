@@ -23,7 +23,6 @@ public abstract class InputParam extends JPanel{
 	 * Updates the value that was entered by the user into the correct
 	 * parameter.
 	 * @throws InputException 
-	 * @throws Exception 
 	 */
 	public abstract void updateParamValue() throws InputException;
 	
