@@ -78,10 +78,11 @@ public class TopologyUpdater implements Runnable {
 			GuiTick.getInstance().setTickCount(currEvent.getTime());
 			GuiStation.simulationFinished();
 			DataSendAttributes.simulationFinished();
+			DispatcherThread.getInstance().notifySimulationEnded();
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-			System.exit(0);
+			System.exit(-1);
 		}
 	}
 
