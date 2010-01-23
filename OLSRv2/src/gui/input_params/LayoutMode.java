@@ -29,7 +29,7 @@ public class LayoutMode extends ComboBoxEntry {
 	 * 
 	 */
 	public LayoutMode() {
-		super(labelText, SimulationParameters.LayoutMode.values(), true);
+		super(labelText, SimulationParameters.LayoutMode.values());
 		this.addListener(new ActionListener() {
 			
 			@Override

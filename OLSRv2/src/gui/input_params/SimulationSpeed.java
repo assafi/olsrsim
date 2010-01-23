@@ -28,7 +28,7 @@ public class SimulationSpeed extends ComboBoxEntry {
 	 * 
 	 */
 	public SimulationSpeed() {
-		super(labelText, gui.GUIManager.SimulationSpeed.values(), true);
+		super(labelText, gui.GUIManager.SimulationSpeed.values());
 		this.addListener(new ActionListener() {
 			
 			@Override

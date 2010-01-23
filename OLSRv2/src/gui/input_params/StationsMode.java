@@ -24,7 +24,7 @@ public class StationsMode extends ComboBoxEntry {
 	 * 
 	 */
 	public StationsMode() {
-		super(labelText, SimulationParameters.StationsMode.values(), true);
+		super(labelText, SimulationParameters.StationsMode.values());
 	}
 
 	@Override
