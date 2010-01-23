@@ -178,9 +178,13 @@ public class Dispatcher implements IDispatcher {
 					Point dstLocation = topologyManager.getStationById(dataMessageEvent.getLocalDst()).getLocation();
 					dataMessageEvent.setEventSourceLocation(srcLocation);
 					dataMessageEvent.setLocalDestinationLocation(dstLocation);
+					GuiEventsQueue.getInstance().addEvent(currentEvent);
 				}
+			} 
+			else {
+				GuiEventsQueue.getInstance().addEvent(currentEvent);
 			}
-			GuiEventsQueue.getInstance().addEvent(currentEvent);
+
 			if (currentEvent.getClass().equals(StopEvent.class)){
 				break;
 			}
