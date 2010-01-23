@@ -167,7 +167,7 @@ public class TopologyManager implements ITopologyManager {
 	}
 
 	public String getRandomStation() {
-		int randomStationIndex = rand.nextInt(this.count());
+		int randomStationIndex = rand.nextInt(stationsByID.size());
 		return new String((String)stationsByID.keySet().toArray()[randomStationIndex]);
 	}
 	
