@@ -40,6 +40,9 @@ public class GuiTick {
 		}
 	};
 	
+	/**
+	 * @return An instance of type GuiTick
+	 */
 	public static GuiTick getInstance() {
 		if(instance == null) {
 			instance = new GuiTick();
@@ -53,18 +56,30 @@ public class GuiTick {
 		DataSendAttributes.updateDataSend();
 	}
 	
+	/**
+	 * @return the current tick count
+	 */
 	public long getTickCount() {
 		return currentTickCount;
 	}
 	
+	/**
+	 * @param tickCount
+	 */
 	public void setTickCount(long tickCount) {
 		this.currentTickCount = tickCount;
 	}
 	
+	/**
+	 * 
+	 */
 	public synchronized void start() {
 		timer.start();
 	}
 
+	/**
+	 * 
+	 */
 	public synchronized void stop() {
 		timer.stop();
 	}
@@ -89,6 +104,9 @@ public class GuiTick {
 		timer.setDelay(currentTickSize);
 	}
 	
+	/**
+	 * @return The size in milliseconds of a tick
+	 */
 	public int getCurrentTickSize() {
 		return currentTickSize;
 	}

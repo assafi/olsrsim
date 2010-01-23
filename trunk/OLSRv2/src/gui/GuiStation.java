@@ -43,8 +43,8 @@ public class GuiStation {
 		NEW, DESTROYED, MOVING, NORMAL
 	}
 	
-	/**
-	 * @return
+	/** 
+	 * @return A duplicated list of all GuiStations
 	 */
 	public static List<GuiStation> getAllStations() {
 		List<GuiStation> ret = new LinkedList<GuiStation>();
@@ -56,6 +56,10 @@ public class GuiStation {
 		return ret;
 	}
 	
+	/**
+	 * @param id
+	 * @param location
+	 */
 	public GuiStation(String id, Point location) {
 		this.stationID = new String(id);
 		this.stationPosition = new Point(location);
@@ -76,6 +80,9 @@ public class GuiStation {
 		}
 	}
 
+	/**
+	 * @return The current display size of the station
+	 */
 	public int getStationDisplaySize() {
 		long currTickCount = GuiTick.getInstance().getTickCount();
 		long stationUpTime = currTickCount - this.creationTime;
@@ -119,7 +126,7 @@ public class GuiStation {
 	}
 
 	/**
-	 * @return
+	 * @return the station current position
 	 */
 	public Point getPosition() {
 		Point ret;

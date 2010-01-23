@@ -46,7 +46,7 @@ public class LayoutTab extends JPanel {
 	private boolean clusterParamsVisible = false;
 	
 	/**
-	 * @return
+	 * @return An instance of type LayoutTab
 	 */
 	public static LayoutTab getInstance() {
 		if(null == instance) {
