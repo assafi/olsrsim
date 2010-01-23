@@ -216,14 +216,14 @@ public class GuiStation {
 	public static void simulationFinished() {
 		synchronized (allStations) {
 			movingStations.clear();
-			List<GuiStation> destroedStations = new LinkedList<GuiStation>();
+			List<GuiStation> destroyedStations = new LinkedList<GuiStation>();
 			for (GuiStation gStation : allStations) {
 				if(gStation.state == StationState.DESTROYED) {
-					destroedStations.add(gStation);
+					destroyedStations.add(gStation);
 				}
 				gStation.state = StationState.NORMAL;
 			}
-			for (GuiStation gStation : destroedStations) {
+			for (GuiStation gStation : destroyedStations) {
 				allStations.remove(gStation);
 			}
 		}

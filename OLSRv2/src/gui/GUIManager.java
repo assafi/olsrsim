@@ -58,7 +58,6 @@ public class GUIManager {
 	private SimulationSpeed simulationSpeed = SimulationSpeed.NORMAL;
 	private JButton applyParametersButton;
 	private JButton startSimulationButton;
-	private JButton stopSimulationButton;
 	private ComboBoxEntry simulationSpeedBox;
 	
 	public enum AlertType {
@@ -129,17 +128,14 @@ public class GUIManager {
 		applyParametersButton = new JButton("Apply Parameters");
 		startSimulationButton = new JButton("Start Simulation");
 		startSimulationButton.setEnabled(false);
-		stopSimulationButton = new JButton("Stop Simulation");
-		stopSimulationButton.setEnabled(false);
 		
 		simulationSpeedBox = new ComboBoxEntry("Simulation speed:",
 				SimulationSpeed.values(), false);
 		
 		bottomPanel.add(applyParametersButton);
-		bottomPanel.add(simulationSpeedBox);
 		bottomPanel.add(startSimulationButton);
-		bottomPanel.add(stopSimulationButton);
-
+		bottomPanel.add(simulationSpeedBox);
+		
 		mainPanel.add(leftPanel, BorderLayout.LINE_START);
 		mainPanel.add(worldOuterPanel, BorderLayout.CENTER);
 		mainPanel.add(bottomPanel, BorderLayout.PAGE_END);
@@ -177,12 +173,6 @@ public class GUIManager {
 			}
 		});
 		
-		stopSimulationButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				GUIManager.getInstance().stopSimulation();
-			}
-		});
 	}
 
 
@@ -206,19 +196,12 @@ public class GUIManager {
 	 * 
 	 */
 	public void startSimulation() {
+		applyParametersButton.setEnabled(false);
 		startSimulationButton.setEnabled(false);
 		topologyUpdaterThread.start();
 		dispatcherThread.start();
-		stopSimulationButton.setEnabled(true);
 	}
 	
-	/**
-	 * 
-	 */
-	public void stopSimulation() {
-		System.out.println("Simulation stoped!!! - not implemented yet");
-	}
-
 	/**
 	 * @return The simulation speed
 	 */
