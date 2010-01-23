@@ -44,8 +44,8 @@ public class GUIManager {
 	public static final Dimension MIN_WORLD_SIZE = new Dimension(100,100);
 	private static GUIManager instance = null;
 
-	private Thread topologyUpdaterThread;
-	private Thread dispatcherThread;
+	public Thread topologyUpdaterThread;
+	public Thread dispatcherThread;
 	
 	private JPanel worldOuterPanel;
 	private FlowLayout worldFlowLayout;
