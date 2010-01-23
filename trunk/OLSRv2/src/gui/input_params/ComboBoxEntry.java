@@ -37,30 +37,27 @@ public class ComboBoxEntry extends InputParam {
 	 * @param values
 	 * @param vertical 
 	 */
-	public ComboBoxEntry(String parameterText, Object[] values, boolean vertical) {
+	public ComboBoxEntry(String parameterText, Object[] values) {
 		setLayout(new FlowLayout(FlowLayout.LEFT));
 		JLabel label = new JLabel(parameterText);
 		comboBox = new JComboBox(values);
 		comboBox.setBackground(Color.white);
 
 		JPanel innerPanel;
-		if(vertical) {
-			label.setForeground(GUIManager.FONT_COLOR);
-			setBackground(GUIManager.BACKGROUND);
-			innerPanel = new JPanel(new GridLayout(2, 1));
-			innerPanel.setBackground(GUIManager.BACKGROUND);
-			innerPanel.add(label);
-			innerPanel.add(comboBox);
-			this.add(innerPanel);
-		}
-		else {
-			label.setForeground(Color.black);
-			this.add(label);
-			this.add(comboBox);
-		}
+		label.setForeground(GUIManager.FONT_COLOR);
+		setBackground(GUIManager.BACKGROUND);
+		innerPanel = new JPanel(new GridLayout(2, 1));
+		innerPanel.setBackground(GUIManager.BACKGROUND);
+		innerPanel.add(label);
+		innerPanel.add(comboBox);
+		this.add(innerPanel);
 	}
 
 	
+	/**
+	 * Wrapper to the JComboBox addListener method.
+	 * @param listener
+	 */
 	public void addListener(ActionListener listener) {
 		comboBox.addActionListener(listener);
 	}

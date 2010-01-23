@@ -24,7 +24,7 @@ public class ProtocolDataSendMode extends ComboBoxEntry {
 	 * 
 	 */
 	public ProtocolDataSendMode() {
-		super(labelText, SimulationParameters.ProtocolDataSendMode.values(), true);
+		super(labelText, SimulationParameters.ProtocolDataSendMode.values());
 	}
 
 	@Override

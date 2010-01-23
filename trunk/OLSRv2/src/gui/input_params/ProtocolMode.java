@@ -24,7 +24,7 @@ public class ProtocolMode extends ComboBoxEntry {
 	 * 
 	 */
 	public ProtocolMode() {
-		super(labelText, SimulationParameters.ProtocolMprMode.values(), true);
+		super(labelText, SimulationParameters.ProtocolMprMode.values());
 	}
 
 	@Override
