@@ -34,6 +34,9 @@ public class WorldTopology extends JPanel {
 	private static final Color DATA_MESSAGE_COLOR = Color.yellow;
 	private Image backgroundImage;
 	
+	/**
+	 * 
+	 */
 	public WorldTopology() {
 		this.setBackground(GUIManager.BACKGROUND);
 		this.setBorder(new LineBorder(Color.black));

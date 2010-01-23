@@ -29,6 +29,9 @@ public class DispatcherThread implements Runnable {
 	private Dispatcher dispatcher;
 	
 	
+	/**
+	 * @return An instance of type DispatcherThread
+	 */
 	public static DispatcherThread getInstance() {
 		if(null == instance) {
 			instance = new DispatcherThread();
@@ -43,6 +46,9 @@ public class DispatcherThread implements Runnable {
 		dispatcher = Dispatcher.getInstance();
 	}
 	
+	/**
+	 * 
+	 */
 	public void notifySimulationEnded() {
 		synchronized (this) {
 			notify();

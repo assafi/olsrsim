@@ -29,6 +29,10 @@ public class SimulatorTime extends JPanel {
 	private static final Color background = Color.blue;
 	private JLabel timeLabel;
 
+	/**
+	 * @param width
+	 * @param height
+	 */
 	public SimulatorTime(int width, int height) {
 		this.setPreferredSize(new Dimension(width, height));
 		this.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));

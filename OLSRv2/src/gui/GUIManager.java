@@ -58,10 +58,18 @@ public class GUIManager {
 	private JButton applyParametersButton;
 	private JButton startSimulationButton;
 	
+	/**
+	 * @author Asi
+	 *
+	 */
 	public enum AlertType {
 		NORMAL, ERROR, WARNING, FATAL
 	}
 	
+	/**
+	 * @author Asi
+	 *
+	 */
 	public enum SimulationSpeed {
 		NORMAL, FAST, SLOW, REAL_TIME
 	}
@@ -232,6 +240,10 @@ public class GUIManager {
 		worldOuterPanel.updateUI();
 	}
 	
+	/**
+	 * @param message
+	 * @param type
+	 */
 	public void popAlertMessage(String message, AlertType type) {
 		JOptionPane p = new JOptionPane(message);
 		if(type == AlertType.WARNING) {

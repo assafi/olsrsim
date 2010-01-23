@@ -49,7 +49,6 @@ public class GuiEventsQueue {
 	 * This method is a blocking method, will be released when an event is added to the queue.
 	 * @return The next event
 	 * @throws InterruptedException 
-	 * @throws Exception
 	 */
 	public synchronized Event popEvent() throws InterruptedException {
 		while(eventsQueue.isEmpty()) {

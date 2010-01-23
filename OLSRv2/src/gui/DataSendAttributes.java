@@ -27,6 +27,9 @@ public class DataSendAttributes {
 	
 	private static List<DataSendAttributes> allDataSends = new LinkedList<DataSendAttributes>();
 	
+	/**
+	 * @return A duplicated list of all messages that needs to be displayed
+	 */
 	public static List<DataSendAttributes> getAllDataSends() {
 		List<DataSendAttributes> ret = new LinkedList<DataSendAttributes>();
 		synchronized (allDataSends) {
@@ -39,12 +42,19 @@ public class DataSendAttributes {
 		return ret;
 	}
 	
+	/**
+	 * @param src
+	 * @param dst
+	 */
 	public static void addDataSend(Point src, Point dst) {
 		synchronized (allDataSends) {
 			allDataSends.add(new DataSendAttributes(src, dst, SimulationParameters.transmitionTime));
 		}
 	}
 	
+	/**
+	 * 
+	 */
 	public static void updateDataSend() {
 		synchronized (allDataSends) {
 			List<DataSendAttributes> removeDataSends = new LinkedList<DataSendAttributes>();
@@ -61,7 +71,9 @@ public class DataSendAttributes {
 	}
 	
 	/**
-	 * 
+	 * @param src 
+	 * @param dst 
+	 * @param displayTicks 
 	 */
 	public DataSendAttributes(Point src, Point dst, int displayTicks) {
 		this.src = new Point(src);
@@ -69,18 +81,30 @@ public class DataSendAttributes {
 		this.displayTicksLeft = displayTicks;
 	}
 
+	/**
+	 * 
+	 */
 	public void decreaseDisplayTickCount() {
 		this.displayTicksLeft--;
 	}
 
+	/**
+	 * @return the number of ticks this message still needs to be displayed.
+	 */
 	public int getDisplayTicksLeft() {
 		return displayTicksLeft;
 	}
 
+	/**
+	 * @return the destination of this message.
+	 */
 	public Point getDestination() {
 		return dst;
 	}
 	
+	/**
+	 * @return the source of this message.
+	 */
 	public Point getSource() {
 		return src;
 	}
