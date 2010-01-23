@@ -10,6 +10,7 @@
  */
 package dispatch;
 
+import java.awt.Point;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +24,7 @@ import layout.LayoutException;
 import layout.UniformLayout;
 import log.Log;
 import log.LogException;
+import messages.DataMessage;
 import messages.HelloMessage;
 import messages.TCMessage;
 
@@ -166,6 +168,15 @@ public class Dispatcher implements IDispatcher {
 			}
 						
 			Event currentEvent = tasksQueue.poll();
+			
+			// This will provide the gui the info it needs to display a data message
+			if(currentEvent.getClass().equals(DataMessage.class)) {
+				DataMessage dataMessageEvent = (DataMessage)currentEvent;
+				Point srcLocation = topologyManager.getStationById(dataMessageEvent.getLocalSrc()).getLocation();
+				Point dstLocation = topologyManager.getStationById(dataMessageEvent.getLocalDst()).getLocation();
+				dataMessageEvent.setEventSourceLocation(srcLocation);
+				dataMessageEvent.setLocalDestinationLocation(dstLocation);
+			}
 			GuiEventsQueue.getInstance().addEvent(currentEvent);
 			if (currentEvent.getClass().equals(StopEvent.class)){
 				break;
