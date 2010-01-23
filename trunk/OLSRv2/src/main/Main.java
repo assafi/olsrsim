@@ -29,7 +29,7 @@ public class Main {
 		// Initializing the topology events thread
 		GUIManager.getInstance().initTopologyThread();
 		// Initializing the dispatcher thread
-		GUIManager.getInstance().initDispatcherThread();
+		GUIManager.getInstance().initDispatcherThread();	
 	}
 
 }
