@@ -1,5 +1,6 @@
 package events;
 
+import java.awt.Point;
 import java.util.HashMap;
 
 import log.Log;
@@ -13,6 +14,7 @@ import data.SimLabels;
 public abstract class MessageEvent extends Event {
 
 	private String eventSource;
+	private Point eventSourceLocation;
 	protected String messageType = null;
 	
 	/**
@@ -29,6 +31,15 @@ public abstract class MessageEvent extends Event {
 	 */
 	public String getSource() {
 		return eventSource;
+	}
+	
+	
+	public Point getEventSourceLocation() {
+		return this.eventSourceLocation;
+	}
+	
+	public void setEventSourceLocation(Point loc) {
+		this.eventSourceLocation = loc;
 	}
 	
 	/**

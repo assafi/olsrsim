@@ -21,9 +21,7 @@ import topology.IStation;
 public class SendDataEvent extends Event {
 
 	private String srcName;
-	private Point srcLocation;
 	private String dstName;
-	private Point dstLocation;
 	/**
 	 * @param time
 	 */
@@ -39,39 +37,18 @@ public class SendDataEvent extends Event {
 	}
 	
 	/**
-	 * @return the location
-	 */
-	public Point getSrcLocation() {
-		return srcLocation;
-	}
-
-	/**
 	 * @param srcName the src to set
 	 */
 	public void setSrcName(String srcName) {
 		this.srcName = srcName;
 	}
 	
-	/**
-	 * @param loc
-	 */
-	public void setSrcLocation(Point loc) {
-		this.srcLocation = loc;
-	}
-
 
 	/**
 	 * @return the dst
 	 */
 	public String getDstName() {
 		return dstName;
-	}
-	
-	/**
-	 * @return the loc
-	 */
-	public Point getDstLocation() {
-		return dstLocation;
 	}
 
 	/**
@@ -81,12 +58,6 @@ public class SendDataEvent extends Event {
 		this.dstName = dstName;
 	}
 	
-	/**
-	 * @param loc
-	 */
-	public void setDstLocation(Point loc) {
-		this.dstLocation = loc;
-	}
 
 	/* (non-Javadoc)
 	 * @see events.Event#execute(java.lang.Object)
