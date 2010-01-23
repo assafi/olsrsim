@@ -10,6 +10,7 @@
  */
 package messages;
 
+import java.awt.Point;
 import java.util.Collection;
 
 import data.SimEvents;
@@ -37,6 +38,7 @@ public class DataMessage extends MessageEvent {
 	private String globalSrc = null;
 	private String globalDst = null;
 	private String localDst = null;
+	private Point localDstLocation = null;
 	/**
 	 * @param src
 	 * @param time
@@ -66,6 +68,15 @@ public class DataMessage extends MessageEvent {
 		}
 	}
 
+	
+	public Point getLocalDestinationLocation() {
+		return this.localDstLocation;
+	}
+	
+	public void setLocalDestinationLocation(Point loc) {
+		this.localDstLocation = loc;
+	}
+	
 	/**
 	 * @return the globalSrc
 	 */
