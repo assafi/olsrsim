@@ -171,7 +171,6 @@ public class EventGenerator {
 		for (IStation station : stationsThatWantsToSendDataPackets) {
 			SendDataEvent dataEvent = new SendDataEvent(currentTime);
 			dataEvent.setSrcName(station.getID());
-			dataEvent.setSrcLocation(station.getLocation());
 			
 			String trgID;
 			do {
@@ -179,7 +178,6 @@ public class EventGenerator {
 				trgID = topologyManager.getRandomStation();
 			} while (trgID == station.getID());
 			dataEvent.setDstName(trgID);
-			dataEvent.setDstLocation(topologyManager.getStationPosition(trgID));
 			dispatcher.pushEvent(dataEvent);
 			
 			/*
