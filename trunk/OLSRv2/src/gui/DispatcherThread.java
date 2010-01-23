@@ -38,7 +38,14 @@ public class DispatcherThread implements Runnable {
 			dispatcher.startSimulation();
 		} catch (DispatcherException e) {
 			GUIManager.getInstance().popAlertMessage(e.getMessage(), AlertType.ERROR);
+		} catch (Exception e) {
+			GUIManager.getInstance().popAlertMessage("Internal error occured, simulation failed", AlertType.ERROR);
+			e.printStackTrace();
 		}
+		// Writing the log file into the database
+		Log.getInstance().updateDB();
+		Log.getInstance().close();
+		System.exit(-1);
 	}
 
 }
