@@ -15,7 +15,6 @@ import gui.GUIManager;
 
 import java.awt.Color;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 
@@ -41,12 +40,12 @@ public class ComboBoxEntry extends InputParam {
 	public ComboBoxEntry(String parameterText, Object[] values, boolean vertical) {
 		setLayout(new FlowLayout(FlowLayout.LEFT));
 		JLabel label = new JLabel(parameterText);
-		label.setForeground(GUIManager.FONT_COLOR);
 		comboBox = new JComboBox(values);
 		comboBox.setBackground(Color.white);
 
 		JPanel innerPanel;
 		if(vertical) {
+			label.setForeground(GUIManager.FONT_COLOR);
 			setBackground(GUIManager.BACKGROUND);
 			innerPanel = new JPanel(new GridLayout(2, 1));
 			innerPanel.setBackground(GUIManager.BACKGROUND);
@@ -55,6 +54,7 @@ public class ComboBoxEntry extends InputParam {
 			this.add(innerPanel);
 		}
 		else {
+			label.setForeground(Color.black);
 			this.add(label);
 			this.add(comboBox);
 		}
