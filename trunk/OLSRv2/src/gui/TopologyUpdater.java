@@ -10,6 +10,7 @@
  */
 package gui;
 
+import messages.DataMessage;
 import events.Event;
 import events.SendDataEvent;
 import events.StopEvent;
@@ -65,9 +66,9 @@ public class TopologyUpdater implements Runnable {
 					}
 				}
 				
-				if(currEvent.getClass() == SendDataEvent.class) {
-					SendDataEvent event = (SendDataEvent)currEvent;
-					DataSendAttributes.addDataSend(event.getSrcLocation(), event.getDstLocation());
+				if(currEvent.getClass() == DataMessage.class) {
+					DataMessage event = (DataMessage)currEvent;
+					DataSendAttributes.addDataSend(event.getEventSourceLocation(), event.getLocalDestinationLocation());
 				}
 				// pop next event
 				currEvent = queue.popEvent();
