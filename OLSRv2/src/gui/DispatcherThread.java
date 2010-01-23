@@ -61,15 +61,20 @@ public class DispatcherThread implements Runnable {
 			// Writing the log file into the database
 			Log.getInstance().updateDB();
 			Log.getInstance().close();
+			GUIManager.getInstance().popAlertMessage("Simulation information was written to the database", AlertType.NORMAL);
 		} catch (DispatcherException e) {
 			GUIManager.getInstance().popAlertMessage(e.getMessage(), AlertType.FATAL);
+			Log.getInstance().close();
 		} catch (SQLException e) {
+			Log.getInstance().close();
 			String message = "Error occured while writing simulation results to the database";
 			GUIManager.getInstance().popAlertMessage(message, AlertType.FATAL);
 		} catch (SqlProxyException e) {
+			Log.getInstance().close();
 			String message = "Error occured while trying to connect to database";
 			GUIManager.getInstance().popAlertMessage(message, AlertType.FATAL);
 		} catch (Exception e) {
+			Log.getInstance().close();
 			e.printStackTrace();
 			GUIManager.getInstance().popAlertMessage("Internal error occured, simulation failed", AlertType.FATAL);
 		}
