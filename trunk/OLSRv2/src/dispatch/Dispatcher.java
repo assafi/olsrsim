@@ -172,11 +172,13 @@ public class Dispatcher implements IDispatcher {
 			// This will provide the gui the info it needs to display a data message
 			if(currentEvent.getClass().equals(DataMessage.class)) {
 				DataMessage dataMessageEvent = (DataMessage)currentEvent;
-				System.out.println("src = " + dataMessageEvent.getLocalSrc() + " dst = " + dataMessageEvent.getLocalDst());
-				Point srcLocation = topologyManager.getStationById(dataMessageEvent.getLocalSrc()).getLocation();
-				Point dstLocation = topologyManager.getStationById(dataMessageEvent.getLocalDst()).getLocation();
-				dataMessageEvent.setEventSourceLocation(srcLocation);
-				dataMessageEvent.setLocalDestinationLocation(dstLocation);
+				if(topologyManager.doesStationExist(dataMessageEvent.getLocalSrc()) && 
+						topologyManager.doesStationExist(dataMessageEvent.getLocalDst())) {
+					Point srcLocation = topologyManager.getStationById(dataMessageEvent.getLocalSrc()).getLocation();
+					Point dstLocation = topologyManager.getStationById(dataMessageEvent.getLocalDst()).getLocation();
+					dataMessageEvent.setEventSourceLocation(srcLocation);
+					dataMessageEvent.setLocalDestinationLocation(dstLocation);
+				}
 			}
 			GuiEventsQueue.getInstance().addEvent(currentEvent);
 			if (currentEvent.getClass().equals(StopEvent.class)){
