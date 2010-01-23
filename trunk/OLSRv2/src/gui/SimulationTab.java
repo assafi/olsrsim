@@ -20,6 +20,7 @@ import gui.input_params.ProtocolDataSendMode;
 import gui.input_params.ProtocolMode;
 import gui.input_params.ReceptionRadius;
 import gui.input_params.SimulationEndTime;
+import gui.input_params.SimulationSpeed;
 import gui.input_params.StationsMode;
 import gui.input_params.TCInterval;
 import gui.input_params.TopologyPoissonicRate;
@@ -77,6 +78,7 @@ public class SimulationTab extends JPanel {
 		parameters.add(new ReceptionRadius());
 		parameters.add(new TopologyPoissonicRate());
 		parameters.add(new DataEventsPoissonicRate());
+		parameters.add(new SimulationSpeed());
 	}
 
 }
