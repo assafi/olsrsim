@@ -177,35 +177,31 @@ public class Log implements ILog {
 	}
 
 	/**
+	 * @throws SqlProxyException 
+	 * @throws SQLException 
+	 * @throws ClassNotFoundException 
+	 * @throws IOException 
 	 * 
 	 */
-	public void updateDB() {
+	public void updateDB() throws ClassNotFoundException, SQLException, SqlProxyException, IOException {
 		SqlProxy proxy = new SqlProxy();
 		close();
-		try {
-			this.writer = new SqlWriter();
-			createSqlLog((IDataSqlWriter)writer);
-			writer.writeLabels(SimLabels.stringify());
-			close();
-			proxy.connect(SqlProxyDefinitions.host , SqlProxyDefinitions.port,
-					SqlProxyDefinitions.user, SqlProxyDefinitions.password, SqlProxyDefinitions.database);
-			
-			String newIdentifier = ((new File("").getAbsolutePath()) + "/" + fileIdentifier).replace("\\", "/");
-			String query = "LOAD DATA INFILE '" + newIdentifier + "' " + 
-			"INTO TABLE " + tableIdentifier + " FIELDS TERMINATED BY ',' ENCLOSED BY '\"' " +
-					"LINES TERMINATED BY '" + System.getProperty("line.separator") + "'" +
-							" IGNORE 1 LINES;";
-			PreparedStatement stmt = proxy.preparedStatement(query);
-			stmt.execute();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (SqlProxyException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+
+		this.writer = new SqlWriter();
+		createSqlLog((IDataSqlWriter)writer);
+		writer.writeLabels(SimLabels.stringify());
+		close();
+		proxy.connect(SqlProxyDefinitions.host , SqlProxyDefinitions.port,
+				SqlProxyDefinitions.user, SqlProxyDefinitions.password, SqlProxyDefinitions.database);
+		
+		String newIdentifier = ((new File("").getAbsolutePath()) + "/" + fileIdentifier).replace("\\", "/");
+		String query = "LOAD DATA INFILE '" + newIdentifier + "' " + 
+		"INTO TABLE " + tableIdentifier + " FIELDS TERMINATED BY ',' ENCLOSED BY '\"' " +
+				"LINES TERMINATED BY '" + System.getProperty("line.separator") + "'" +
+						" IGNORE 1 LINES;";
+		PreparedStatement stmt = proxy.preparedStatement(query);
+		stmt.execute();
+
 		/*
 		 * Delete the csv file since, we have all data backed
 		 * up on the SQL server
