@@ -10,10 +10,10 @@
  */
 package gui;
 
-import java.io.IOException;
+import gui.GUIManager.AlertType;
+
 import java.sql.SQLException;
 
-import gui.GUIManager.AlertType;
 import log.Log;
 import log.sqlproxy.SqlProxyException;
 import data.CsvWriter;
