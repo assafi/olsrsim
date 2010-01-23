@@ -10,11 +10,10 @@
  */
 package gui;
 
-import messages.DataMessage;
 import events.Event;
-import events.SendDataEvent;
 import events.StopEvent;
 import events.TopologyEvent;
+import messages.DataMessage;
 import topology.IStation;
 
 /**
