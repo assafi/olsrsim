@@ -12,9 +12,9 @@ package topology;
 
 import java.awt.Point;
 
+import main.SimulationParameters;
 import protocol.OLSRv2Protocol.IOLSRv2Protocol;
 import protocol.OLSRv2Protocol.OLSRv2Protocol;
-import main.SimulationParameters;
 
 /**
  * @author Asi
