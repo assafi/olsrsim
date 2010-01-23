@@ -14,6 +14,8 @@ import java.awt.Point;
 import java.util.LinkedList;
 import java.util.List;
 
+import main.SimulationParameters;
+
 /**
  * @author Asi
  *
@@ -23,7 +25,6 @@ public class DataSendAttributes {
 	private Point dst;
 	private int displayTicksLeft;
 	
-	private static final int DISPLAY_DATA_SEND_TICKS = 5;
 	private static List<DataSendAttributes> allDataSends = new LinkedList<DataSendAttributes>();
 	
 	public static List<DataSendAttributes> getAllDataSends() {
@@ -40,7 +41,7 @@ public class DataSendAttributes {
 	
 	public static void addDataSend(Point src, Point dst) {
 		synchronized (allDataSends) {
-			allDataSends.add(new DataSendAttributes(src, dst, DISPLAY_DATA_SEND_TICKS));
+			allDataSends.add(new DataSendAttributes(src, dst, SimulationParameters.transmitionTime));
 		}
 	}
 	
