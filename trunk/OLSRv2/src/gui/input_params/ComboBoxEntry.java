@@ -35,7 +35,6 @@ public class ComboBoxEntry extends InputParam {
 	/**
 	 * @param parameterText
 	 * @param values
-	 * @param vertical 
 	 */
 	public ComboBoxEntry(String parameterText, Object[] values) {
 		setLayout(new FlowLayout(FlowLayout.LEFT));
