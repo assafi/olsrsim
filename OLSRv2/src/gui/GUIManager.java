@@ -62,7 +62,7 @@ public class GUIManager {
 	private ComboBoxEntry simulationSpeedBox;
 	
 	public enum AlertType {
-		ERROR, WARNING
+		NORMAL, ERROR, WARNING, FATAL
 	}
 	
 	public enum SimulationSpeed {
@@ -250,8 +250,7 @@ public class GUIManager {
 	 * 
 	 */
 	public void initDispatcherThread() {
-		Runnable dispatcher = new DispatcherThread();
-		dispatcherThread = new Thread(dispatcher);
+		dispatcherThread = new Thread(DispatcherThread.getInstance());
 	}
 	
 	/**
@@ -268,11 +267,14 @@ public class GUIManager {
 	
 	public void popAlertMessage(String message, AlertType type) {
 		JOptionPane p = new JOptionPane(message);
-		if(type == AlertType.ERROR) {
-			p.setMessageType(JOptionPane.ERROR_MESSAGE);
-		}
-		else if(type == AlertType.WARNING) {
+		if(type == AlertType.WARNING) {
 			p.setMessageType(JOptionPane.WARNING_MESSAGE);
+		}
+		else if(type == AlertType.NORMAL) {
+			p.setMessageType(JOptionPane.INFORMATION_MESSAGE);
+		}
+		else {
+			p.setMessageType(JOptionPane.ERROR_MESSAGE);
 		}
 		Object[] o = new String[] { "OK" };
 		p.setOptions(o);
@@ -282,6 +284,9 @@ public class GUIManager {
 		d.pack();
 		d.setVisible(true);
 		popupFrame.dispose();
+		if(type == AlertType.FATAL) {
+			System.exit(-1);
+		}
 	}
 	
 }
