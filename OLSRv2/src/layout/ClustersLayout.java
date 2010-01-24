@@ -146,9 +146,6 @@ public class ClustersLayout extends Layout{
 		
 	}
 
-	/* (non-Javadoc)
-	 * @see layout.Layout#getRandomPoint()
-	 */
 	@Override
 	public Point getRandomPoint() 
 		throws LayoutException{
@@ -164,6 +161,9 @@ public class ClustersLayout extends Layout{
 		
 		int xCoor = (int) (Math.cos(theta)*radius + clusterCenter.getX());
 		int yCoor = (int) (Math.sin(theta)*radius + clusterCenter.getY());
+		
+		assert(xCoor >= 0 && xCoor < this.xBoundry);
+		assert(yCoor >= 0 && yCoor < this.yBoundry);
 		
 		Point p = new Point(xCoor,yCoor);
 		return p;

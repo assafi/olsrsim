@@ -147,7 +147,7 @@ public class CsvWriterTestCase {
 			data.clear();
 			data.put(SimLabels.VIRTUAL_TIME.name(), "4");
 			data.put(SimLabels.NODE_ID.name(), "node-1");
-			data.put(SimLabels.EVENT_TYPE.name(), SimEvents.DATA_SENT.name());
+			data.put(SimLabels.EVENT_TYPE.name(), SimEvents.DATA_SENT_FROM_SOURCE.name());
 			data.put(SimLabels.GLOBAL_SOURCE.name(), "node-1");
 			data.put(SimLabels.LOCAL_SOURCE.name(), "node-1");
 			data.put(SimLabels.LOCAL_TARGET.name(), "All neighbors");
@@ -158,7 +158,7 @@ public class CsvWriterTestCase {
 			data.clear();
 			data.put(SimLabels.VIRTUAL_TIME.name(), "5");
 			data.put(SimLabels.NODE_ID.name(), "node-2");
-			data.put(SimLabels.EVENT_TYPE.name(), SimEvents.DATA_REACH.name());
+			data.put(SimLabels.EVENT_TYPE.name(), SimEvents.DATA_REACH_2_TARGET.name());
 			data.put(SimLabels.GLOBAL_SOURCE.name(), "node-1");
 			data.put(SimLabels.LOCAL_SOURCE.name(), "node-1");
 			data.put(SimLabels.LOCAL_TARGET.name(), "All neighbors");

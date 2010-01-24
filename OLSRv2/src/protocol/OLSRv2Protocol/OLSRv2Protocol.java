@@ -121,17 +121,17 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		DataMessage msg  = (DataMessage)dataMsg;
 		Dispatcher dispatcher = Dispatcher.getInstance();
 		
-		logEvent(SimEvents.DATA_REACH_RELAY.name(), msg.getGlobalSrc(), msg.getGlobalDst(), msg.getLocalSrc(), msg.getLocalDst() ,false, null);
+		logEvent(SimEvents.DATA_REACHED_2_RELAY.name(), msg.getGlobalSrc(), msg.getGlobalDst(), msg.getLocalSrc(), msg.getLocalDst() ,false, null);
 		
 		if (msg.getLocalDst().equals(stationID)){// check if this message is for me
 			if(msg.getGlobalDst().equals(stationID)){
 				//we got the message!!!
-				logEvent(SimEvents.DATA_REACH.name(), null, msg.getLocalDst(), null, null ,false, null);
+				logEvent(SimEvents.DATA_REACH_2_TARGET.name(), null, msg.getLocalDst(), null, null ,false, null);
 			}
 			else{
 				if(neighborInfo.is1HopNeighbor(msg.getGlobalDst())){
 					// if the destination is my neighbor send him the message
-					logEvent(SimEvents.DATA_SEND_FROM_RELAY.name(), msg.getGlobalSrc(), msg.getGlobalDst(), msg.getLocalSrc(), msg.getLocalDst() ,false, null);
+					logEvent(SimEvents.DATA_SENT_FROM_RELAY.name(), msg.getGlobalSrc(), msg.getGlobalDst(), msg.getLocalSrc(), msg.getLocalDst() ,false, null);
 					msg.setLocalSrc(stationID);
 					msg.setLocalDst(msg.getGlobalDst());
 					msg.updateTime(dispatcher.getCurrentVirtualTime() + SimulationParameters.transmitionTime);
@@ -154,13 +154,13 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 					msg.setSource(stationID);
 					msg.setLocalDst(entryData.getNextHop());
 					msg.updateTime(dispatcher.getCurrentVirtualTime() + SimulationParameters.transmitionTime);
-					logEvent(SimEvents.DATA_SEND_FROM_RELAY.name(), msg.getGlobalSrc(), msg.getGlobalDst(), msg.getLocalSrc(), msg.getLocalDst() ,false, null);
+					logEvent(SimEvents.DATA_SENT_FROM_RELAY.name(), msg.getGlobalSrc(), msg.getGlobalDst(), msg.getLocalSrc(), msg.getLocalDst() ,false, null);
 					dispatcher.pushEvent(msg);
 				}
 			}
 		}
 		else{
-			logEvent(SimEvents.DATA_DROPED_RELAY.name(), msg.getGlobalSrc(), msg.getGlobalDst(), msg.getLocalSrc(), msg.getLocalDst() ,false, null);
+			logEvent(SimEvents.DATA_DROPPED_AT_RELAY.name(), msg.getGlobalSrc(), msg.getGlobalDst(), msg.getLocalSrc(), msg.getLocalDst() ,false, null);
 		}
 	}
 	
@@ -171,7 +171,7 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 	public void sendDataMessage(String dst) {
 		
 		//log
-		logEvent(SimEvents.DATA_SENT.name(), stationID, dst, null, null, false, null);
+		logEvent(SimEvents.DATA_SENT_FROM_SOURCE.name(), stationID, dst, null, null, false, null);
 		
 		//Create new data message from me to me
 		DataMessage dataMsg = new DataMessage(stationID, stationID, stationID, dst, Dispatcher.getInstance().getCurrentVirtualTime() + SimulationParameters.transmitionTime);
