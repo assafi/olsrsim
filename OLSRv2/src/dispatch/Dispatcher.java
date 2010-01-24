@@ -174,11 +174,13 @@ public class Dispatcher implements IDispatcher {
 				DataMessage dataMessageEvent = (DataMessage)currentEvent;
 				if(topologyManager.doesStationExist(dataMessageEvent.getLocalSrc()) && 
 						topologyManager.doesStationExist(dataMessageEvent.getLocalDst())) {
-					Point srcLocation = topologyManager.getStationById(dataMessageEvent.getLocalSrc()).getLocation();
-					Point dstLocation = topologyManager.getStationById(dataMessageEvent.getLocalDst()).getLocation();
-					dataMessageEvent.setEventSourceLocation(srcLocation);
-					dataMessageEvent.setLocalDestinationLocation(dstLocation);
-					GuiEventsQueue.getInstance().addEvent(currentEvent);
+					IStation srcStation = topologyManager.getStationById(dataMessageEvent.getLocalSrc());
+					IStation dstStation = topologyManager.getStationById(dataMessageEvent.getLocalDst());
+					if(srcStation.isInRange(dstStation)) {
+						dataMessageEvent.setEventSourceLocation(srcStation.getLocation());
+						dataMessageEvent.setLocalDestinationLocation(dstStation.getLocation());
+						GuiEventsQueue.getInstance().addEvent(currentEvent);
+					}
 				}
 			} 
 			else {
