@@ -52,7 +52,7 @@ public class DataMessage extends MessageEvent {
 		this.localDst = localDst;
 		this.globalSrc = globalSrc;
 		this.globalDst = globalDst;
-		this.messageType = SimEvents.DATA_SENT.name();
+		this.messageType = SimEvents.DATA_SENT_FROM_SOURCE.name();
 	}
 
 	/* (non-Javadoc)
