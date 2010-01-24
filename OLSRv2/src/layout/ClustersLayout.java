@@ -123,7 +123,12 @@ public class ClustersLayout extends Layout{
 					Math.min(Math.min(xCoor, xBoundry - xCoor),
 							 Math.min(yCoor, yBoundry - yCoor));
 			} else {
-				clusterRadius = this.radius;
+				clusterRadius = new Random().nextInt() % 
+				Math.min(this.radius, Math.min(
+							Math.min(xCoor, xBoundry - xCoor),
+							Math.min(yCoor, yBoundry - yCoor)
+							)
+						);
 			}
 			
 			Point p = new Point(xCoor,yCoor);
