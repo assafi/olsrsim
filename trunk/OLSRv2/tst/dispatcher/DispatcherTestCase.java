@@ -86,8 +86,8 @@ public class DispatcherTestCase {
 		SimulationParameters.receptionRadius = 50;
 		SimulationParameters.stationsMode = StationsMode.DYNAMIC;
 		SimulationParameters.clusterRadius = 50;
-		SimulationParameters.maxStations = 150;
-		SimulationParameters.simulationEndTime = 1000;
+		SimulationParameters.maxStations = 100;
+		SimulationParameters.simulationEndTime = 5000;
 		
 		dispatcher.startSimulation();
 	}
