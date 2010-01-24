@@ -261,10 +261,8 @@ public class EventGenerator {
 			float rand = new Random().nextFloat();
 			if (rand <= 0.5){
 				return TopologyEventType.NODE_MOVE;
-			} else if (rand <= 0.67) {
-				return TopologyEventType.NODE_DESTROY;
-			}
-			return TopologyEventType.NODE_CREATE;
+			} 
+			return TopologyEventType.NODE_DESTROY;
 		}	
 	}
 
