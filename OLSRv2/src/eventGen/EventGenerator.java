@@ -259,7 +259,7 @@ public class EventGenerator {
 			}
 		} else {
 			float rand = new Random().nextFloat();
-			if (rand <= 0.5){
+			if (rand <= 0.5 || topologyManager.count() == 1){
 				return TopologyEventType.NODE_MOVE;
 			} 
 			return TopologyEventType.NODE_DESTROY;
