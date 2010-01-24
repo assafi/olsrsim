@@ -10,13 +10,10 @@
  */
 package dispatch;
 
-import java.awt.Point;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.PriorityQueue;
-
-import data.SimLabels;
 
 import layout.ClustersLayout;
 import layout.Layout;
@@ -24,10 +21,16 @@ import layout.LayoutException;
 import layout.UniformLayout;
 import log.Log;
 import log.LogException;
+import main.SimulationParameters;
+import main.SimulationParameters.StationsMode;
 import messages.DataMessage;
 import messages.HelloMessage;
 import messages.TCMessage;
-
+import topology.IStation;
+import topology.ITopologyManager;
+import topology.Station;
+import topology.TopologyManager;
+import data.SimLabels;
 import eventGen.EventGenerator;
 import events.Event;
 import events.IntervalEndEvent;
@@ -36,13 +39,6 @@ import events.SendDataEvent;
 import events.StopEvent;
 import events.TopologyEvent;
 import gui.GuiEventsQueue;
-import topology.IStation;
-import topology.ITopologyManager;
-import topology.Station;
-import topology.TopologyManager;
-
-import main.SimulationParameters;
-import main.SimulationParameters.StationsMode;
 
 /**
  * @author Assaf
