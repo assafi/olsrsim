@@ -65,6 +65,7 @@ public class WorldTopology extends JPanel {
 		List<GuiStation> stations = GuiStation.getAllStations();
 		for (GuiStation station : stations) {
 			drawCircle(station.getPosition(), station.getStationDisplaySize(), g2d);
+			//drawReceptionRadius(station.getPosition(), (int)station.getReceptionRadius()*2, g2d);
 		}
 		g2d.setColor(DATA_MESSAGE_COLOR);
 		List<DataSendAttributes> dataSends = DataSendAttributes.getAllDataSends();
@@ -87,6 +88,10 @@ public class WorldTopology extends JPanel {
 	private void drawCircle(Point p, int diameter, Graphics2D g) {
 		g.drawOval(p.x - diameter/2, p.y - diameter/2, diameter, diameter);
 		g.fillOval(p.x - diameter/2, p.y - diameter/2, diameter, diameter);
+	}
+	
+	private void drawReceptionRadius(Point p, int diameter, Graphics2D g) {
+		g.drawOval(p.x - diameter/2, p.y - diameter/2, diameter, diameter);
 	}
 
 	

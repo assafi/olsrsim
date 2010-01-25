@@ -49,10 +49,13 @@ public class TopologyUpdater implements Runnable {
 				if (currEvent.getClass() == TopologyEvent.class) {
 					TopologyEvent topologyEvent = (TopologyEvent)currEvent;
 					IStation station = topologyEvent.getStation();
+	
+					
+					System.out.println("Event type: " + topologyEvent.getType() + " " + station.getLocation().toString());
 					
 					switch (topologyEvent.getType()) {
 					case NODE_CREATE:	
-						GuiStation.createStation(station.getID(), station.getLocation());
+						GuiStation.createStation(station.getID(), station.getLocation(), station.getReceptionRadius());
 						break;
 					case NODE_DESTROY:	
 						GuiStation.removeStation(station.getID());

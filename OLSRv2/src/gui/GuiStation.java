@@ -33,6 +33,7 @@ public class GuiStation {
 	
 	private String stationID;
 	private Point stationPosition;
+	private double receptionRadius;
 	// in case the station is moving
 	private Point stationNewPosition;
 	private long creationTime;
@@ -59,12 +60,14 @@ public class GuiStation {
 	/**
 	 * @param id
 	 * @param location
+	 * @param receptionRadius 
 	 */
-	public GuiStation(String id, Point location) {
+	public GuiStation(String id, Point location, double receptionRadius) {
 		this.stationID = new String(id);
 		this.stationPosition = new Point(location);
 		this.creationTime = GuiTick.getInstance().getTickCount();
 		this.state = StationState.NEW;
+		this.receptionRadius = receptionRadius;
 	}
 	
 	/**
@@ -77,9 +80,17 @@ public class GuiStation {
 			this.creationTime = guiStation.creationTime;
 			this.destroyedTime = guiStation.destroyedTime;
 			this.state = guiStation.state;
+			this.receptionRadius = guiStation.receptionRadius;
 		}
 	}
 
+	/**
+	 * @return The reception radius
+	 */
+	public double getReceptionRadius() {
+		return this.receptionRadius;
+	}
+	
 	/**
 	 * @return The current display size of the station
 	 */
@@ -139,10 +150,11 @@ public class GuiStation {
 	/**
 	 * @param id
 	 * @param location
+	 * @param receptionRadius 
 	 */
-	public static void createStation(String id, Point location) {
+	public static void createStation(String id, Point location, double receptionRadius) {
 		synchronized (allStations) {
-			allStations.add(new GuiStation(id, location));
+			allStations.add(new GuiStation(id, location, receptionRadius));
 		}
 	}
 
