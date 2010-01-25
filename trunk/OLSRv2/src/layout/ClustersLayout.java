@@ -110,8 +110,10 @@ public class ClustersLayout extends Layout{
 		
 		for (int i=0; i< this.nmbClusters; i++){
 			
-			int xCoor = new Random().nextInt(xBoundry);
-			int yCoor = new Random().nextInt(yBoundry);
+			int xCoor;
+			while ((xCoor = new Random().nextInt(xBoundry)) == 0);
+			int yCoor;
+			while ((yCoor = new Random().nextInt(yBoundry)) == 0);
 			
 			int clusterRadius;
 			

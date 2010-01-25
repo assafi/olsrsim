@@ -173,12 +173,14 @@ public class EventGenerator {
 			dataEvent.setSrcName(station.getID());
 			
 			String trgID;
-			do {
-				/* Will not send data to itself */
-				trgID = topologyManager.getRandomStation();
-			} while (trgID == station.getID());
-			dataEvent.setDstName(trgID);
-			dispatcher.pushEvent(dataEvent);
+			if (topologyManager.count() > 1) {
+				do {
+					/* Will not send data to itself */
+					trgID = topologyManager.getRandomStation();
+				} while (trgID == station.getID());
+				dataEvent.setDstName(trgID);
+				dispatcher.pushEvent(dataEvent);
+			}
 			
 			/*
 			 * Next event time for the station.
