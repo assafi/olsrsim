@@ -157,13 +157,16 @@ public class ClustersLayout extends Layout{
 		int clusterIndex = new Random().nextInt() % clusters.size();
 		Point clusterCenter = (Point) clusters.keySet().toArray()[clusterIndex];
 		double theta = new Random().nextDouble() % (2*Math.PI);
-		int radius = (int) (Math.pow(new Random().nextDouble(),2) * this.radius);
+		int clusterRadius = clusters.get(clusterCenter);
+		int radius = (int) (Math.pow(new Random().nextDouble(),2) * clusterRadius);
 		
 		int xCoor = (int) (Math.cos(theta)*radius + clusterCenter.getX());
 		int yCoor = (int) (Math.sin(theta)*radius + clusterCenter.getY());
 		
 		assert(xCoor >= 0 && xCoor < this.xBoundry);
 		assert(yCoor >= 0 && yCoor < this.yBoundry);
+		
+		System.out.println("New point at [" + xCoor + "," + yCoor + "] grid is: " + this.xBoundry + "X" + this.yBoundry);
 		
 		Point p = new Point(xCoor,yCoor);
 		return p;
