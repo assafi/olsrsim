@@ -16,6 +16,7 @@ import java.util.Map;
 import data.SimEvents;
 import data.SimLabels;
 import dispatch.Dispatcher;
+import eventGen.EventGenerator;
 
 import log.Log;
 import log.LogException;
@@ -33,7 +34,7 @@ public class TopologyEvent extends Event {
 	 *
 	 */
 	public enum TopologyEventType {
-		NODE_CREATE, NODE_DESTROY, NODE_MOVE, NOOP
+		NODE_CREATE, NODE_DESTROY, NODE_MOVE, NODE_LAST_MOVE, NOOP
 	};
 	
 	private TopologyEventType type = null;
@@ -68,6 +69,12 @@ public class TopologyEvent extends Event {
 		case NODE_MOVE:
 			tm.changeStationPosition(station.getID(), station.getLocation());
 			break;
+		case NODE_LAST_MOVE:
+			tm.changeStationPosition(station.getID(), station.getLocation());
+			EventGenerator eventGen = EventGenerator.getInstance();
+			if (null != eventGen) {
+				eventGen.stationReachedTargetLocation(station.getID());
+			}
 		}
 		
 		logTopologyEvent();

@@ -63,15 +63,15 @@ public class Dispatcher implements IDispatcher {
 
 		this.tasksQueue = new PriorityQueue<Event>(INITIAL_QUEUE_SIZE,
 				new Comparator<Event>() {
-					public int compare(Event ev1, Event ev2) {
-						return (int) (ev1.getTime() - ev2.getTime());
-					}
-				});
-		
+			public int compare(Event ev1, Event ev2) {
+				return (int) (ev1.getTime() - ev2.getTime());
+			}
+		});
+
 		this.currentVirtualTime = 0;
 		this.topologyManager = new TopologyManager(); 
 		this.log = Log.getInstance();
-	
+
 		/*
 		 * Can't set eventGen here because of deadlock.
 		 */
@@ -93,10 +93,26 @@ public class Dispatcher implements IDispatcher {
 	 * @param event The event to be pushed to the tasks queue 
 	 */
 	public synchronized void pushEvent(Event event) {
-		
+
 		this.tasksQueue.add(event);
 	}
-	
+
+	/**
+	 * Used mainly to push several events at known intervals. </br>
+	 * e.g - movement of stations. a few MOVE events, representing a node's hopes.
+	 * @param events Pushing several events at once.
+	 */
+	public synchronized void pushEvents(Event[] events) {
+
+		if (null == events) {
+			return;
+		}
+
+		for (Event event : events) {
+			this.tasksQueue.add(event);
+		}
+	}
+
 	/**
 	 * 	Virtual time is a logical order between events that occur in the 
 	 * simulator. It represents an "Happened Before" ratio between events.
@@ -105,65 +121,70 @@ public class Dispatcher implements IDispatcher {
 	 * @return The current simulator virtual time.
 	 */
 	public synchronized long getCurrentVirtualTime(){
-		
+
 		return this.currentVirtualTime;
 	}
-	
+
 	/**
 	 * @throws DispatcherException
 	 */
 	public void startSimulation() throws DispatcherException {
-		
+
 		if (null != this.eventGen){
 			throw new DispatcherException("Can only start the dispatcher once...");
 		}
-		
+
 		Station.defaultReceptionRadius = SimulationParameters.receptionRadius;
-		
+
 		Layout layout;
-		
+
 		try {
 			layout = createLayout();
 		} catch (LayoutException e) {
 			throw new DispatcherException(e);
 		}
-		
+
 		float topologyPoissonicRate = SimulationParameters.topologyPoissonicRate;
-		
+
 		float dataEventsPoissonicRate = SimulationParameters.dataEventsPoissonicRate;
-		
+
 		int maxStations = SimulationParameters.maxStations;
-		
-		boolean staticMode = (SimulationParameters.stationsMode == StationsMode.STATIC);
-		
+
 		int timeout = SimulationParameters.simulationEndTime;
-		
-		this.eventGen = EventGenerator.getInstance(topologyPoissonicRate,dataEventsPoissonicRate, layout, maxStations,staticMode);
+
+		StationsMode stationsBehavior = SimulationParameters.stationsMode;
+
+		this.eventGen = EventGenerator.getInstance(topologyPoissonicRate,dataEventsPoissonicRate, layout, maxStations,stationsBehavior);
 
 		/*
 		 * Generating the first event
 		 */
 		this.eventGen.tick();
-		
+
 		while (timeout > currentVirtualTime){
-			
+
+			Event currentEvent = null;
+
+			long nextEventTime;
+			nextEventTime = peek().getTime();
+
 			if (tasksQueue.isEmpty() || 
-					tasksQueue.peek().getTime() > currentVirtualTime){
+					nextEventTime > currentVirtualTime){
 				this.currentVirtualTime++;
 				this.eventGen.tick();
 				continue;
 			}
-			
+
 			/*
 			 * Error handling
 			 */
-			if (tasksQueue.peek().getTime() < currentVirtualTime){
-				logDispError(tasksQueue.poll(),new DispatcherException("Simulation internal error - event time: " + 
-						tasksQueue.peek().getTime() + ", sim time: " + currentVirtualTime + "."));
+			if (nextEventTime < currentVirtualTime){
+				logDispError(dequeue(),new DispatcherException("Simulation internal error - event time: " + 
+						nextEventTime + ", sim time: " + currentVirtualTime + "."));
 				continue;
 			}
-						
-			Event currentEvent = tasksQueue.poll();
+
+			currentEvent = dequeue();
 			
 			// This will provide the gui the info it needs to display a data message
 			if(currentEvent.getClass().equals(DataMessage.class)) {
@@ -186,12 +207,12 @@ public class Dispatcher implements IDispatcher {
 			if (currentEvent.getClass().equals(StopEvent.class)){
 				break;
 			}
-			
+
 			/*
 			 * Handles the event according to it's type
 			 */
 			if (MessageEvent.class.isAssignableFrom(currentEvent.getClass())){
-				
+
 				MessageEvent me = (MessageEvent)currentEvent;
 				try {
 					List<IStation> relevantNodesList = 
@@ -203,7 +224,7 @@ public class Dispatcher implements IDispatcher {
 			}
 
 			if (TopologyEvent.class.isAssignableFrom(currentEvent.getClass())){
-				
+
 				TopologyEvent te = (TopologyEvent)currentEvent;
 				try {
 					te.execute(this.topologyManager);
@@ -211,7 +232,7 @@ public class Dispatcher implements IDispatcher {
 					logDispError(currentEvent,e);
 				}
 			}
-			
+
 			if (IntervalEndEvent.class.isAssignableFrom(currentEvent.getClass())){
 				IntervalEndEvent ie = (IntervalEndEvent)currentEvent;
 				try {
@@ -221,7 +242,7 @@ public class Dispatcher implements IDispatcher {
 					logDispError(currentEvent,e);
 				}
 			}
-			
+
 			if (SendDataEvent.class.isAssignableFrom(currentEvent.getClass())) {
 				SendDataEvent sde = (SendDataEvent)currentEvent;
 				try {
@@ -234,7 +255,7 @@ public class Dispatcher implements IDispatcher {
 				}
 			}
 		}
-		
+
 		// Alerts the GUI that the simulation is over
 		GuiEventsQueue.getInstance().addEvent(new StopEvent(timeout));
 		try {
@@ -243,26 +264,34 @@ public class Dispatcher implements IDispatcher {
 			System.err.println(e.getMessage());
 		}
 	}
-	
+
+	private synchronized Event dequeue() {
+		return this.tasksQueue.poll();
+	}
+
+	private synchronized Event peek() {
+		return this.tasksQueue.peek();
+	}
+
 	/**
 	 * @return
 	 * @throws LayoutException 
 	 */
 	private Layout createLayout() throws LayoutException {
-		
+
 		int xBoundry = SimulationParameters.xBoundry;
 		int yBoundry = SimulationParameters.yBoundry;
-		
+
 		switch (SimulationParameters.layoutMode) {
 		case UNIFORM: 
 			return new UniformLayout(xBoundry,yBoundry);
 		case CLUSTER:
-			
+
 			int clusterNum = SimulationParameters.clusterNum;
 			int clusterRadius = SimulationParameters.clusterRadius;
 			return new ClustersLayout(clusterNum, xBoundry, yBoundry, clusterRadius);
 		}
-		
+
 		throw new LayoutException("Undefined layout");
 	}
 
@@ -277,11 +306,11 @@ public class Dispatcher implements IDispatcher {
 		if (TCMessage.class.isAssignableFrom(currentEvent.getClass())){
 			data.put(SimLabels.GLOBAL_SOURCE.name(),((TCMessage)currentEvent).getSource());
 		}
-		
+
 		if (HelloMessage.class.isAssignableFrom(currentEvent.getClass())){
 			data.put(SimLabels.GLOBAL_SOURCE.name(),((HelloMessage)currentEvent).getSource());
 		}
-		
+
 		data.put(SimLabels.ERROR.name(), "true");
 		data.put(SimLabels.DETAILS.name(), e.getMessage());
 		try {

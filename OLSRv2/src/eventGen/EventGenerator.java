@@ -13,17 +13,21 @@ package eventGen;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.UUID;
 
 import layout.Layout;
 import log.Log;
 import log.LogException;
+import main.SimulationParameters.StationsMode;
 
 import topology.IStation;
 import topology.ITopologyManager;
+import topology.Station;
 import topology.TopologyManager;
 
 import data.SimLabels;
@@ -43,14 +47,21 @@ public class EventGenerator {
 	private float dataChangePoissonicRate;
 
 	private long nextEventTime;
-	private Map<Long, List<IStation>> dataTime2stations = new HashMap<Long, List<IStation>>();
+	private Map<Long, List<IStation>> stations2SendDataPerTime = new HashMap<Long, List<IStation>>();
 	private Dispatcher dispatcher = null;
 	private static EventGenerator instance = null;
 	private int maxStations;
-	private boolean staticMode = false;
+	private StationsMode stationBehavior = StationsMode.STATIC;
+	private Map<Long, List<IStation>> stations2MovePerTime = new HashMap<Long, List<IStation>>();
+	private double hopDistance;
+	private static int HOP_TIME_INTERVAL = 20;
 	
+	/* Used only in MIXED mode to track stations who are scheduled to move */
+	private Set<String> scheduled2MoveStations = new HashSet<String>(); 
+
+
 	/*
-	 * This map of nodes will be updated before the Topology
+	 * This stations2SendDataPerTime of nodes will be updated before the Topology
 	 * Manager will be updated. so we'll avoid situations where
 	 * we call for an event which relates to a state which will no 
 	 * longer be relevant when the event reaches the front of the 
@@ -58,13 +69,13 @@ public class EventGenerator {
 	 */
 	private ITopologyManager topologyManager = null;
 	private Layout layout = null;
-	
+
 	private Log log = null;
-	
+
 	/**
 	 * 
 	 */
-	private EventGenerator(float factor, Layout layout, int maxStations, boolean staticMod) {
+	private EventGenerator(float factor, Layout layout, int maxStations, StationsMode staticMod) {
 		this.topologyPoissonicRate = factor;
 		this.dispatcher = Dispatcher.getInstance();
 		this.nextEventTime = 0;
@@ -72,9 +83,11 @@ public class EventGenerator {
 		this.layout = layout;
 		this.maxStations = maxStations;
 		this.log = Log.getInstance();
-		this.staticMode = staticMod;
+		this.stationBehavior = staticMod;
+		this.hopDistance = ( main.SimulationParameters.simulationSpeed.ordinal() + 1) * 
+			main.SimulationParameters.simulationHopDistance;
 	}
-	
+
 	/**
 	 * @param dataEventsPoissonicRate 
 	 * @param topologyPoissonicRate An optional parameter specify a topologyPoissonicRate to take into consideration 
@@ -82,19 +95,32 @@ public class EventGenerator {
 	 * @param layout The Layout object representing the layout by which station will be
 	 * generated.
 	 * @param maxStations The maximum number of simulated stations
-	 * @param staticMode false to enable nodes mobility
+	 * @param stationBehavior choose between STATIC, DYNAMIC & MIXED
 	 * @return The EventGenerator singleton
 	 */
 	public static EventGenerator getInstance(float topologyPoissonicRate, float dataEventsPoissonicRate, Layout layout, int maxStations, 
-			boolean staticMode){
-		
+			StationsMode stationBehavior){
+
 		if (null == instance){
-			instance = new EventGenerator(topologyPoissonicRate, layout,maxStations,staticMode);
+			instance = new EventGenerator(topologyPoissonicRate, layout,maxStations,stationBehavior);
+			instance.topologyPoissonicRate = topologyPoissonicRate;
+			instance.dataChangePoissonicRate = dataEventsPoissonicRate;
 		}
 		EventGenerator eventGen = instance;
-		eventGen.topologyPoissonicRate = topologyPoissonicRate;
-		eventGen.dataChangePoissonicRate = dataEventsPoissonicRate;
 		return eventGen;
+	}
+	
+	/**
+	 * This method will only return an instance if one already exists. </br>
+	 * it will not create a new one. you must use the getInstance() with the
+	 * parameters in order to create a new instance.
+	 * @return EventGenerator instance
+	 */
+	public static EventGenerator getInstance() {
+		if (null != instance){
+			return instance;
+		}
+		return null; 
 	}
 
 	/**
@@ -102,29 +128,39 @@ public class EventGenerator {
 	 */
 	public void tick(){
 		long currentTime = dispatcher.getCurrentVirtualTime();
-		
+
 		if (currentTime == 0) {
 			phase1();
 			return;
 		}
-		
-		
+
+
 		/*
 		 * Handling topology events
 		 */
-		if (currentTime == this.nextEventTime){
+		if (currentTime == this.nextEventTime && stationBehavior == StationsMode.MIXED){
+
 			generateEvent();
-			
+
 			/*
 			 * Update the time in which the next event will be created 
 			 */
 			this.nextEventTime += Math.max(getExpDelay(topologyPoissonicRate),1);
+			System.out.println("Next event at: " + nextEventTime);
 		}
-		
+
+		/*
+		 * Handling stations movement
+		 */
+		if (stationBehavior == StationsMode.DYNAMIC && 
+				stations2MovePerTime.containsKey(currentTime)) {
+			moveStations(currentTime);
+		}
+
 		/*
 		 * Handling send data events
 		 */
-		if (this.dataTime2stations.containsKey(currentTime)) {
+		if (this.stations2SendDataPerTime.containsKey(currentTime)) {
 			generateDataEvents(currentTime);
 		}
 	}
@@ -143,22 +179,55 @@ public class EventGenerator {
 				dispatcher.pushEvent(event);
 				IStation station = event.getStation();
 				setNextDataEvent(station,0);
+				handleFirstMovement(station);
 			} catch (Exception e) {
 				logEvGenError(TopologyEvent.TopologyEventType.NODE_CREATE, e);
 			}
 		}
-		
-		this.nextEventTime = Math.max(getExpDelay(topologyPoissonicRate),1);
+		if (stationBehavior == StationsMode.MIXED) {
+			/*
+			 * Next event time is generated 
+			 */
+			this.nextEventTime = Math.max(getExpDelay(topologyPoissonicRate),1);
+			System.out.println("Next event at: " + nextEventTime);
+		}
+	}
+
+	/**
+	 * @param station
+	 */
+	private void handleFirstMovement(IStation station) {
+		switch (stationBehavior) {
+			case STATIC: {
+				/*
+				 * No movement in static mode
+				 */
+				return;
+			}
+			case DYNAMIC: {
+				/*
+				 * Setting the first movement no time "1"
+				 */
+				updateTable(1, station, stations2MovePerTime);
+				return;
+			}
+			case MIXED: {
+				/*
+				 * Next event will be evaluated globally
+				 */
+				return;
+			}
+		}
 	}
 
 	/**
 	 * @param station The station for which we want to schedule a send data event
 	 */
 	private void setNextDataEvent(IStation station, long baseTime) {
-		
+
 		long eventTime;
 		eventTime = Math.max(getExpDelay(dataChangePoissonicRate),1) + baseTime;
-		updateTable(eventTime, station);
+		updateTable(eventTime, station, stations2SendDataPerTime);
 	}
 
 	/**
@@ -166,12 +235,12 @@ public class EventGenerator {
 	 * 
 	 */
 	private void generateDataEvents(long currentTime) {
-		
-		List<IStation> stationsThatWantsToSendDataPackets = dataTime2stations.remove(currentTime);
+
+		List<IStation> stationsThatWantsToSendDataPackets = stations2SendDataPerTime.remove(currentTime);
 		for (IStation station : stationsThatWantsToSendDataPackets) {
 			SendDataEvent dataEvent = new SendDataEvent(currentTime);
 			dataEvent.setSrcName(station.getID());
-			
+
 			String trgID;
 			if (topologyManager.count() > 1) {
 				do {
@@ -181,52 +250,56 @@ public class EventGenerator {
 				dataEvent.setDstName(trgID);
 				dispatcher.pushEvent(dataEvent);
 			}
-			
+
 			/*
 			 * Next event time for the station.
 			 */
 			long nextTime;
 			nextTime = Math.max(getExpDelay(dataChangePoissonicRate),1) + currentTime;
-			updateTable(nextTime, station);
+			updateTable(nextTime, station, stations2SendDataPerTime);
 		}
 	}
 
 	/**
-	 * @param nextTime The next SendData event time
+	 * @param nextTime The next event time for the specified station
 	 * @param station The station that will be the source of the event
+	 * @param stations2SendDataPerTime The stations2SendDataPerTime which identifies the action to be performed upon the event time
 	 */
-	private void updateTable(long nextTime, IStation station) {
-		List<IStation> stationsThatWantsToSendDataPackets;
-		if (dataTime2stations.containsKey(nextTime)) {
-			stationsThatWantsToSendDataPackets = dataTime2stations.remove(nextTime);
+	static private void updateTable(long nextTime, IStation station, Map<Long, List<IStation>> map) {
+		List<IStation> stationList;
+		if (map.containsKey(nextTime)) {
+			stationList = map.remove(nextTime);
 		} else {
-			stationsThatWantsToSendDataPackets = new ArrayList<IStation>();
+			stationList = new ArrayList<IStation>();
 		}
-		stationsThatWantsToSendDataPackets.add(station);
-		dataTime2stations.put(nextTime, stationsThatWantsToSendDataPackets);
+		stationList.add(station);
+		map.put(nextTime, stationList);
 	}
 
+
+
 	/**
-	 * 
+	 * Generating random event when stationBehavior == MIXED
 	 */
 	public void generateEvent() {
-		
+
 		TopologyEventType type = randomAction();
+		long currentTime = dispatcher.getCurrentVirtualTime();
 
 		if (null == type) {
 			return;
 		}
-		
+
 		try{
 			switch (type){
 			case NODE_CREATE:
 				TopologyEvent event = createStation();
 				dispatcher.pushEvent(event);
 				IStation station = event.getStation();
-				setNextDataEvent(station, dispatcher.getCurrentVirtualTime());
+				setNextDataEvent(station, currentTime);
 				break;
 			case NODE_MOVE:
-				dispatcher.pushEvent(moveStation());
+				dispatcher.pushEvents(moveStation(currentTime));
 				break;
 			case NODE_DESTROY:
 				dispatcher.pushEvent(removeStation());
@@ -246,10 +319,7 @@ public class EventGenerator {
 	 * @return
 	 */
 	private TopologyEventType randomAction() {		
-		if (staticMode){
-			return null;
-		}
-		
+
 		if (topologyManager.count() < maxStations){
 			float rand = new Random().nextFloat();
 			if (rand <= 0.33){
@@ -273,44 +343,154 @@ public class EventGenerator {
 	 * @throws Exception 
 	 */
 	private TopologyEvent createStation() throws Exception {
-		
+
 		String stationID = UUID.randomUUID().toString();
-		
+
 		Point stationLocation = this.layout.getRandomPoint();
 		IStation station = this.topologyManager.createNewStation(stationID, stationLocation);
-		
+
 		return new TopologyEvent(this.nextEventTime, TopologyEventType.NODE_CREATE, station);
 	}
 
-	/**
-	 * @return
-	 * @throws Exception 
-	 */
-	private Event moveStation() throws Exception {
-		Point newStationLocation = this.layout.getRandomPoint();
-		
-		while (this.topologyManager.doesStationExist(newStationLocation)){
-			
-			newStationLocation = this.layout.getRandomPoint();
+	private IStation getAvailableStation() {
+		if (scheduled2MoveStations.size() == topologyManager.count()) {
+			/*
+			 * No available stations 
+			 */
+			return null;
 		}
 		
-		IStation station = topologyManager
-			.changeStationPosition(topologyManager.getRandomStation(), newStationLocation); //will need to return the updated IStation
-		return new TopologyEvent(this.nextEventTime, TopologyEventType.NODE_MOVE, station);
+		/*
+		 * Can't move stations that are moving (Design decision)
+		 */
+		String stationID = this.topologyManager.getRandomStation();
+		while (scheduled2MoveStations.contains(stationID)){
+			stationID = this.topologyManager.getRandomStation();
+		}
+
+		return topologyManager.getStationById(stationID);
 	}
 	
+	/**
+	 * Move a single station. only used when stationBehavior == MIXED
+	 * @throws Exception 
+	 */
+	private Event[] moveStation(long currentTime) throws Exception {
+
+		IStation station = getAvailableStation();
+		if (null == station) {
+			return null;
+		}
+		
+		scheduled2MoveStations.add(station.getID());
+		return moveStation(station, currentTime);
+	}
+	
+	/**
+	 * @param currentTime 
+	 * @return
+	 * @throws Exception 
+	 * @throws Exception 
+	 */
+	private Event[] moveStation(IStation station, long currentTime) throws Exception {
+
+		/*
+		 * Setting the final destination of node's movement
+		 */
+		Point newStationLocation = this.layout.getRandomPoint(station.getLocation());
+		while (this.topologyManager.doesStationExist(newStationLocation)){
+			newStationLocation = this.layout.getRandomPoint(station.getLocation());
+		}
+
+		/*
+		 * Calculating the number of hops
+		 */
+		double distance = Math.abs(newStationLocation.distance(station.getLocation()));
+		int numHops = (int)Math.ceil(distance / hopDistance ); 
+
+		assert(numHops > 0);
+		
+		/*
+		 * hops Cartesian movement
+		 */
+		double xMovement = (newStationLocation.getX() - station.getLocation().getX()) / numHops;
+		double yMovement = (newStationLocation.getY() - station.getLocation().getY()) / numHops;
+
+		TopologyEvent[] hops = new TopologyEvent[numHops];
+
+		/*
+		 * the first hop details
+		 */
+		long hopTime = currentTime + 1;
+		int hopXCoor = (int)(station.getLocation().getX() + xMovement);
+		int hopYCoor = (int)(station.getLocation().getY() + yMovement);
+
+		IStation midStation = null;
+		for (int i = 0; i < numHops; i++) {
+			if (i == numHops - 1) {
+				/*
+				 * last hop location is the final destination 
+				 */
+				midStation = new Station(station.getID(), newStationLocation); 
+				hops[i] = new TopologyEvent(hopTime, TopologyEventType.NODE_LAST_MOVE, midStation);
+			} else {
+				/*
+				 * non-final hops locations
+				 */
+				midStation = new Station(station.getID(), new Point(hopXCoor,hopYCoor));
+				hopXCoor += xMovement;
+				hopYCoor += yMovement;
+				hops[i] = new TopologyEvent(hopTime, TopologyEventType.NODE_MOVE, midStation);
+			}
+			hopTime += HOP_TIME_INTERVAL;
+		}
+
+		/*
+		 * If the mode is dynamic we should schedule the next movement,
+		 * Immediately following the last hop.
+		 */
+		if (stationBehavior == StationsMode.DYNAMIC) {
+			hopTime -= HOP_TIME_INTERVAL;
+			updateTable(hopTime, station, stations2MovePerTime);
+		}
+
+		this.topologyManager.changeStationPosition(midStation.getID(), midStation.getLocation());
+		return hops;
+	}
+
+	/**
+	 * @param currentTime
+	 */
+	private void moveStations(long currentTime) {
+
+		List<IStation> stationList = this.stations2MovePerTime.remove(currentTime);
+		for (IStation station : stationList) {
+
+			try {
+				Event[] movement = moveStation(station, currentTime);
+				this.dispatcher.pushEvents(movement);
+			} catch (Exception e) {
+				logEvGenError(TopologyEventType.NODE_MOVE, e);
+			}
+		}
+	}
+
 	private Event removeStation() throws Exception {
-		IStation station = this.topologyManager.removeStation(topologyManager.getRandomStation());
+		IStation station = getAvailableStation();
+		if (null == station) {
+			return null;
+		}
+		
+		this.topologyManager.removeStation(station.getID());
 		return new TopologyEvent(this.nextEventTime, TopologyEventType.NODE_DESTROY, station);
 	}
-	
+
 	private static long getExpDelay(double poissonicRate) {
-	    double U = new Random().nextDouble();
+		double U = new Random().nextDouble();
 		return (long) (((-1/poissonicRate)*Math.log(1-U))); //*10
 	}
-	
-	
-	
+
+
 	/**
 	 * @param e logs the exception in the system log
 	 */
@@ -324,6 +504,15 @@ public class EventGenerator {
 			log.writeDown(data);
 		} catch (LogException le) {
 			System.out.println(le.getMessage());
+		}
+	}
+
+	/**
+	 * @param stationID 
+	 */
+	public void stationReachedTargetLocation(String stationID) {
+		if (null != stationID) {
+			scheduled2MoveStations.remove(stationID);
 		}
 	}
 }
