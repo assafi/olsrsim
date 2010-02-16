@@ -83,8 +83,21 @@ public class SimulationParameters {
 	static public int clusterNum = 10;
 	
 	public enum StationsMode{
+		/*
+		 * Stations are static in space
+		 */
 		STATIC, 
-		DYNAMIC  
+		
+		/*
+		 * Stations are constantly moving in space
+		 */
+		DYNAMIC,
+		
+		/*
+		 * Stations will decide to move every once in a while (in a non-deterministic fashion).
+		 * stations can also be destroyed and created, beside from moving.  
+		 */
+		MIXED
 	}
 	
 	static public StationsMode stationsMode = StationsMode.STATIC;
@@ -109,5 +122,18 @@ public class SimulationParameters {
 	
 	static public int maxStations = 100;
 		
+	public enum Speed {
+		LOW,
+		MEDIUM,
+		HIGH
+	}
 	
+	static public Speed simulationSpeed = Speed.LOW;
+	
+	/*
+	 * the actual speed of nodes movement is determined 
+	 * by calculating simulationSpeed.ordinal() * simulationHopDistance 
+	 * as the distance a node will travel for each hop every 10 simulation time units.
+	 */
+	static public int simulationHopDistance = 5;
 }

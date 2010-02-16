@@ -1,0 +1,4 @@
+﻿select count(*) as 'Number of messages'
+from sim_26012010_160045
+where EVENT_TYPE='DATA_SENT_FROM_SOURCE'
+or EVENT_TYPE='DATA_SENT_FROM_RELAY';

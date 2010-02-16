@@ -52,4 +52,12 @@ public class UniformLayout extends Layout {
 		return new Point(Math.abs(xCoor), Math.abs(yCoor));
 	}
 
+	/* (non-Javadoc)
+	 * @see layout.Layout#getRandomPoint(java.awt.Point)
+	 */
+	@Override
+	public Point getRandomPoint(Point environment) throws LayoutException {
+		return getRandomPoint();
+	}
+
 }
