@@ -43,6 +43,7 @@ import events.TCIntervalEndEvent;
 public class OLSRv2Protocol implements IOLSRv2Protocol {
 
 	private String stationID;
+	private long lastReceiveTime = -1; 
 	
 	/** Protocol information bases **/
 	
@@ -109,7 +110,10 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		
 		// Send them to the dispatcher
 		Dispatcher dispacher = Dispatcher.getInstance();
-		dispacher.pushEvent(newHelloMsg);
+		// if we are not transmitting or receiving we can send the data
+		if (helloTrigerMsg.getTime() > lastReceiveTime + SimulationParameters.transmitionTime){
+			dispacher.pushEvent(newHelloMsg);
+		}
 		dispacher.pushEvent(nexTriger);
 	}
 
@@ -119,6 +123,15 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 	@Override
 	public void reciveDataMessage(MessageEvent dataMsg) {
 		DataMessage msg  = (DataMessage)dataMsg;
+		
+		// if we are transmitting or receiving then we should drop this message
+		if (msg.getTime() >= lastReceiveTime && msg.getTime() <= lastReceiveTime + SimulationParameters.transmitionTime){
+			logEvent(SimEvents.DATA_DROPPED_AT_RELAY.name(), msg.getGlobalSrc(), msg.getGlobalDst(), msg.getLocalSrc(), msg.getLocalDst() ,false, null);
+			return;
+		}
+		
+		lastReceiveTime = msg.getTime(); // update the last receive time
+		
 		Dispatcher dispatcher = Dispatcher.getInstance();
 		
 		logEvent(SimEvents.DATA_REACHED_2_RELAY.name(), msg.getGlobalSrc(), msg.getGlobalDst(), msg.getLocalSrc(), msg.getLocalDst() ,false, null);
@@ -170,6 +183,16 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 	@Override
 	public void sendDataMessage(String dst) {
 		
+		Dispatcher dipatcher = Dispatcher.getInstance();
+		
+		// if we are transmitting or receiving then we should drop this message
+		if (dipatcher.getCurrentVirtualTime() >= lastReceiveTime && dipatcher.getCurrentVirtualTime() <= lastReceiveTime + SimulationParameters.transmitionTime){
+			logEvent(SimEvents.DATA_LOSS.name(), stationID, dst, null, null ,false, null);
+			return;
+		}
+		
+		lastReceiveTime = dipatcher.getCurrentVirtualTime();
+		
 		//log
 		logEvent(SimEvents.DATA_SENT_FROM_SOURCE.name(), stationID, dst, null, null, false, null);
 		
@@ -188,6 +211,14 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		/* if NHDP layer returns true after proccesing meaning that there
 		 * was a new 1-jop symmetric neighbor added or 2-hop neighbor
 		 * we must invoke the recalculation of MPRs */
+		
+		// if we are transmitting or receiving then we should drop this message
+		if (helloMsg.getTime() >= lastReceiveTime && helloMsg.getTime() <= lastReceiveTime + SimulationParameters.transmitionTime){
+			logEvent(SimEvents.BUSSY_MSG_DROPPED.name(), null, null, helloMsg.getSource(), stationID ,false, "Cann't proccess cause bussy");
+			return;
+		}
+		
+		lastReceiveTime = helloMsg.getTime();
 		
 		//clear the sets of invalid entries
 		cleanExpiredSetEntries();
@@ -222,6 +253,14 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 	 */
 	@Override
 	public void reciveTCMessage(MessageEvent tcMsg) {
+		
+		// if we are transmitting or receiving then we should drop this message
+		if (tcMsg.getTime() >= lastReceiveTime && tcMsg.getTime() <= lastReceiveTime + SimulationParameters.transmitionTime){
+			logEvent(SimEvents.BUSSY_MSG_DROPPED.name(), ((TCMessage)tcMsg).getGlobalSrc(), null, tcMsg.getSource(), stationID ,false, "Cann't proccess cause bussy");
+			return;
+		}
+		
+		lastReceiveTime = tcMsg.getTime();
 		
 		//clear the sets of invalid entries
 		cleanExpiredSetEntries();
@@ -266,6 +305,10 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		
 		// Send them to the dispatcher
 		Dispatcher dispacher = Dispatcher.getInstance();
+		// if we are not transmitting or receiving we can send the data
+		if (tcTrigerMsg.getTime() > lastReceiveTime + SimulationParameters.transmitionTime){
+			dispacher.pushEvent(newTCMsg);
+		}
 		dispacher.pushEvent(nexTriger);
 	}
 	
