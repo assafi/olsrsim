@@ -79,7 +79,8 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 		int rand = new Random().nextInt(SimulationParameters.TCInterval);
 		long jitter = rand / SimulationParameters.maxStations;
 		
-		generateTCMessage(dispatcher.getCurrentVirtualTime() + jitter);
+		TCMessage tcMsg = generateTCMessage(dispatcher.getCurrentVirtualTime() + jitter);
+		dispatcher.pushEvent(tcMsg);
 		dispatcher.pushEvent(new TCIntervalEndEvent(stationID, dispatcher.getCurrentVirtualTime() + SimulationParameters.TCInterval + jitter));
 	}
 	
@@ -90,8 +91,8 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 	public TCMessage generateTCMessage(long currentSimTime) {
 		// first time the local source = global source
 		TCMessage tcMsg = new TCMessage(stationID, stationID, currentSimTime + SimulationParameters.transmitionTime, neighborInfo.getAllNeighbors());
-		Dispatcher dispatcher = Dispatcher.getInstance();
-		dispatcher.pushEvent(tcMsg);
+//		Dispatcher dispatcher = Dispatcher.getInstance();
+//		dispatcher.pushEvent(tcMsg);
 		return tcMsg;
 	}
 
@@ -324,7 +325,9 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 			//because the MPR selector set is changed we must send a TC message
 			//TODO see how this settels with minimum time before trunsmition
 			//     and if the interval of TC is passed or near to finish
-			generateTCMessage(helloMsg.getTime());
+			TCMessage tcMsg  = generateTCMessage(helloMsg.getTime());
+			Dispatcher dispatcher = Dispatcher.getInstance();
+			dispatcher.pushEvent(tcMsg);
 		}
 		else{ // otherwise set it to be false. Needed in case it was selected and now it is not
 			neighborInfo.getNeighborProperty(helloMsg.getSource()).setMpr_selector(false);
