@@ -24,6 +24,10 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		if(args.length > 0) {
+			
+		}
+		
 		// Creating the GUI
 		GUIManager.getInstance().createGUI();
 		// Initializing the topology events thread
