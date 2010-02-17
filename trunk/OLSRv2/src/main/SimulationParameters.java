@@ -122,18 +122,18 @@ public class SimulationParameters {
 	
 	static public int maxStations = 100;
 		
-	public enum Speed {
+	public enum StationsSpeed {
 		LOW,
 		MEDIUM,
 		HIGH
 	}
 	
-	static public Speed simulationSpeed = Speed.LOW;
+	static public StationsSpeed stationSpeed = StationsSpeed.LOW;
 	
 	/*
 	 * the actual speed of nodes movement is determined 
 	 * by calculating simulationSpeed.ordinal() * simulationHopDistance 
 	 * as the distance a node will travel for each hop every 10 simulation time units.
 	 */
-	static public int simulationHopDistance = 5;
+	static public int stationHopDistance = 5;
 }
