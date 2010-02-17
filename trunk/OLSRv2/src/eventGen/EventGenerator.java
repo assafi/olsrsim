@@ -84,8 +84,8 @@ public class EventGenerator {
 		this.maxStations = maxStations;
 		this.log = Log.getInstance();
 		this.stationBehavior = staticMod;
-		this.hopDistance = ( main.SimulationParameters.simulationSpeed.ordinal() + 1) * 
-			main.SimulationParameters.simulationHopDistance;
+		this.hopDistance = ( main.SimulationParameters.stationSpeed.ordinal() + 1) * 
+			main.SimulationParameters.stationHopDistance;
 	}
 
 	/**
