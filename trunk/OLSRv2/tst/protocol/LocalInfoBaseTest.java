@@ -82,27 +82,6 @@ public class LocalInfoBaseTest {
 	}
 
 	/**
-	 * Test method for {@link protocol.InformationBases.LocalInformationBase#getInterfaceAddress(java.lang.String)}.
-	 */
-	@Test
-	public void testGetInterfaceAddress() {
-		try {
-			System.out.println(base.getInterfaceAddress("eth0"));
-			System.out.println(base.getInterfaceAddress("eth1"));
-		} catch (ProtocolException e) {
-			fail();
-		}
-		
-		try {
-			System.out.println(base.getInterfaceAddress("eth2"));
-		} catch (ProtocolException e) {
-			return;
-		}
-		System.out.println("faild");
-		fail();
-	}
-
-	/**
 	 * Test method for {@link protocol.InformationBases.LocalInformationBase#getAllLocalInterfaces()}.
 	 */
 	@Test
