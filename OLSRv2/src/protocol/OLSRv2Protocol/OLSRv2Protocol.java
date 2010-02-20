@@ -111,7 +111,8 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		// Send them to the dispatcher
 		Dispatcher dispacher = Dispatcher.getInstance();
 		// if we are not transmitting or receiving we can send the data
-		if (helloTrigerMsg.getTime() > lastReceiveTime + SimulationParameters.transmitionTime){
+		if (lastReceiveTime != -1 &&
+			helloTrigerMsg.getTime() > lastReceiveTime + SimulationParameters.transmitionTime){
 			dispacher.pushEvent(newHelloMsg);
 		}
 		dispacher.pushEvent(nexTriger);
@@ -125,7 +126,8 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		DataMessage msg  = (DataMessage)dataMsg;
 		
 		// if we are transmitting or receiving then we should drop this message
-		if (msg.getTime() >= lastReceiveTime && msg.getTime() <= lastReceiveTime + SimulationParameters.transmitionTime){
+		if (lastReceiveTime != -1 &&
+			msg.getTime() >= lastReceiveTime && msg.getTime() <= lastReceiveTime + SimulationParameters.transmitionTime){
 			logEvent(SimEvents.DATA_DROPPED_AT_RELAY.name(), msg.getGlobalSrc(), msg.getGlobalDst(), msg.getLocalSrc(), msg.getLocalDst() ,false, null);
 			return;
 		}
@@ -185,13 +187,14 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		
 		Dispatcher dipatcher = Dispatcher.getInstance();
 		
-		// if we are transmitting or receiving then we should drop this message
-		if (dipatcher.getCurrentVirtualTime() >= lastReceiveTime && dipatcher.getCurrentVirtualTime() <= lastReceiveTime + SimulationParameters.transmitionTime){
-			logEvent(SimEvents.DATA_LOSS.name(), stationID, dst, null, null ,false, null);
-			return;
-		}
-		
-		lastReceiveTime = dipatcher.getCurrentVirtualTime();
+//		// if we are transmitting or receiving then we should drop this message
+//		if (lastReceiveTime != -1 &&
+//			dipatcher.getCurrentVirtualTime() >= lastReceiveTime && dipatcher.getCurrentVirtualTime() <= lastReceiveTime + SimulationParameters.transmitionTime){
+//			logEvent(SimEvents.DATA_LOSS.name(), stationID, dst, null, null ,false, null);
+//			return;
+//		}
+//		
+//		lastReceiveTime = dipatcher.getCurrentVirtualTime();
 		
 		//log
 		logEvent(SimEvents.DATA_SENT_FROM_SOURCE.name(), stationID, dst, null, null, false, null);
@@ -213,7 +216,8 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		 * we must invoke the recalculation of MPRs */
 		
 		// if we are transmitting or receiving then we should drop this message
-		if (helloMsg.getTime() >= lastReceiveTime && helloMsg.getTime() <= lastReceiveTime + SimulationParameters.transmitionTime){
+		if (lastReceiveTime != -1 &&
+			helloMsg.getTime() >= lastReceiveTime && helloMsg.getTime() <= lastReceiveTime + SimulationParameters.transmitionTime){
 			logEvent(SimEvents.BUSSY_MSG_DROPPED.name(), null, null, helloMsg.getSource(), stationID ,false, "Cann't proccess cause bussy");
 			return;
 		}
@@ -255,7 +259,8 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 	public void reciveTCMessage(MessageEvent tcMsg) {
 		
 		// if we are transmitting or receiving then we should drop this message
-		if (tcMsg.getTime() >= lastReceiveTime && tcMsg.getTime() <= lastReceiveTime + SimulationParameters.transmitionTime){
+		if (lastReceiveTime != -1 &&
+			tcMsg.getTime() >= lastReceiveTime && tcMsg.getTime() <= lastReceiveTime + SimulationParameters.transmitionTime){
 			logEvent(SimEvents.BUSSY_MSG_DROPPED.name(), ((TCMessage)tcMsg).getGlobalSrc(), null, tcMsg.getSource(), stationID ,false, "Cann't proccess cause bussy");
 			return;
 		}
@@ -306,7 +311,8 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		// Send them to the dispatcher
 		Dispatcher dispacher = Dispatcher.getInstance();
 		// if we are not transmitting or receiving we can send the data
-		if (tcTrigerMsg.getTime() > lastReceiveTime + SimulationParameters.transmitionTime){
+		if (lastReceiveTime != -1 &&
+			tcTrigerMsg.getTime() > lastReceiveTime + SimulationParameters.transmitionTime){
 			dispacher.pushEvent(newTCMsg);
 		}
 		dispacher.pushEvent(nexTriger);
