@@ -166,12 +166,12 @@ public class Dispatcher implements IDispatcher {
 			Event currentEvent = null;
 
 			long nextEventTime;
-			nextEventTime = peek().getTime();
 
 			if (tasksQueue.isEmpty() || 
-					nextEventTime > currentVirtualTime){
+					(nextEventTime = peek().getTime()) > currentVirtualTime){
 				this.currentVirtualTime++;
 				this.eventGen.tick();
+//				System.out.println(currentVirtualTime);
 				continue;
 			}
 
