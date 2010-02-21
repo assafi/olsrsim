@@ -128,7 +128,7 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		// if we are transmitting or receiving then we should drop this message
 		if (lastReceiveTime != -1 &&
 			msg.getTime() >= lastReceiveTime && msg.getTime() <= lastReceiveTime + SimulationParameters.transmitionTime){
-			logEvent(SimEvents.DATA_DROPPED_AT_RELAY.name(), msg.getGlobalSrc(), msg.getGlobalDst(), msg.getLocalSrc(), msg.getLocalDst() ,false, null);
+			logEvent(SimEvents.BUSSY_MSG_DROPPED.name(), msg.getGlobalSrc(), msg.getGlobalDst(), msg.getLocalSrc(), msg.getLocalDst() ,false, "Cannt receive Data message");
 			return;
 		}
 		
@@ -187,13 +187,13 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		
 		Dispatcher dipatcher = Dispatcher.getInstance();
 		
-//		// if we are transmitting or receiving then we should drop this message
-//		if (lastReceiveTime != -1 &&
-//			dipatcher.getCurrentVirtualTime() >= lastReceiveTime && dipatcher.getCurrentVirtualTime() <= lastReceiveTime + SimulationParameters.transmitionTime){
-//			logEvent(SimEvents.DATA_LOSS.name(), stationID, dst, null, null ,false, null);
-//			return;
-//		}
-//		
+		// if we are transmitting or receiving then we should drop this message
+		if (lastReceiveTime != -1 &&
+			dipatcher.getCurrentVirtualTime() >= lastReceiveTime && dipatcher.getCurrentVirtualTime() <= lastReceiveTime + SimulationParameters.transmitionTime){
+			logEvent(SimEvents.BUSSY_MSG_DROPPED.name(), stationID, dst, null, null ,false, "Data message cann't be sent from global source");
+			return;
+		}
+		
 //		lastReceiveTime = dipatcher.getCurrentVirtualTime();
 		
 		//log
@@ -218,7 +218,7 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		// if we are transmitting or receiving then we should drop this message
 		if (lastReceiveTime != -1 &&
 			helloMsg.getTime() >= lastReceiveTime && helloMsg.getTime() <= lastReceiveTime + SimulationParameters.transmitionTime){
-			logEvent(SimEvents.BUSSY_MSG_DROPPED.name(), null, null, helloMsg.getSource(), stationID ,false, "Cann't proccess cause bussy");
+			logEvent(SimEvents.BUSSY_MSG_DROPPED.name(), null, null, helloMsg.getSource(), stationID ,false, "Cann't proccess Hello message cause bussy");
 			return;
 		}
 		
@@ -261,7 +261,7 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		// if we are transmitting or receiving then we should drop this message
 		if (lastReceiveTime != -1 &&
 			tcMsg.getTime() >= lastReceiveTime && tcMsg.getTime() <= lastReceiveTime + SimulationParameters.transmitionTime){
-			logEvent(SimEvents.BUSSY_MSG_DROPPED.name(), ((TCMessage)tcMsg).getGlobalSrc(), null, tcMsg.getSource(), stationID ,false, "Cann't proccess cause bussy");
+			logEvent(SimEvents.BUSSY_MSG_DROPPED.name(), ((TCMessage)tcMsg).getGlobalSrc(), null, tcMsg.getSource(), stationID ,false, "Cann't proccess TC message cause bussy");
 			return;
 		}
 		

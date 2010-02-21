@@ -53,6 +53,7 @@ public abstract class MessageEvent extends Event {
 		Log log = Log.getInstance();
 		HashMap<String, String> data = new HashMap<String, String>();
 		data.put(SimLabels.VIRTUAL_TIME.name(), Long.toString(getTime()));
+		data.put(SimLabels.NODE_ID.name(), eventSource);
 		data.put(SimLabels.EVENT_TYPE.name(), messageType);
 		data.put(SimLabels.GLOBAL_SOURCE.name(),globalSrc);
 		data.put(SimLabels.GLOBAL_TARGET.name(),globalDst);
