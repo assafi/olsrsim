@@ -41,7 +41,7 @@ public class SimulationParameters {
 	/**
 	 * The Delta of time after which the messages are being sent. 
 	 */
-	static public int transmitionTime = 5; //TODO see that this is a correct interval
+	static public int transmitionTime = 1; //TODO see that this is a correct interval
 	
 	/**
 	 * This defines whether the protocol chooses its
@@ -110,7 +110,7 @@ public class SimulationParameters {
 	// Simulation Definitions
 	///////////////////////////////////////////////////////////////////////////
 	
-	static public int receptionRadius = 30;
+	static public int receptionRadius = 70;
 	
 	static public int simulationEndTime = 2500;
 	

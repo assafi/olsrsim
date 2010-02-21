@@ -200,7 +200,9 @@ public class Log implements ILog {
 				"LINES TERMINATED BY '" + System.getProperty("line.separator") + "'" +
 						" IGNORE 1 LINES;";
 		PreparedStatement stmt = proxy.preparedStatement(query);
+		System.out.print("Updating SQL database... ");
 		stmt.execute();
+		System.out.println("Done");
 
 		/*
 		 * Delete the csv file since, we have all data backed
@@ -211,43 +213,4 @@ public class Log implements ILog {
 			csvFile.deleteOnExit();
 		}
 	}
-	
-//	private boolean tableExists(SqlProxy proxy, String tableName) throws SqlProxyException, SQLException {
-//		
-//		PreparedStatement statement = null;
-//		ResultSet result = null;
-//		try {
-//			statement = proxy.preparedStatement("SELECT table_name FROM information_schema.tables " +
-//					"WHERE table_schema=? AND table_name='" + tableName + "'");
-//			statement.setString(1, "olsr");
-//			result = statement.executeQuery();
-//			
-//			/*
-//			 * If table exists, results are not empty.
-//			 */
-//			return result.first();
-//		} finally {
-//			SqlProxy.closeAllSQLConnections(new Object[] {statement,result});
-//		}
-//	}
-//	
-//	private void createUsersTable() throws SqlProxyException, SQLException {
-//		PreparedStatement createTableStmt = null;
-//		try {
-//			createTableStmt = this.proxy.preparedStatement("create table " + USERS_TABLE + "("
-//					+ ID + " INTEGER PRIMARY KEY AUTO_INCREMENT, " // PRIMARY KEY == KEY + NOT NULL
-//					+ USERNAME + " VARCHAR(32) NOT NULL UNIQUE, "
-//					+ PASSWORD + " VARCHAR(32) NOT NULL, "
-//					+ FIRST_NAME + " VARCHAR(32) NOT NULL, "
-//					+ MIDDLE_NAME + " VARCHAR(32) ,"
-//					+ LAST_NAME + " VARCHAR(32) NOT NULL, "
-//					+ ADDRESS + " VARCHAR(128), "
-//					+ DOB + " DATE NOT NULL, "
-//					+ IS_ADMIN + " BOOLEAN NOT NULL DEFAULT " + DEFAULT_ADMIN_VAL + ")");
-//			createTableStmt.executeUpdate();
-//		} finally {
-//			SqlProxy.closeAllSQLConnections(new Object[] { createTableStmt });
-//		}
-//				
-//	}
 }

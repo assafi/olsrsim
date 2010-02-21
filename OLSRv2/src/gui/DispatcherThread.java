@@ -60,14 +60,14 @@ public class DispatcherThread implements Runnable {
 		try {
 			Log.getInstance().createLog(new CsvWriter());
 			dispatcher.startSimulation();
-			synchronized (this) {
-				wait();
-			}
-			GUIManager.getInstance().popAlertMessage("Simulation Ended Successfully", AlertType.NORMAL);
+//			synchronized (this) {
+//				wait();
+//			}
+//			GUIManager.getInstance().popAlertMessage("Simulation Ended Successfully", AlertType.NORMAL);
 			// Writing the log file into the database
 			Log.getInstance().updateDB();
 			Log.getInstance().close();
-			GUIManager.getInstance().popAlertMessage("Simulation information was written to the database", AlertType.NORMAL);
+//			GUIManager.getInstance().popAlertMessage("Simulation information was written to the database", AlertType.NORMAL);
 		} catch (DispatcherException e) {
 			GUIManager.getInstance().popAlertMessage(e.getMessage(), AlertType.FATAL);
 			Log.getInstance().close();
