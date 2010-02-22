@@ -17,6 +17,7 @@ import gui.input_params.MaxStations;
 import gui.input_params.ReceptionRadius;
 import gui.input_params.SimulationEndTime;
 import gui.input_params.SimulationSpeed;
+import gui.input_params.StationsSpeed;
 import gui.input_params.TopologyPoissonicRate;
 
 import java.awt.Color;
@@ -72,6 +73,7 @@ public class SimulationTab extends JPanel {
 		parameters.add(new TopologyPoissonicRate());
 		parameters.add(new DataEventsPoissonicRate());
 		parameters.add(new SimulationSpeed());
+		parameters.add(new StationsSpeed());
 	}
 
 }
