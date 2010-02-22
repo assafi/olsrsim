@@ -23,13 +23,17 @@ import gui.GUIManager;
  *
  */
 public class Main {
-
+	public static boolean commandLineMode = false;
 	
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		if(args.length > 0) {
+			commandLineMode = true;
+		}
+		
+		if(commandLineMode) {
 			SimulationParameters.entryValidPeriod = Integer.valueOf(args[0]);
 			SimulationParameters.TCInterval =  Integer.valueOf(args[1]);
 			SimulationParameters.HelloInterval = Integer.valueOf(args[2]);
@@ -59,7 +63,7 @@ public class Main {
 		// Initializing the dispatcher thread
 		GUIManager.getInstance().initDispatcherThread();
 		
-		if(args.length > 0) {
+		if(commandLineMode) {
 			GUIManager.getInstance().dispatcherThread.start();
 		}
 	}
