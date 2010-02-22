@@ -127,6 +127,9 @@ public class Log implements ILog {
 	private void createSqlLog(IDataSqlWriter dataWriter) {
 		
 		tableIdentifier = ILog.fileName + simulationTime;
+		
+		System.out.println(tableIdentifier);
+		
 		try {
 			dataWriter.open(tableIdentifier);
 		} catch (Exception e) {
