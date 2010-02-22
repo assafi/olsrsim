@@ -41,7 +41,7 @@ public class WorldTopology extends JPanel {
 		this.setBackground(GUIManager.BACKGROUND);
 		this.setBorder(new LineBorder(Color.black));
 		try {
-			URL imageURL = getClass().getResource("../world_background.jpg");
+			URL imageURL = getClass().getResource("/world_background.jpg");
 			this.backgroundImage = ImageIO.read(imageURL);
 		} catch (IOException e) {
 			e.printStackTrace();
