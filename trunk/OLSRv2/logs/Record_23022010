@@ -1,0 +1,864 @@
+
+
+***** ***** *****
+Data rate: 0.1
+Station mode: STATIC
+Speed: LOW
+Utilization: 0.0036
+MPR Selection mode: NORMAL
+Data transmission mode: NORMAL
+Topology: UNIFORM
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.1
+Station mode: DYNAMIC
+Speed: LOW
+Utilization: 0.0028
+MPR Selection mode: NORMAL
+Data transmission mode: NORMAL
+Topology: UNIFORM
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.1
+Station mode: DYNAMIC
+Speed: MEDIUM
+Utilization: 0.0020
+MPR Selection mode: NORMAL
+Data transmission mode: NORMAL
+Topology: UNIFORM
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.1
+Station mode: DYNAMIC
+Speed: HIGH
+Utilization: 0.0019
+MPR Selection mode: NORMAL
+Data transmission mode: NORMAL
+Topology: UNIFORM
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.2
+Station mode: STATIC
+Speed: LOW
+Utilization: 0.0022
+MPR Selection mode: NORMAL
+Data transmission mode: NORMAL
+Topology: UNIFORM
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.2
+Station mode: DYNAMIC
+Speed: LOW
+Utilization: 0.0038
+MPR Selection mode: NORMAL
+Data transmission mode: NORMAL
+Topology: UNIFORM
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.2
+Station mode: DYNAMIC
+Speed: MEDIUM
+Utilization: 0.0031
+MPR Selection mode: NORMAL
+Data transmission mode: NORMAL
+Topology: UNIFORM
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.2
+Station mode: DYNAMIC
+Speed: HIGH
+Utilization: 0.0026
+MPR Selection mode: NORMAL
+Data transmission mode: NORMAL
+Topology: UNIFORM
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.30000000000000004
+Station mode: STATIC
+Speed: LOW
+Utilization: 0.0049
+MPR Selection mode: NORMAL
+Data transmission mode: NORMAL
+Topology: UNIFORM
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.30000000000000004
+Station mode: DYNAMIC
+Speed: LOW
+Utilization: 0.0041
+MPR Selection mode: NORMAL
+Data transmission mode: NORMAL
+Topology: UNIFORM
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.30000000000000004
+Station mode: DYNAMIC
+Speed: MEDIUM
+Utilization: 0.0035
+MPR Selection mode: NORMAL
+Data transmission mode: NORMAL
+Topology: UNIFORM
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.30000000000000004
+Station mode: DYNAMIC
+Speed: HIGH
+Utilization: 0.0031
+MPR Selection mode: NORMAL
+Data transmission mode: NORMAL
+Topology: UNIFORM
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.4
+Station mode: STATIC
+Speed: LOW
+Utilization: 0.0044
+MPR Selection mode: NORMAL
+Data transmission mode: NORMAL
+Topology: UNIFORM
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.4
+Station mode: DYNAMIC
+Speed: LOW
+Utilization: 0.0047
+MPR Selection mode: NORMAL
+Data transmission mode: NORMAL
+Topology: UNIFORM
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.4
+Station mode: DYNAMIC
+Speed: MEDIUM
+Utilization: 0.0038
+MPR Selection mode: NORMAL
+Data transmission mode: NORMAL
+Topology: UNIFORM
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.4
+Station mode: DYNAMIC
+Speed: HIGH
+Utilization: 0.0033
+MPR Selection mode: NORMAL
+Data transmission mode: NORMAL
+Topology: UNIFORM
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.5
+Station mode: STATIC
+Speed: LOW
+Utilization: 0.0058
+MPR Selection mode: NORMAL
+Data transmission mode: NORMAL
+Topology: UNIFORM
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.5
+Station mode: DYNAMIC
+Speed: LOW
+Utilization: 0.0047
+MPR Selection mode: NORMAL
+Data transmission mode: NORMAL
+Topology: UNIFORM
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.5
+Station mode: DYNAMIC
+Speed: MEDIUM
+Utilization: 0.0040
+MPR Selection mode: NORMAL
+Data transmission mode: NORMAL
+Topology: UNIFORM
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.5
+Station mode: DYNAMIC
+Speed: HIGH
+Utilization: 0.0035
+MPR Selection mode: NORMAL
+Data transmission mode: NORMAL
+Topology: UNIFORM
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.6
+Station mode: STATIC
+Speed: LOW
+Utilization: 0.0067
+MPR Selection mode: NORMAL
+Data transmission mode: NORMAL
+Topology: UNIFORM
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.6
+Station mode: DYNAMIC
+Speed: LOW
+Utilization: 0.0047
+MPR Selection mode: NORMAL
+Data transmission mode: NORMAL
+Topology: UNIFORM
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.6
+Station mode: DYNAMIC
+Speed: MEDIUM
+Utilization: 0.0039
+MPR Selection mode: NORMAL
+Data transmission mode: NORMAL
+Topology: UNIFORM
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.6
+Station mode: DYNAMIC
+Speed: HIGH
+Utilization: 0.0034
+MPR Selection mode: NORMAL
+Data transmission mode: NORMAL
+Topology: UNIFORM
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.1
+Station mode: STATIC
+Speed: LOW
+Utilization: 0.0035
+MPR Selection mode: NORMAL
+Data transmission mode: NORMAL
+Topology: CLUSTER
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.1
+Station mode: DYNAMIC
+Speed: LOW
+Utilization: 0.0034
+MPR Selection mode: NORMAL
+Data transmission mode: NORMAL
+Topology: CLUSTER
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.1
+Station mode: DYNAMIC
+Speed: MEDIUM
+Utilization: 0.0034
+MPR Selection mode: NORMAL
+Data transmission mode: NORMAL
+Topology: CLUSTER
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.1
+Station mode: DYNAMIC
+Speed: HIGH
+Utilization: 0.0035
+MPR Selection mode: NORMAL
+Data transmission mode: NORMAL
+Topology: CLUSTER
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.2
+Station mode: STATIC
+Speed: LOW
+Utilization: 0.0048
+MPR Selection mode: NORMAL
+Data transmission mode: NORMAL
+Topology: CLUSTER
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.2
+Station mode: DYNAMIC
+Speed: LOW
+Utilization: 0.0046
+MPR Selection mode: NORMAL
+Data transmission mode: NORMAL
+Topology: CLUSTER
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.2
+Station mode: DYNAMIC
+Speed: MEDIUM
+Utilization: 0.0050
+MPR Selection mode: NORMAL
+Data transmission mode: NORMAL
+Topology: CLUSTER
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.2
+Station mode: DYNAMIC
+Speed: HIGH
+Utilization: 0.0046
+MPR Selection mode: NORMAL
+Data transmission mode: NORMAL
+Topology: CLUSTER
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.30000000000000004
+Station mode: STATIC
+Speed: LOW
+Utilization: 0.0055
+MPR Selection mode: NORMAL
+Data transmission mode: NORMAL
+Topology: CLUSTER
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.30000000000000004
+Station mode: DYNAMIC
+Speed: LOW
+Utilization: 0.0049
+MPR Selection mode: NORMAL
+Data transmission mode: NORMAL
+Topology: CLUSTER
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.30000000000000004
+Station mode: DYNAMIC
+Speed: MEDIUM
+Utilization: 0.0051
+MPR Selection mode: NORMAL
+Data transmission mode: NORMAL
+Topology: CLUSTER
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.30000000000000004
+Station mode: DYNAMIC
+Speed: HIGH
+Utilization: 0.0049
+MPR Selection mode: NORMAL
+Data transmission mode: NORMAL
+Topology: CLUSTER
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.4
+Station mode: STATIC
+Speed: LOW
+Utilization: 0.0058
+MPR Selection mode: NORMAL
+Data transmission mode: NORMAL
+Topology: CLUSTER
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.4
+Station mode: DYNAMIC
+Speed: LOW
+Utilization: 0.0051
+MPR Selection mode: NORMAL
+Data transmission mode: NORMAL
+Topology: CLUSTER
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.4
+Station mode: DYNAMIC
+Speed: MEDIUM
+Utilization: 0.0050
+MPR Selection mode: NORMAL
+Data transmission mode: NORMAL
+Topology: CLUSTER
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.4
+Station mode: DYNAMIC
+Speed: HIGH
+Utilization: 0.0052
+MPR Selection mode: NORMAL
+Data transmission mode: NORMAL
+Topology: CLUSTER
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.5
+Station mode: STATIC
+Speed: LOW
+Utilization: 0.0063
+MPR Selection mode: NORMAL
+Data transmission mode: NORMAL
+Topology: CLUSTER
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.5
+Station mode: DYNAMIC
+Speed: LOW
+Utilization: 0.0054
+MPR Selection mode: NORMAL
+Data transmission mode: NORMAL
+Topology: CLUSTER
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.5
+Station mode: DYNAMIC
+Speed: MEDIUM
+Utilization: 0.0061
+MPR Selection mode: NORMAL
+Data transmission mode: NORMAL
+Topology: CLUSTER
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.5
+Station mode: DYNAMIC
+Speed: HIGH
+Utilization: 0.0053
+MPR Selection mode: NORMAL
+Data transmission mode: NORMAL
+Topology: CLUSTER
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.6
+Station mode: STATIC
+Speed: LOW
+Utilization: 0.0056
+MPR Selection mode: NORMAL
+Data transmission mode: NORMAL
+Topology: CLUSTER
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.6
+Station mode: DYNAMIC
+Speed: LOW
+Utilization: 0.0054
+MPR Selection mode: NORMAL
+Data transmission mode: NORMAL
+Topology: CLUSTER
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.6
+Station mode: DYNAMIC
+Speed: MEDIUM
+Utilization: 0.0056
+MPR Selection mode: NORMAL
+Data transmission mode: NORMAL
+Topology: CLUSTER
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.6
+Station mode: DYNAMIC
+Speed: HIGH
+Utilization: 0.0052
+MPR Selection mode: NORMAL
+Data transmission mode: NORMAL
+Topology: CLUSTER
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.1
+Station mode: STATIC
+Speed: LOW
+Utilization: 0.0026
+MPR Selection mode: NORMAL
+Data transmission mode: MPRS
+Topology: UNIFORM
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.1
+Station mode: DYNAMIC
+Speed: LOW
+Utilization: 0.0026
+MPR Selection mode: NORMAL
+Data transmission mode: MPRS
+Topology: UNIFORM
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.1
+Station mode: DYNAMIC
+Speed: MEDIUM
+Utilization: 0.0021
+MPR Selection mode: NORMAL
+Data transmission mode: MPRS
+Topology: UNIFORM
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.1
+Station mode: DYNAMIC
+Speed: HIGH
+Utilization: 0.0018
+MPR Selection mode: NORMAL
+Data transmission mode: MPRS
+Topology: UNIFORM
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.2
+Station mode: STATIC
+Speed: LOW
+Utilization: 0.0031
+MPR Selection mode: NORMAL
+Data transmission mode: MPRS
+Topology: UNIFORM
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.2
+Station mode: DYNAMIC
+Speed: LOW
+Utilization: 0.0038
+MPR Selection mode: NORMAL
+Data transmission mode: MPRS
+Topology: UNIFORM
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.2
+Station mode: DYNAMIC
+Speed: MEDIUM
+Utilization: 0.0032
+MPR Selection mode: NORMAL
+Data transmission mode: MPRS
+Topology: UNIFORM
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.2
+Station mode: DYNAMIC
+Speed: HIGH
+Utilization: 0.0027
+MPR Selection mode: NORMAL
+Data transmission mode: MPRS
+Topology: UNIFORM
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.30000000000000004
+Station mode: STATIC
+Speed: LOW
+Utilization: 0.0051
+MPR Selection mode: NORMAL
+Data transmission mode: MPRS
+Topology: UNIFORM
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.30000000000000004
+Station mode: DYNAMIC
+Speed: LOW
+Utilization: 0.0042
+MPR Selection mode: NORMAL
+Data transmission mode: MPRS
+Topology: UNIFORM
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.30000000000000004
+Station mode: DYNAMIC
+Speed: MEDIUM
+Utilization: 0.0037
+MPR Selection mode: NORMAL
+Data transmission mode: MPRS
+Topology: UNIFORM
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.30000000000000004
+Station mode: DYNAMIC
+Speed: HIGH
+Utilization: 0.0031
+MPR Selection mode: NORMAL
+Data transmission mode: MPRS
+Topology: UNIFORM
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.4
+Station mode: STATIC
+Speed: LOW
+Utilization: 0.0047
+MPR Selection mode: NORMAL
+Data transmission mode: MPRS
+Topology: UNIFORM
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.4
+Station mode: DYNAMIC
+Speed: LOW
+Utilization: 0.0046
+MPR Selection mode: NORMAL
+Data transmission mode: MPRS
+Topology: UNIFORM
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.4
+Station mode: DYNAMIC
+Speed: MEDIUM
+Utilization: 0.0037
+MPR Selection mode: NORMAL
+Data transmission mode: MPRS
+Topology: UNIFORM
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.4
+Station mode: DYNAMIC
+Speed: HIGH
+Utilization: 0.0034
+MPR Selection mode: NORMAL
+Data transmission mode: MPRS
+Topology: UNIFORM
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.5
+Station mode: STATIC
+Speed: LOW
+Utilization: 0.0050
+MPR Selection mode: NORMAL
+Data transmission mode: MPRS
+Topology: UNIFORM
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.5
+Station mode: DYNAMIC
+Speed: LOW
+Utilization: 0.0046
+MPR Selection mode: NORMAL
+Data transmission mode: MPRS
+Topology: UNIFORM
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.5
+Station mode: DYNAMIC
+Speed: MEDIUM
+Utilization: 0.0040
+MPR Selection mode: NORMAL
+Data transmission mode: MPRS
+Topology: UNIFORM
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.5
+Station mode: DYNAMIC
+Speed: HIGH
+Utilization: 0.0035
+MPR Selection mode: NORMAL
+Data transmission mode: MPRS
+Topology: UNIFORM
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.6
+Station mode: STATIC
+Speed: LOW
+Utilization: 0.0060
+MPR Selection mode: NORMAL
+Data transmission mode: MPRS
+Topology: UNIFORM
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.6
+Station mode: DYNAMIC
+Speed: LOW
+Utilization: 0.0044
+MPR Selection mode: NORMAL
+Data transmission mode: MPRS
+Topology: UNIFORM
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.6
+Station mode: DYNAMIC
+Speed: MEDIUM
+Utilization: 0.0040
+MPR Selection mode: NORMAL
+Data transmission mode: MPRS
+Topology: UNIFORM
+Hello interval: 10
+TC interval: 15
+
+
+***** ***** *****
+Data rate: 0.6
+Station mode: DYNAMIC
+Speed: HIGH
+Utilization: 0.0035
+MPR Selection mode: NORMAL
+Data transmission mode: MPRS
+Topology: UNIFORM
+Hello interval: 10
+TC interval: 15
