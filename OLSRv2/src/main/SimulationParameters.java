@@ -49,8 +49,8 @@ public class SimulationParameters {
 	 * as MPRs 
 	 */
 	public enum ProtocolMprMode{
-		NORMAL, /* Regular MPR selection */ 
-		ALL_MPRS /* All nodes are being chosen as MPRs*/
+		NORMAL, /* Regular MPR selection (Minimum 2-hop cover by 1-hop neighbors set) */ 
+		ALL_MPRS /* All 1-hop neighbors are being chosen as MPRs*/
 	}
 	
 	static public ProtocolMprMode protocolMode = ProtocolMprMode.NORMAL;

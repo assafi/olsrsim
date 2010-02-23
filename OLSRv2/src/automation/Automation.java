@@ -60,7 +60,8 @@ public class Automation {
 		}
 
 		for (ProtocolMprMode protocolMode : ProtocolMprMode.values()) {
-			for (ProtocolDataSendMode protocolDataSendMode : ProtocolDataSendMode.values()) {
+			ProtocolDataSendMode protocolDataSendMode = ProtocolDataSendMode.MPRS;
+//			for (ProtocolDataSendMode protocolDataSendMode : ProtocolDataSendMode.values()) {
 				for (LayoutMode layoutMode : LayoutMode.values()) {
 					for (double gamma = 0.1 ; gamma <= 0.6 ; gamma += 0.1) {
 						StationsMode stationsMode = StationsMode.STATIC;
@@ -75,7 +76,7 @@ public class Automation {
 						recordSim(protocolMode, protocolDataSendMode, layoutMode, gamma, stationsMode, stationSpeed, fileName);
 					}
 				}
-			}
+//			}
 		}
 	}
 
@@ -140,6 +141,11 @@ public class Automation {
 			BufferedReader stdError = new BufferedReader(new 
 					InputStreamReader(p.getErrorStream()));
 
+			// read any errors from the attempted command
+			while ((out = stdError.readLine()) != null) {
+				System.out.println(out);
+			}
+
 			// read the output from the command
 			while ((out = stdInput.readLine()) != null) {
 				if (null == table) {
@@ -148,10 +154,6 @@ public class Automation {
 				}
 			}
 
-			// read any errors from the attempted command
-			while ((out = stdError.readLine()) != null) {
-				System.out.println(out);
-			}
 
 
 			//Wait for completion
