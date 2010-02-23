@@ -161,7 +161,7 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 					HashMap<String, RoutingSetData>  routingSet =  topologyInfo.getRoutingSet();
 					
 					if (!routingSet.containsKey(msg.getGlobalDst())){
-						logEvent(SimEvents.DATA_LOSS.name(), msg.getGlobalSrc(), msg.getGlobalDst(), msg.getLocalSrc(), msg.getLocalDst() ,false, null);
+						logEvent(SimEvents.DATA_LOSS.name(), msg.getGlobalSrc(), msg.getGlobalDst(), msg.getLocalSrc(), msg.getLocalDst() ,false, "Cann't find rout");
 						return;
 					}
 					
@@ -175,7 +175,7 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 			}
 		}
 		else{
-			logEvent(SimEvents.DATA_DROPPED_AT_RELAY.name(), msg.getGlobalSrc(), msg.getGlobalDst(), msg.getLocalSrc(), msg.getLocalDst() ,false, null);
+			logEvent(SimEvents.DATA_DROPPED_AT_RELAY.name(), msg.getGlobalSrc(), msg.getGlobalDst(), msg.getLocalSrc(), msg.getLocalDst() ,false, "The station not the local target of the message");
 		}
 	}
 	
