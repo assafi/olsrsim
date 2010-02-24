@@ -10,8 +10,6 @@
  */
 package events;
 
-import java.awt.Point;
-
 import topology.IStation;
 
 /**
