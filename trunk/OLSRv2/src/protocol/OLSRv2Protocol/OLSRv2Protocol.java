@@ -131,7 +131,7 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 			logEvent(SimEvents.BUSSY_MSG_DROPPED.name(), 
 					msg.getGlobalSrc(), msg.getGlobalDst(), 
 					msg.getLocalSrc(), msg.getLocalDst() ,
-					false, "Cannt receive Data message", true);
+					false, "Cannot receive Data message", true);
 			return;
 		}
 		
@@ -175,10 +175,13 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 						logEvent(SimEvents.DATA_LOSS.name(), 
 								msg.getGlobalSrc(), msg.getGlobalDst(), 
 								msg.getLocalSrc(), msg.getLocalDst() ,
-								false, "Cann't find rout",true);
+								false, "Cannot find route",true);
 						return;
 					}
 					
+					/*
+					 * Found destination routing set
+					 */
 					RoutingSetData entryData = routingSet.get(msg.getGlobalDst());
 					msg.setSource(stationID);
 					msg.setLocalDst(entryData.getNextHop());
@@ -208,7 +211,10 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		
 		// if we are transmitting or receiving then we should drop this message
 		if (lastReceiveTime != -1 &&
-dipatcher.getCurrentVirtualTime() >= lastReceiveTime && dipatcher.getCurrentVirtualTime() <= lastReceiveTime + SimulationParameters.transmissionTime){
+				dipatcher.getCurrentVirtualTime() >= lastReceiveTime && 
+				dipatcher.getCurrentVirtualTime() <= 
+							lastReceiveTime + SimulationParameters.transmissionTime){
+			
 			logEvent(SimEvents.BUSSY_MSG_DROPPED.name(), stationID, 
 					dst, null, null ,false, "Data message cannot be sent from global source"
 					,true);
@@ -241,7 +247,7 @@ dipatcher.getCurrentVirtualTime() >= lastReceiveTime && dipatcher.getCurrentVirt
 		if (lastReceiveTime != -1 &&
 			helloMsg.getTime() >= lastReceiveTime && helloMsg.getTime() <= lastReceiveTime + SimulationParameters.transmissionTime){
 			logEvent(SimEvents.BUSSY_MSG_DROPPED.name(), null, null, helloMsg.getSource(), 
-					stationID ,false, "Cann't proccess Hello message cause bussy",true);
+					stationID ,false, "Cannot proccess Hello message cause bussy",true);
 			return;
 		}
 		
@@ -263,16 +269,6 @@ dipatcher.getCurrentVirtualTime() >= lastReceiveTime && dipatcher.getCurrentVirt
 			//Shouldn't fail
 			e.printStackTrace();
 		}
-		
-		//TODO remove
-		//if(stationID.equals("8")){
-			//neighborInfo.logStationTables(stationID);
-			//topologyInfo.logStationTables(stationID);
-		//}
-//		if(stationID.equals("8")){
-//			neighborInfo.logStationTables(stationID);
-//			topologyInfo.logStationTables(stationID);
-//		}
 	}
 
 	/* (non-Javadoc)
@@ -302,16 +298,6 @@ dipatcher.getCurrentVirtualTime() >= lastReceiveTime && dipatcher.getCurrentVirt
 			//Shouldn't fail
 			e.printStackTrace();
 		}
-		
-		//TODO remove
-		//if(stationID.equals("8")){
-			//neighborInfo.logStationTables(stationID);
-			//topologyInfo.logStationTables(stationID);
-		//}
-//		if(stationID.equals("8")){
-//			neighborInfo.logStationTables(stationID);
-//			topologyInfo.logStationTables(stationID);
-//		}
 	}
 
 	/* (non-Javadoc)

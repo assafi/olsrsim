@@ -234,12 +234,12 @@ public class Dispatcher implements IDispatcher {
 				} catch (Exception e) {
 					logDispError(currentEvent,e);
 				}
-			}
+			}  
 
 			/*
 			 * Topology changes - i.e. create/move/remove stations
 			 */
-			if (TopologyEvent.class.isAssignableFrom(currentEvent.getClass())){
+			else if (TopologyEvent.class.isAssignableFrom(currentEvent.getClass())){
 
 				TopologyEvent te = (TopologyEvent)currentEvent;
 				try {
@@ -252,7 +252,7 @@ public class Dispatcher implements IDispatcher {
 			/*
 			 * End of Hello/TC intervals
 			 */
-			if (IntervalEndEvent.class.isAssignableFrom(currentEvent.getClass())){
+			else if (IntervalEndEvent.class.isAssignableFrom(currentEvent.getClass())){
 				IntervalEndEvent ie = (IntervalEndEvent)currentEvent;
 				try {
 					IStation station = this.topologyManager.getStationById(ie.getSource());
@@ -265,7 +265,7 @@ public class Dispatcher implements IDispatcher {
 			/*
 			 * Alerts the station to send a data packet
 			 */
-			if (SendDataEvent.class.isAssignableFrom(currentEvent.getClass())) {
+			else if (SendDataEvent.class.isAssignableFrom(currentEvent.getClass())) {
 				SendDataEvent sde = (SendDataEvent)currentEvent;
 				try {
 					IStation station = this.topologyManager.getStationById(sde.getSrcName());
@@ -275,6 +275,12 @@ public class Dispatcher implements IDispatcher {
 				} catch (Exception e) {
 					logDispError(currentEvent,e);
 				}
+			}
+			/*
+			 * Unknown event
+			 */
+			else {
+				logDispError(currentEvent, new Exception("Unknown event"));
 			}
 		}
 

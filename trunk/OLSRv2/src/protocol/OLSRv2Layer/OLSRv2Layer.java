@@ -10,12 +10,9 @@
  */
 package protocol.OLSRv2Layer;
 
-import java.awt.TrayIcon.MessageType;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.Map.Entry;
@@ -27,7 +24,6 @@ import messages.HelloMessage;
 import messages.TCMessage;
 
 import dispatch.Dispatcher;
-import events.HelloIntervalEndEvent;
 import events.TCIntervalEndEvent;
 
 import protocol.OLSRv2Protocol.MessegeTypes;
