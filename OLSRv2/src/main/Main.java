@@ -37,7 +37,7 @@ public class Main {
 			SimulationParameters.entryValidPeriod = Integer.valueOf(args[0]);
 			SimulationParameters.TCInterval =  Integer.valueOf(args[1]);
 			SimulationParameters.HelloInterval = Integer.valueOf(args[2]);
-			SimulationParameters.transmitionTime = Integer.valueOf(args[3]);
+			SimulationParameters.transmissionTime = Integer.valueOf(args[3]);
 			SimulationParameters.protocolMode = ProtocolMprMode.valueOf(args[4]);
 			SimulationParameters.protocolDataSendMode = ProtocolDataSendMode.valueOf(args[5]);
 			SimulationParameters.layoutMode = LayoutMode.valueOf(args[6]);
