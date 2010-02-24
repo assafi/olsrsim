@@ -48,7 +48,7 @@ public class DataSendAttributes {
 	 */
 	public static void addDataSend(Point src, Point dst) {
 		synchronized (allDataSends) {
-			allDataSends.add(new DataSendAttributes(src, dst, SimulationParameters.transmitionTime));
+			allDataSends.add(new DataSendAttributes(src, dst, SimulationParameters.transmissionTime));
 		}
 	}
 	
