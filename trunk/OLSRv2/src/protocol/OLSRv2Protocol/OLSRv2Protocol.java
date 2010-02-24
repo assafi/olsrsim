@@ -141,7 +141,7 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		if (msg.getLocalDst().equals(stationID)){// check if this message is for me
 			if(msg.getGlobalDst().equals(stationID)){
 				//we got the message!!!
-				logEvent(SimEvents.DATA_REACH_2_TARGET.name(), null, msg.getLocalDst(), null, null ,false, "The message reached global destination");
+				logEvent(SimEvents.DATA_REACHED_2_TARGET.name(), null, msg.getLocalDst(), null, null ,false, "The message reached global destination");
 			}
 			else{
 				if(neighborInfo.is1HopNeighbor(msg.getGlobalDst())){
@@ -175,7 +175,7 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 			}
 		}
 		else{
-			logEvent(SimEvents.DATA_DROPPED_AT_RELAY.name(), msg.getGlobalSrc(), msg.getGlobalDst(), msg.getLocalSrc(), msg.getLocalDst() ,false, "The station not the local target of the message - The message is ignored");
+			logEvent(SimEvents.DATA_DROPPED_AT_RELAY.name(), msg.getGlobalSrc(), msg.getGlobalDst(), msg.getLocalSrc(), msg.getLocalDst() ,false, "The station is not the local target of the message - The message is ignored");
 		}
 	}
 	
@@ -189,8 +189,8 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		
 		// if we are transmitting or receiving then we should drop this message
 		if (lastReceiveTime != -1 &&
-			dipatcher.getCurrentVirtualTime() >= lastReceiveTime && dipatcher.getCurrentVirtualTime() <= lastReceiveTime + SimulationParameters.transmissionTime){
-			logEvent(SimEvents.BUSSY_MSG_DROPPED.name(), stationID, dst, null, null ,false, "Data message cann't be sent from global source");
+dipatcher.getCurrentVirtualTime() >= lastReceiveTime && dipatcher.getCurrentVirtualTime() <= lastReceiveTime + SimulationParameters.transmissionTime){
+			logEvent(SimEvents.BUSSY_MSG_DROPPED.name(), stationID, dst, null, null ,false, "Data message cannot be sent from global source");
 			return;
 		}
 		
@@ -202,7 +202,7 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		//Create new data message from me to me
 		DataMessage dataMsg = new DataMessage(stationID, stationID, stationID, dst, Dispatcher.getInstance().getCurrentVirtualTime() + SimulationParameters.transmissionTime);
 		
-		//Receive the message this will triger to forward the message in the network 
+		//Receive the message this will trigger to forward the message in the network 
 		reciveDataMessage(dataMsg);
 	}
 

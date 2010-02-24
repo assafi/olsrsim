@@ -135,5 +135,5 @@ public class SimulationParameters {
 	 * by calculating simulationSpeed.ordinal() * simulationHopDistance 
 	 * as the distance a node will travel for each hop every 10 simulation time units.
 	 */
-	static public int stationHopDistance = 5;
+	static public int stationHopDistance = 2;
 }

@@ -60,8 +60,7 @@ public class Automation {
 		}
 
 		for (ProtocolMprMode protocolMode : ProtocolMprMode.values()) {
-			ProtocolDataSendMode protocolDataSendMode = ProtocolDataSendMode.MPRS;
-//			for (ProtocolDataSendMode protocolDataSendMode : ProtocolDataSendMode.values()) {
+			for (ProtocolDataSendMode protocolDataSendMode : ProtocolDataSendMode.values()) {
 				for (LayoutMode layoutMode : LayoutMode.values()) {
 					for (double gamma = 0.1 ; gamma <= 0.6 ; gamma += 0.1) {
 						StationsMode stationsMode = StationsMode.STATIC;
@@ -76,7 +75,7 @@ public class Automation {
 						recordSim(protocolMode, protocolDataSendMode, layoutMode, gamma, stationsMode, stationSpeed, fileName);
 					}
 				}
-//			}
+			}
 		}
 	}
 
@@ -107,19 +106,19 @@ public class Automation {
 		String command = "java -jar OLSRv2.jar ";
 
 		int validPeriod = 300;
-		int tcInterval = 15;
-		int helloInterval = 10;
+		int tcInterval = 100;
+		int helloInterval = 30;
 		int transmitionTime = 1;
 		int clusterRadius = 150;
 		int clusterNum = 15;
 		int xBoundry = 500;
 		int yBoundry = 500;
-		int receptionRadius = 70;
+		int receptionRadius = 85;
 		int simulationEndTime = 2500;
 		double topologyPoissonicRate = 0.2;
 		double dataEventsPoissonicRate = gamma;
-		int maxStations = 100;
-		int stationHopDistance = 5;
+		int maxStations = 40;
+		int stationHopDistance = 3;
 
 		command += validPeriod + " " + tcInterval + " " + helloInterval + " ";
 		command += transmitionTime + " " + protocolMode.name() + " " + protocolDataSendMode.name() + " ";
@@ -141,11 +140,6 @@ public class Automation {
 			BufferedReader stdError = new BufferedReader(new 
 					InputStreamReader(p.getErrorStream()));
 
-			// read any errors from the attempted command
-			while ((out = stdError.readLine()) != null) {
-				System.out.println(out);
-			}
-
 			// read the output from the command
 			while ((out = stdInput.readLine()) != null) {
 				if (null == table) {
@@ -154,6 +148,10 @@ public class Automation {
 				}
 			}
 
+			// read any errors from the attempted command
+			while ((out = stdError.readLine()) != null) {
+				System.out.println(out);
+			}
 
 
 			//Wait for completion
@@ -245,7 +243,7 @@ public class Automation {
 			"(" + simulationEndTime + " * " + maxStations + ") " +
 			"AS Utilization FROM " +
 			"(SELECT count(*) AS num_data_msgs FROM " + table + " s1 " +
-			"WHERE EVENT_TYPE='DATA_REACH_2_TARGET') a ;" ;
+			"WHERE EVENT_TYPE='DATA_REACHED_2_TARGET') a ;" ;
 
 			statement = proxy.preparedStatement(query);
 			result = statement.executeQuery();

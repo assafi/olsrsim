@@ -171,7 +171,6 @@ public class Dispatcher implements IDispatcher {
 					(nextEventTime = peek().getTime()) > currentVirtualTime){
 				this.currentVirtualTime++;
 				this.eventGen.tick();
-//				System.out.println(currentVirtualTime);
 				continue;
 			}
 
