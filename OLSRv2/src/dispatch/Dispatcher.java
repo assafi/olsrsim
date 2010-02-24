@@ -30,6 +30,7 @@ import topology.IStation;
 import topology.ITopologyManager;
 import topology.Station;
 import topology.TopologyManager;
+import data.SimEvents;
 import data.SimLabels;
 import eventGen.EventGenerator;
 import events.Event;
@@ -210,6 +211,10 @@ public class Dispatcher implements IDispatcher {
 			/*
 			 * Handles the event according to it's type
 			 */
+			
+			/*
+			 * MessageEvent is used for Hello & TC messages as well as Data messages
+			 */
 			if (MessageEvent.class.isAssignableFrom(currentEvent.getClass())){
 
 				MessageEvent me = (MessageEvent)currentEvent;
@@ -217,11 +222,23 @@ public class Dispatcher implements IDispatcher {
 					List<IStation> relevantNodesList = 
 						this.topologyManager.getStationNeighbors(me.getSource());
 					me.execute(relevantNodesList);
+					
+					/*
+					 * If a station thinks that the next hop for a data message is
+					 * in it's radius it sets the local target as this node. however
+					 * if that target is not physible (because of the the local source
+					 * databases has not converged with the physical world) we would 
+					 * like to register that in the log. (the message will get lost)
+					 */
+					checkDataPhysibility(me, relevantNodesList);
 				} catch (Exception e) {
 					logDispError(currentEvent,e);
 				}
 			}
 
+			/*
+			 * Topology changes - i.e. create/move/remove stations
+			 */
 			if (TopologyEvent.class.isAssignableFrom(currentEvent.getClass())){
 
 				TopologyEvent te = (TopologyEvent)currentEvent;
@@ -232,6 +249,9 @@ public class Dispatcher implements IDispatcher {
 				}
 			}
 
+			/*
+			 * End of Hello/TC intervals
+			 */
 			if (IntervalEndEvent.class.isAssignableFrom(currentEvent.getClass())){
 				IntervalEndEvent ie = (IntervalEndEvent)currentEvent;
 				try {
@@ -242,6 +262,9 @@ public class Dispatcher implements IDispatcher {
 				}
 			}
 
+			/*
+			 * Alerts the station to send a data packet
+			 */
 			if (SendDataEvent.class.isAssignableFrom(currentEvent.getClass())) {
 				SendDataEvent sde = (SendDataEvent)currentEvent;
 				try {
@@ -261,6 +284,22 @@ public class Dispatcher implements IDispatcher {
 			new StopEvent().execute(null);
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
+		}
+	}
+
+	/**
+	 * @param me
+	 * @param relevantNodesList 
+	 */
+	private void checkDataPhysibility(MessageEvent me, List<IStation> relevantNodesList) {
+		if (!DataMessage.class.isAssignableFrom(me.getClass())) {
+			return;
+		}
+		
+		DataMessage dm = (DataMessage)me;
+		if (null != relevantNodesList &&
+				!relevantNodesList.contains(dm.getLocalDst())) {
+			logTargetNotPhysible(dm);
 		}
 	}
 
@@ -312,6 +351,26 @@ public class Dispatcher implements IDispatcher {
 
 		data.put(SimLabels.ERROR.name(), "true");
 		data.put(SimLabels.DETAILS.name(), e.getMessage());
+		try {
+			log.writeDown(data);
+		} catch (LogException le) {
+			System.out.println(le.getMessage());
+		}
+	}
+	
+	public void logTargetNotPhysible(DataMessage dm) {
+		Log log = Log.getInstance();
+		HashMap<String, String> data = new HashMap<String, String>();
+		data.put(SimLabels.VIRTUAL_TIME.name(), Long.toString(Dispatcher.getInstance().getCurrentVirtualTime()));
+		data.put(SimLabels.EVENT_TYPE.name(), SimEvents.LOCAL_TARGET_NOT_PHYSIBLE.name());
+		data.put(SimLabels.NODE_ID.name(),dm.getLocalSrc());
+		data.put(SimLabels.LOCAL_SOURCE.name(), dm.getLocalSrc());
+		data.put(SimLabels.LOCAL_TARGET.name(),dm.getLocalDst());
+		data.put(SimLabels.GLOBAL_SOURCE.name(), dm.getGlobalSrc());
+		data.put(SimLabels.GLOBAL_TARGET.name(),dm.getGlobalDst());
+		data.put(SimLabels.LOST.name(), "1");
+		data.put(SimLabels.DETAILS.name(), "Local target is not physible. probably because local source" +
+				" databases do not match actual topology.");
 		try {
 			log.writeDown(data);
 		} catch (LogException le) {
