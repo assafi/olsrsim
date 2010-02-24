@@ -102,9 +102,7 @@ public class NHDPLayer implements INHDPLayer {
 		
 		// in case we have new symmetric 1-hop neighbor or new 2-hop neighbor 
 		// we should notify so that OLSRv2 layer can recalculate the MPRs
-		boolean newSemmerticOr2hop = false;
-		
-		Dispatcher dispatcher = Dispatcher.getInstance();
+		boolean newSymetricOr2hop = false;
 		
 		String msgSrc = helloMsg.getSource();
 		long simTime = helloMsg.getTime();
@@ -116,7 +114,7 @@ public class NHDPLayer implements INHDPLayer {
 			if (helloMsg.getNeighborSet().containsKey(stationID)){// if the receiving station is a neighbor then this is a symmetric connection 
 				property.setQuality(helloMsg.getNeighborSet().get(stationID).getQuality());
 				property.setSymetricLink(true);
-				newSemmerticOr2hop = true;
+				newSymetricOr2hop = true;
 				property.setValideTime(simTime + SimulationParameters.entryValidPeriod); 
 				//TODO insert event that the validity time has passed or check in other ways
 				//dispatcher.pushEvent(new );
@@ -160,7 +158,7 @@ public class NHDPLayer implements INHDPLayer {
 		//if this was a symmetric neighbor must sent HELLO message
 		if (sendHelloMsg){
 			generateHelloMessage(simTime);
-			newSemmerticOr2hop = true;
+			newSymetricOr2hop = true;
 		}
 		
 		/* Update the 2-hop neighbor set */
@@ -174,11 +172,11 @@ public class NHDPLayer implements INHDPLayer {
 				// that we got the Hello message from will be added to the
 				// list of 1-hop nodes that we can reach it from
 				neighborInfo.add2HopNeighbor(secondHopNeighbor, msgSrc);
-				newSemmerticOr2hop = true;
+				newSymetricOr2hop = true;
 			}
 		}
 		
-		return newSemmerticOr2hop;
+		return newSymetricOr2hop;
 	}
 
 	/* (non-Javadoc)

@@ -12,8 +12,15 @@ package messages;
 
 import java.awt.Point;
 import java.util.Collection;
+import java.util.HashMap;
+
+import log.Log;
+import log.LogException;
+import main.SimulationParameters;
 
 import data.SimEvents;
+import data.SimLabels;
+import dispatch.Dispatcher;
 
 import protocol.OLSRv2Protocol.IOLSRv2Protocol;
 
@@ -39,6 +46,7 @@ public class DataMessage extends MessageEvent {
 	private String globalDst = null;
 	private String localDst = null;
 	private Point localDstLocation = null;
+	private int ttl = 0;
 	/**
 	 * @param src
 	 * @param time
@@ -118,9 +126,38 @@ public class DataMessage extends MessageEvent {
 	 * @param localDst the localDst to set
 	 */
 	public void setLocalDst(String localDst) {
+		/*
+		 * Message is about to be sent
+		 */
+		if (ttl++ > SimulationParameters.TTL_LIMIT) {
+			logLimitReached();
+		}
 		this.localDst = localDst;
 	}
 	
+	/**
+	 * 
+	 */
+	private void logLimitReached() {
+			Log log = Log.getInstance();
+			HashMap<String, String> data = new HashMap<String, String>();
+			data.put(SimLabels.VIRTUAL_TIME.name(), Long.toString(Dispatcher.getInstance().getCurrentVirtualTime()));
+			data.put(SimLabels.EVENT_TYPE.name(), SimEvents.TTL_LIMIT_REACHED.name());
+			data.put(SimLabels.NODE_ID.name(),getLocalSrc());
+			data.put(SimLabels.LOCAL_SOURCE.name(), getLocalSrc());
+			data.put(SimLabels.LOCAL_TARGET.name(),getLocalDst());
+			data.put(SimLabels.GLOBAL_SOURCE.name(), getGlobalSrc());
+			data.put(SimLabels.GLOBAL_TARGET.name(),getGlobalDst());
+			data.put(SimLabels.LOST.name(), "0");
+			data.put(SimLabels.DETAILS.name(), "Data message passed over " + SimulationParameters.TTL_LIMIT 
+					+ " stations, and still did not reached target");
+			try {
+				log.writeDown(data);
+			} catch (LogException le) {
+				System.out.println(le.getMessage());
+			}
+	}
+
 	/**
 	 * @return the localSrc
 	 */

@@ -21,22 +21,24 @@ public class SimulationParameters {
 	// Protocol Definitions
 	///////////////////////////////////////////////////////////////////////////
 	
+	public static final int TTL_LIMIT = 50;
+
 	/**
 	 * The validity period of the entry in the table 
 	 */
-	static public int entryValidPeriod = 1000;
+	static public int entryValidPeriod = 300;
 	
 	/**
 	 * The Interval that the Hello messages should be generated
 	 * periodically. 
 	 */
-	static public int TCInterval = 10; //TODO see that this is a correct interval
+	static public int TCInterval = 50; //TODO see that this is a correct interval
 	
 	/**
 	 * The Interval that the Hello messages should be generated
 	 * periodically. 
 	 */
-	static public int HelloInterval = 10; //TODO see that this is a correct interval
+	static public int HelloInterval = 15; //TODO see that this is a correct interval
 	
 	/**
 	 * The Delta of time after which the messages are being sent. 
@@ -110,7 +112,7 @@ public class SimulationParameters {
 	// Simulation Definitions
 	///////////////////////////////////////////////////////////////////////////
 	
-	static public int receptionRadius = 70;
+	static public int receptionRadius = 80;
 	
 	static public int simulationEndTime = 2500;
 	
@@ -120,7 +122,7 @@ public class SimulationParameters {
 	static public float dataEventsPoissonicRate = (float) 0.2; /* This dataEventsPoissonicRate is taken into account when creating
 												Send data events. */
 	
-	static public int maxStations = 100;
+	static public int maxStations = 50;
 		
 	public enum StationsSpeed {
 		LOW,
