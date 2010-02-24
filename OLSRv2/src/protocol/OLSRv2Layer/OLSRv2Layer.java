@@ -90,7 +90,7 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 	@Override
 	public TCMessage generateTCMessage(long currentSimTime) {
 		// first time the local source = global source
-		TCMessage tcMsg = new TCMessage(stationID, stationID, currentSimTime + SimulationParameters.transmitionTime, neighborInfo.getAllNeighbors());
+		TCMessage tcMsg = new TCMessage(stationID, stationID, currentSimTime + SimulationParameters.transmissionTime, neighborInfo.getAllNeighbors());
 //		Dispatcher dispatcher = Dispatcher.getInstance();
 //		dispatcher.pushEvent(tcMsg);
 		return tcMsg;
@@ -168,7 +168,7 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 			Dispatcher dispatcher = Dispatcher.getInstance();
 			//send the message after Delta time
 			tcMsg.setLocalSrc(stationID); // set the local source to be me the global source doesn't change
-			tcMsg.updateTime(dispatcher.getCurrentVirtualTime() + SimulationParameters.transmitionTime);
+			tcMsg.updateTime(dispatcher.getCurrentVirtualTime() + SimulationParameters.transmissionTime);
 			dispatcher.pushEvent(tcMsg);
 		}
 	}

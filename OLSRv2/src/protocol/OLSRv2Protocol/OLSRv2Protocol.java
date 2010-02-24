@@ -112,7 +112,7 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		Dispatcher dispacher = Dispatcher.getInstance();
 		// if we are not transmitting or receiving we can send the data
 		if (lastReceiveTime != -1 &&
-			helloTrigerMsg.getTime() > lastReceiveTime + SimulationParameters.transmitionTime){
+			helloTrigerMsg.getTime() > lastReceiveTime + SimulationParameters.transmissionTime){
 			dispacher.pushEvent(newHelloMsg);
 		}
 		dispacher.pushEvent(nexTriger);
@@ -127,7 +127,7 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		
 		// if we are transmitting or receiving then we should drop this message
 		if (lastReceiveTime != -1 &&
-			msg.getTime() >= lastReceiveTime && msg.getTime() <= lastReceiveTime + SimulationParameters.transmitionTime){
+			msg.getTime() >= lastReceiveTime && msg.getTime() <= lastReceiveTime + SimulationParameters.transmissionTime){
 			logEvent(SimEvents.BUSSY_MSG_DROPPED.name(), msg.getGlobalSrc(), msg.getGlobalDst(), msg.getLocalSrc(), msg.getLocalDst() ,false, "Cannt receive Data message");
 			return;
 		}
@@ -149,7 +149,7 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 					logEvent(SimEvents.DATA_SENT_FROM_RELAY.name(), msg.getGlobalSrc(), msg.getGlobalDst(), msg.getLocalSrc(), msg.getLocalDst() ,false, "Data sent to the next station on the route");
 					msg.setLocalSrc(stationID);
 					msg.setLocalDst(msg.getGlobalDst());
-					msg.updateTime(dispatcher.getCurrentVirtualTime() + SimulationParameters.transmitionTime);
+					msg.updateTime(dispatcher.getCurrentVirtualTime() + SimulationParameters.transmissionTime);
 					dispatcher.pushEvent(msg);
 				}
 				else{
@@ -168,7 +168,7 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 					RoutingSetData entryData = routingSet.get(msg.getGlobalDst());
 					msg.setSource(stationID);
 					msg.setLocalDst(entryData.getNextHop());
-					msg.updateTime(dispatcher.getCurrentVirtualTime() + SimulationParameters.transmitionTime);
+					msg.updateTime(dispatcher.getCurrentVirtualTime() + SimulationParameters.transmissionTime);
 					logEvent(SimEvents.DATA_SENT_FROM_RELAY.name(), msg.getGlobalSrc(), msg.getGlobalDst(), msg.getLocalSrc(), msg.getLocalDst() ,false, "Data sent to the next station on the route");
 					dispatcher.pushEvent(msg);
 				}
@@ -189,7 +189,7 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		
 		// if we are transmitting or receiving then we should drop this message
 		if (lastReceiveTime != -1 &&
-			dipatcher.getCurrentVirtualTime() >= lastReceiveTime && dipatcher.getCurrentVirtualTime() <= lastReceiveTime + SimulationParameters.transmitionTime){
+			dipatcher.getCurrentVirtualTime() >= lastReceiveTime && dipatcher.getCurrentVirtualTime() <= lastReceiveTime + SimulationParameters.transmissionTime){
 			logEvent(SimEvents.BUSSY_MSG_DROPPED.name(), stationID, dst, null, null ,false, "Data message cann't be sent from global source");
 			return;
 		}
@@ -200,7 +200,7 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		logEvent(SimEvents.DATA_SENT_FROM_SOURCE.name(), stationID, dst, null, null, false, null);
 		
 		//Create new data message from me to me
-		DataMessage dataMsg = new DataMessage(stationID, stationID, stationID, dst, Dispatcher.getInstance().getCurrentVirtualTime() + SimulationParameters.transmitionTime);
+		DataMessage dataMsg = new DataMessage(stationID, stationID, stationID, dst, Dispatcher.getInstance().getCurrentVirtualTime() + SimulationParameters.transmissionTime);
 		
 		//Receive the message this will triger to forward the message in the network 
 		reciveDataMessage(dataMsg);
@@ -217,7 +217,7 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		
 		// if we are transmitting or receiving then we should drop this message
 		if (lastReceiveTime != -1 &&
-			helloMsg.getTime() >= lastReceiveTime && helloMsg.getTime() <= lastReceiveTime + SimulationParameters.transmitionTime){
+			helloMsg.getTime() >= lastReceiveTime && helloMsg.getTime() <= lastReceiveTime + SimulationParameters.transmissionTime){
 			logEvent(SimEvents.BUSSY_MSG_DROPPED.name(), null, null, helloMsg.getSource(), stationID ,false, "Cann't proccess Hello message cause bussy");
 			return;
 		}
@@ -260,7 +260,7 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		
 		// if we are transmitting or receiving then we should drop this message
 		if (lastReceiveTime != -1 &&
-			tcMsg.getTime() >= lastReceiveTime && tcMsg.getTime() <= lastReceiveTime + SimulationParameters.transmitionTime){
+			tcMsg.getTime() >= lastReceiveTime && tcMsg.getTime() <= lastReceiveTime + SimulationParameters.transmissionTime){
 			logEvent(SimEvents.BUSSY_MSG_DROPPED.name(), ((TCMessage)tcMsg).getGlobalSrc(), null, tcMsg.getSource(), stationID ,false, "Cann't proccess TC message cause bussy");
 			return;
 		}
@@ -312,7 +312,7 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		Dispatcher dispacher = Dispatcher.getInstance();
 		// if we are not transmitting or receiving we can send the data
 		if (lastReceiveTime != -1 &&
-			tcTrigerMsg.getTime() > lastReceiveTime + SimulationParameters.transmitionTime){
+			tcTrigerMsg.getTime() > lastReceiveTime + SimulationParameters.transmissionTime){
 			dispacher.pushEvent(newTCMsg);
 		}
 		dispacher.pushEvent(nexTriger);

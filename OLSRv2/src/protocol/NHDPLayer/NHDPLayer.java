@@ -187,7 +187,7 @@ public class NHDPLayer implements INHDPLayer {
 	@Override
 	public HelloMessage generateHelloMessage(long currentSimTime) {
 		// Create new Hello message
-		HelloMessage msg = new HelloMessage(stationID, currentSimTime + SimulationParameters.transmitionTime, neighborInfo.getAllNeighbors(), neighborInfo.getAllLostNeighborSet());
+		HelloMessage msg = new HelloMessage(stationID, currentSimTime + SimulationParameters.transmissionTime, neighborInfo.getAllNeighbors(), neighborInfo.getAllLostNeighborSet());
 		// Pass it to OLSR layer for update
 		msg = olsrLayer.helloMessageModification(msg);
 		return msg;
