@@ -1,0 +1,9 @@
+﻿SELECT A.num_sent AS num_sent, B.num_recieved AS num_recieved, C.num_loss AS num_loss,
+D.num_not_physible AS num_not_physible, E.num_busy AS num_busy,
+A.num_sent - B.num_recieved - C.num_loss - E.num_busy AS unexplained
+FROM
+(SELECT COUNT(*) AS num_sent FROM sim_24022010_235418 WHERE EVENT_TYPE = 'DATA_SENT_FROM_SOURCE') A,
+(SELECT COUNT(*) AS num_recieved FROM sim_24022010_235418 WHERE EVENT_TYPE = 'DATA_REACHED_2_TARGET') B,
+(SELECT COUNT(*) AS num_loss FROM sim_24022010_235418 WHERE EVENT_TYPE = 'DATA_LOSS') C,
+(SELECT COUNT(*) AS num_not_physible FROM sim_24022010_235418 WHERE EVENT_TYPE = 'LOCAL_TARGET_NOT_PHYSIBLE') D,
+(SELECT COUNT(*) AS num_busy FROM sim_24022010_235418 WHERE EVENT_TYPE = 'BUSSY_MSG_DROPPED' AND DETAILS = 'Cannot receive Data message') E;
