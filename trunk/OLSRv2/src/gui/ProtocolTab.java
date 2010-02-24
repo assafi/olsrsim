@@ -17,7 +17,7 @@ import gui.input_params.ProtocolDataSendMode;
 import gui.input_params.ProtocolMode;
 import gui.input_params.TCInterval;
 import gui.input_params.EntryValidPeriod;
-import gui.input_params.TransmitionTime;
+import gui.input_params.TransmissionTime;
 
 import java.awt.Color;
 import java.awt.FlowLayout;
@@ -69,7 +69,7 @@ public class ProtocolTab extends JPanel {
 		parameters.add(new EntryValidPeriod());
 		parameters.add(new HelloInterval());
 		parameters.add(new TCInterval());
-		parameters.add(new TransmitionTime());
+		parameters.add(new TransmissionTime());
 		parameters.add(new ProtocolMode());
 		parameters.add(new ProtocolDataSendMode());
 	}
