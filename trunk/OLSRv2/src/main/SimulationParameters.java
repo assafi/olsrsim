@@ -41,7 +41,7 @@ public class SimulationParameters {
 	/**
 	 * The Delta of time after which the messages are being sent. 
 	 */
-	static public int transmitionTime = 1; //TODO see that this is a correct interval
+	static public int transmissionTime = 1; //TODO see that this is a correct interval
 	
 	/**
 	 * This defines whether the protocol chooses its
