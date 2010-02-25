@@ -377,7 +377,9 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 				String next2hopNeighbor = neighbors2hop.get(0);
 				List<String> mprCandidates = neighborInfo.get2HopReachAddresses(next2hopNeighbor);
 				if (1 == mprCandidates.size()){// if the 1-hop neighbor is the only one we can reach the neighbor2hop set it as MPR
-					neighborInfo.getNeighborProperty(mprCandidates.get(0)).setMpr(true);
+					if (neighborInfo.is1HopNeighbor(mprCandidates.get(0))){
+						neighborInfo.getNeighborProperty(mprCandidates.get(0)).setMpr(true);
+					}
 					
 					// remove from the neighbors2hop all the 2-hop neighbors that the selected MPR covers
 					// we can get it from the topology set
@@ -394,15 +396,19 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 					int max = -1;
 					String mpr = null;
 					for (String candidate : mprCandidates) {
-						int candidateToAddressesSize = topologyInfo.getTopologySet().get(candidate).getToAddresses().size();
-						if (candidateToAddressesSize > max){
-							max = candidateToAddressesSize;
-							mpr = candidate;
+						if (topologyInfo.getTopologySet().containsKey(candidate)){
+							int candidateToAddressesSize = topologyInfo.getTopologySet().get(candidate).getToAddresses().size();
+							if (candidateToAddressesSize > max){
+								max = candidateToAddressesSize;
+								mpr = candidate;
+							}
 						}
 					}
 					
 					//set the MPR
-					neighborInfo.getNeighborProperty(mpr).setMpr(true);
+					if (neighborInfo.is1HopNeighbor(mpr)){
+						neighborInfo.getNeighborProperty(mpr).setMpr(true);
+					}
 					
 					// remove from the neighbors2hop all the 2-hop neighbors that the selected MPR covers
 					// we can get it from the topology set

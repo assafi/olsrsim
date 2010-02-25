@@ -43,7 +43,7 @@ import events.TCIntervalEndEvent;
 public class OLSRv2Protocol implements IOLSRv2Protocol {
 
 	private String stationID;
-	private long lastReceiveTime = -1; 
+	private long timeUntillBusy = -1; 
 	
 	/** Protocol information bases **/
 	
@@ -111,8 +111,8 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		// Send them to the dispatcher
 		Dispatcher dispacher = Dispatcher.getInstance();
 		// if we are not transmitting or receiving we can send the data
-		if (lastReceiveTime != -1 &&
-			helloTrigerMsg.getTime() > lastReceiveTime + SimulationParameters.transmissionTime){
+		if (timeUntillBusy != -1 &&
+			helloTrigerMsg.getTime() > timeUntillBusy + SimulationParameters.transmissionTime){
 			dispacher.pushEvent(newHelloMsg);
 		}
 		dispacher.pushEvent(nexTriger);
@@ -125,26 +125,27 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 	public void reciveDataMessage(MessageEvent dataMsg) {
 		DataMessage msg  = (DataMessage)dataMsg;
 		
-		// if we are transmitting or receiving then we should drop this message
-		if (lastReceiveTime != -1 &&
-			msg.getTime() >= lastReceiveTime && msg.getTime() <= lastReceiveTime + SimulationParameters.transmissionTime){
-			logEvent(SimEvents.BUSSY_MSG_DROPPED.name(), 
-					msg.getGlobalSrc(), msg.getGlobalDst(), 
-					msg.getLocalSrc(), msg.getLocalDst() ,
-					false, "Cannot receive Data message", true);
-			return;
-		}
-		
-		lastReceiveTime = msg.getTime(); // update the last receive time
-		
 		Dispatcher dispatcher = Dispatcher.getInstance();
 		
-		logEvent(SimEvents.DATA_REACHED_2_RELAY.name(), 
-				msg.getGlobalSrc(), msg.getGlobalDst(), 
-				msg.getLocalSrc(), msg.getLocalDst() ,
-				false, "1-hop neighbour received the data message",false);
-		
 		if (msg.getLocalDst().equals(stationID)){// check if this message is for me
+			
+			// if we are transmitting or receiving then we should drop this message
+			if (timeUntillBusy != -1 &&
+				msg.getTime() <= timeUntillBusy + SimulationParameters.transmissionTime){
+				logEvent(SimEvents.BUSSY_MSG_IGNORED.name(), 
+						msg.getGlobalSrc(), msg.getGlobalDst(), 
+						msg.getLocalSrc(), msg.getLocalDst() ,
+						false, "Cannot receive Data message", true);
+				return;
+			}
+			
+			timeUntillBusy = msg.getTime(); // update the last receive time
+			
+			logEvent(SimEvents.DATA_REACHED_2_RELAY.name(), 
+					msg.getGlobalSrc(), msg.getGlobalDst(), 
+					msg.getLocalSrc(), msg.getLocalDst() ,
+					false, "1-hop neighbour received the data message",false);
+			
 			if(msg.getGlobalDst().equals(stationID)){
 				//we got the message!!!
 				logEvent(SimEvents.DATA_REACHED_2_TARGET.name(), 
@@ -152,49 +153,11 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 						"The message reached global destination",false);
 			}
 			else{
-				if(neighborInfo.is1HopNeighbor(msg.getGlobalDst())){
-					// if the destination is my neighbor send him the message
-					logEvent(SimEvents.DATA_SENT_FROM_RELAY.name(), 
-							msg.getGlobalSrc(), msg.getGlobalDst(), 
-							msg.getLocalSrc(), msg.getLocalDst() ,
-							false, "Data sent to the next station on the route",false);
-					msg.setLocalSrc(stationID);
-					msg.setLocalDst(msg.getGlobalDst());
-					msg.updateTime(dispatcher.getCurrentVirtualTime() + SimulationParameters.transmissionTime);
-					dispatcher.pushEvent(msg);
-				}
-				else{
-					/*
-					 *  the destination is not our neighbor 
-					 *  -> we should send to the next node in the route 
-					 */
-					
-					HashMap<String, RoutingSetData>  routingSet =  topologyInfo.getRoutingSet();
-					
-					if (!routingSet.containsKey(msg.getGlobalDst())){
-						logEvent(SimEvents.DATA_LOSS.name(), 
-								msg.getGlobalSrc(), msg.getGlobalDst(), 
-								msg.getLocalSrc(), msg.getLocalDst() ,
-								false, "Cannot find route",true);
-						return;
-					}
-					
-					/*
-					 * Found destination routing set
-					 */
-					RoutingSetData entryData = routingSet.get(msg.getGlobalDst());
-					msg.setSource(stationID);
-					msg.setLocalDst(entryData.getNextHop());
-					msg.updateTime(dispatcher.getCurrentVirtualTime() + SimulationParameters.transmissionTime);
-					logEvent(SimEvents.DATA_SENT_FROM_RELAY.name(), 
-							msg.getGlobalSrc(), msg.getGlobalDst(), msg.getLocalSrc(), msg.getLocalDst() ,
-							false, "Data sent to the next station on the route",false);
-					dispatcher.pushEvent(msg);
-				}
+				sendMsgOnRoute(msg, false);
 			}
 		}
 		else{
-			logEvent(SimEvents.DATA_DROPPED_AT_RELAY.name(), 
+			logEvent(SimEvents.DATA_IGNORED_AT_RELAY.name(), 
 					msg.getGlobalSrc(), msg.getGlobalDst(), 
 					msg.getLocalSrc(), msg.getLocalDst() ,
 					false, "The station is not the local target of the message - The message is ignored", false);
@@ -210,28 +173,20 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		Dispatcher dipatcher = Dispatcher.getInstance();
 		
 		// if we are transmitting or receiving then we should drop this message
-		if (lastReceiveTime != -1 &&
-				dipatcher.getCurrentVirtualTime() >= lastReceiveTime && 
+		if (timeUntillBusy != -1 &&
 				dipatcher.getCurrentVirtualTime() <= 
-							lastReceiveTime + SimulationParameters.transmissionTime){
+							timeUntillBusy + SimulationParameters.transmissionTime){
 			
-			logEvent(SimEvents.BUSSY_MSG_DROPPED.name(), stationID, 
+			logEvent(SimEvents.BUSSY_MSG_IGNORED.name(), stationID, 
 					dst, null, null ,false, "Data message cannot be sent from global source"
 					,true);
 			return;
 		}
 		
-//		lastReceiveTime = dipatcher.getCurrentVirtualTime();
-		
-		//log
-		logEvent(SimEvents.DATA_SENT_FROM_SOURCE.name(), stationID, dst, null, null, 
-				false, null,false);
-		
-		//Create new data message from me to me
+		//Create new data message and send on the calculated route
 		DataMessage dataMsg = new DataMessage(stationID, stationID, stationID, dst, Dispatcher.getInstance().getCurrentVirtualTime() + SimulationParameters.transmissionTime);
 		
-		//Receive the message this will trigger to forward the message in the network 
-		reciveDataMessage(dataMsg);
+		sendMsgOnRoute(dataMsg, true);
 	}
 
 	/* (non-Javadoc)
@@ -244,14 +199,14 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		 * we must invoke the recalculation of MPRs */
 		
 		// if we are transmitting or receiving then we should drop this message
-		if (lastReceiveTime != -1 &&
-			helloMsg.getTime() >= lastReceiveTime && helloMsg.getTime() <= lastReceiveTime + SimulationParameters.transmissionTime){
-			logEvent(SimEvents.BUSSY_MSG_DROPPED.name(), null, null, helloMsg.getSource(), 
+		if (timeUntillBusy != -1 &&
+			helloMsg.getTime() <= timeUntillBusy + SimulationParameters.transmissionTime){
+			logEvent(SimEvents.BUSSY_MSG_IGNORED.name(), null, null, helloMsg.getSource(), 
 					stationID ,false, "Cannot proccess Hello message cause bussy",true);
 			return;
 		}
 		
-		lastReceiveTime = helloMsg.getTime();
+		timeUntillBusy = helloMsg.getTime();
 		
 		//clear the sets of invalid entries
 		cleanExpiredSetEntries();
@@ -278,14 +233,14 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 	public void reciveTCMessage(MessageEvent tcMsg) {
 		
 		// if we are transmitting or receiving then we should drop this message
-		if (lastReceiveTime != -1 &&
-			tcMsg.getTime() >= lastReceiveTime && tcMsg.getTime() <= lastReceiveTime + SimulationParameters.transmissionTime){
-			logEvent(SimEvents.BUSSY_MSG_DROPPED.name(), ((TCMessage)tcMsg).getGlobalSrc(), null, tcMsg.getSource(), stationID ,
+		if (timeUntillBusy != -1 &&
+			tcMsg.getTime() <= timeUntillBusy + SimulationParameters.transmissionTime){
+			logEvent(SimEvents.BUSSY_MSG_IGNORED.name(), ((TCMessage)tcMsg).getGlobalSrc(), null, tcMsg.getSource(), stationID ,
 					false, "Cann't proccess TC message cause bussy",true);
 			return;
 		}
 		
-		lastReceiveTime = tcMsg.getTime();
+		timeUntillBusy = tcMsg.getTime();
 		
 		//clear the sets of invalid entries
 		cleanExpiredSetEntries();
@@ -321,11 +276,84 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		// Send them to the dispatcher
 		Dispatcher dispacher = Dispatcher.getInstance();
 		// if we are not transmitting or receiving we can send the data
-		if (lastReceiveTime != -1 &&
-			tcTrigerMsg.getTime() > lastReceiveTime + SimulationParameters.transmissionTime){
+		if (timeUntillBusy != -1 &&
+			tcTrigerMsg.getTime() > timeUntillBusy + SimulationParameters.transmissionTime){
 			dispacher.pushEvent(newTCMsg);
 		}
 		dispacher.pushEvent(nexTriger);
+	}
+	
+	private void sendMsgOnRoute(DataMessage msg, boolean isGlobalSource){
+		
+		Dispatcher dispatcher = Dispatcher.getInstance();
+		
+		if(neighborInfo.is1HopNeighbor(msg.getGlobalDst())){
+			// if the destination is my neighbor send him the message
+			if(isGlobalSource){
+				logEvent(SimEvents.DATA_SENT_FROM_SOURCE.name(), 
+						msg.getGlobalSrc(), msg.getGlobalDst(), 
+						msg.getLocalSrc(), msg.getLocalDst() ,
+						false, "Data sent to the next station on the route from global source",false);
+			}
+			else{
+				logEvent(SimEvents.DATA_SENT_FROM_RELAY.name(), 
+						msg.getGlobalSrc(), msg.getGlobalDst(), 
+						msg.getLocalSrc(), msg.getLocalDst() ,
+						false, "Data sent to the next station on the route",false);
+			}
+			
+			msg.setLocalSrc(stationID);
+			msg.setLocalDst(msg.getGlobalDst());
+			msg.updateTime(dispatcher.getCurrentVirtualTime() + SimulationParameters.transmissionTime);
+			timeUntillBusy = dispatcher.getCurrentVirtualTime();
+			dispatcher.pushEvent(msg);
+		}
+		else{
+			/*
+			 *  the destination is not our neighbor 
+			 *  -> we should send to the next node in the route 
+			 */
+			
+			HashMap<String, RoutingSetData>  routingSet =  topologyInfo.getRoutingSet();
+			
+			if (!routingSet.containsKey(msg.getGlobalDst())){
+				if (isGlobalSource){
+					logEvent(SimEvents.DATA_NOT_SENT_NO_ROUTE.name(), 
+							msg.getGlobalSrc(), msg.getGlobalDst(), 
+							msg.getLocalSrc(), msg.getLocalDst() ,
+							false, "Data wasnt sent from source. Cannot find route",true);
+				}
+				else{
+					logEvent(SimEvents.DATA_LOSS_NO_ROUTE.name(), 
+							msg.getGlobalSrc(), msg.getGlobalDst(), 
+							msg.getLocalSrc(), msg.getLocalDst() ,
+							false, "Cannot find route",true);
+				}
+				return;
+			}
+			
+			/*
+			 * Found destination routing set
+			 */
+			RoutingSetData entryData = routingSet.get(msg.getGlobalDst());
+			msg.setSource(stationID);
+			msg.setLocalDst(entryData.getNextHop());
+			msg.updateTime(dispatcher.getCurrentVirtualTime() + SimulationParameters.transmissionTime);
+			if(isGlobalSource){
+				logEvent(SimEvents.DATA_SENT_FROM_SOURCE.name(), 
+						msg.getGlobalSrc(), msg.getGlobalDst(), 
+						msg.getLocalSrc(), msg.getLocalDst() ,
+						false, "Data sent to the next station on the route from global source",false);
+			}
+			else{
+				logEvent(SimEvents.DATA_SENT_FROM_RELAY.name(), 
+						msg.getGlobalSrc(), msg.getGlobalDst(), 
+						msg.getLocalSrc(), msg.getLocalDst() ,
+						false, "Data sent to the next station on the route",false);
+			}
+			timeUntillBusy = dispatcher.getCurrentVirtualTime();
+			dispatcher.pushEvent(msg);
+		}
 	}
 	
 	public void logEvent(String eventType, String globalSrc, String globalDst, String localSrc, String localDst, boolean error, String errorDetails, boolean lost) {
