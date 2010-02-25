@@ -70,16 +70,15 @@ public class SendDataEvent extends Event {
 		IStation station = (IStation)node;
 		station.getOLSRv2Protocol().sendDataMessage(dstName);
 		
-		
-		Log log = Log.getInstance();
-		HashMap<String, String> data = new HashMap<String, String>();
-		data.put(SimLabels.VIRTUAL_TIME.name(), Long.toString(getTime()));
-		data.put(SimLabels.EVENT_TYPE.name(), "SEND_EVENT_TMP");
-		try {
-			log.writeDown(data);
-		} catch (LogException le) {
-			System.out.println(le.getMessage());
-		}
+//		Log log = Log.getInstance();
+//		HashMap<String, String> data = new HashMap<String, String>();
+//		data.put(SimLabels.VIRTUAL_TIME.name(), Long.toString(getTime()));
+//		data.put(SimLabels.EVENT_TYPE.name(), "SEND_EVENT_TMP");
+//		try {
+//			log.writeDown(data);
+//		} catch (LogException le) {
+//			System.out.println(le.getMessage());
+//		}
 	}
 
 }
