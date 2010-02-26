@@ -72,8 +72,7 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 		Dispatcher dispatcher = Dispatcher.getInstance();
 		
 		// calculate jitter for the first TC Interval event
-		int rand = new Random().nextInt(SimulationParameters.TCInterval);
-		long jitter = rand / SimulationParameters.maxStations;
+		int jitter = new Random().nextInt(SimulationParameters.TCInterval);
 		
 		TCMessage tcMsg = generateTCMessage(dispatcher.getCurrentVirtualTime() + jitter);
 		dispatcher.pushEvent(tcMsg);
@@ -87,8 +86,6 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 	public TCMessage generateTCMessage(long currentSimTime) {
 		// first time the local source = global source
 		TCMessage tcMsg = new TCMessage(stationID, stationID, currentSimTime + SimulationParameters.transmissionTime, neighborInfo.getAllNeighbors());
-//		Dispatcher dispatcher = Dispatcher.getInstance();
-//		dispatcher.pushEvent(tcMsg);
 		return tcMsg;
 	}
 
@@ -111,7 +108,6 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 		
 		HashMap<String, TopologySetData> topologySet = topologyInfo.getTopologySet();
 		
-
 		int hops = 1;
 		while(true){
 			boolean routingSetChanged = false;
@@ -120,7 +116,7 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 					if (!routingSet.containsKey(station) && 
 						routingSet.containsKey(topologyEntry.getKey())){
 						
-						// find next hop that is one of my neughbors
+						// find next hop that is one of my neighbors
 						String newNextHop =  routingSet.get(topologyEntry.getKey()).getNextHop();
 						while (null != newNextHop && !neighborInfo.is1HopNeighbor(newNextHop)){
 							newNextHop =  routingSet.get(newNextHop).getNextHop();
@@ -202,7 +198,6 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 			return;
 		}
 		
-		String localSrc = tcMsg.getLocalSrc();
 		String globalSrc = tcMsg.getGlobalSrc();
 		
 		/*

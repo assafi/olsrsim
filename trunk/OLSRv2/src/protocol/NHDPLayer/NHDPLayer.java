@@ -60,8 +60,7 @@ public class NHDPLayer implements INHDPLayer {
 		this.olsrLayer = olsrLayer;
 		
 		// calculate jitter for the first Hello Interval event
-		int rand = new Random().nextInt(SimulationParameters.HelloInterval);
-		long jitter = rand / SimulationParameters.maxStations;
+		int jitter = new Random().nextInt(SimulationParameters.HelloInterval);
 		
 		dispatcher.pushEvent(generateHelloMessage(dispatcher.getCurrentVirtualTime() + jitter));
 		dispatcher.pushEvent(new HelloIntervalEndEvent(stationID, dispatcher.getCurrentVirtualTime() + SimulationParameters.HelloInterval + jitter));
@@ -75,30 +74,6 @@ public class NHDPLayer implements INHDPLayer {
 		if (null == helloMsg){
 			throw new ProtocolException("Wrong message!");
 		}
-		
-		
-//		//TODO remove
-//		if (stationID.equals("2")){
-//			String logDetails = new String("Hello neighbors");
-//
-//			for (String name : helloMsg.getNeighborSet().keySet()) {
-//				logDetails += " " + name;
-//			}
-//			
-//			Log log = Log.getInstance();
-//			HashMap<String, String> data = new HashMap<String, String>();
-//			data.put(SimLabels.VIRTUAL_TIME.name(), Long.toString(Dispatcher.getInstance().getCurrentVirtualTime()));
-//			data.put(SimLabels.NODE_ID.name(), stationID);
-//			data.put(SimLabels.EVENT_TYPE.name(), SimEvents.LOG.name());
-//			data.put(SimLabels.DETAILS.name(), logDetails);
-//			try {
-//				log.writeDown(data);
-//			} catch (LogException le) {
-//				System.out.println(le.getMessage());
-//			}
-//		}
-//		////////////////////////////////////////////////////////
-		
 		
 		// in case we have new symmetric 1-hop neighbor or new 2-hop neighbor 
 		// we should notify so that OLSRv2 layer can recalculate the MPRs
@@ -116,16 +91,13 @@ public class NHDPLayer implements INHDPLayer {
 				property.setSymetricLink(true);
 				newSymetricOr2hop = true;
 				property.setValideTime(simTime + SimulationParameters.entryValidPeriod); 
-				//TODO insert event that the validity time has passed or check in other ways
-				//dispatcher.pushEvent(new );
 				neighborInfo.addNeighbor(msgSrc, property);
 			}
 			else{
-				property.setQuality(1);/*TODO calculate the quality*/
+				property.setQuality(1); /*TODO calculate the quality*/
 				property.setSymetricLink(false);
 				property.setValideTime(simTime + SimulationParameters.entryValidPeriod);
 				neighborInfo.addNeighbor(msgSrc, property);
-				//TODO insert event that the validity time has passed or check in other ways
 			}
 			
 			// if in the past this neighbor was my 2-hop neighbor
