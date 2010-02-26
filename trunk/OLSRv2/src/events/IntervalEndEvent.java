@@ -51,6 +51,7 @@ public class IntervalEndEvent extends Event {
 		Log log = Log.getInstance();
 		HashMap<String, String> data = new HashMap<String, String>();
 		data.put(SimLabels.VIRTUAL_TIME.name(), Long.toString(this.getTime()));
+		data.put(SimLabels.NODE_ID.name(), localDst);
 		data.put(SimLabels.EVENT_TYPE.name(), eventType );
 		data.put(SimLabels.LOCAL_SOURCE.name(), eventSource);
 		data.put(SimLabels.LOCAL_TARGET.name(), localDst);
