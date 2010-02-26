@@ -108,6 +108,7 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 		
 		HashMap<String, TopologySetData> topologySet = topologyInfo.getTopologySet();
 		
+
 		int hops = 1;
 		while(true){
 			boolean routingSetChanged = false;
@@ -116,7 +117,7 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 					if (!routingSet.containsKey(station) && 
 						routingSet.containsKey(topologyEntry.getKey())){
 						
-						// find next hop that is one of my neighbors
+						// find next hop that is one of my neughbors
 						String newNextHop =  routingSet.get(topologyEntry.getKey()).getNextHop();
 						while (null != newNextHop && !neighborInfo.is1HopNeighbor(newNextHop)){
 							newNextHop =  routingSet.get(newNextHop).getNextHop();
@@ -150,7 +151,7 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 	/**
 	 * This method should send the TC message it received to all it's MPRs
 	 */
-	private void floodTCMsg(TCMessage tcMsg){
+	private void floodTCMsg(TCMessage tcMsg, long time){
 		/*
 		 * We should flood the TC message only if 
 		 * we are selected as MPR
@@ -160,7 +161,7 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 			Dispatcher dispatcher = Dispatcher.getInstance();
 			//send the message after Delta time
 			tcMsg.setLocalSrc(stationID); // set the local source to be me the global source doesn't change
-			tcMsg.updateTime(dispatcher.getCurrentVirtualTime() + SimulationParameters.transmissionTime);
+			tcMsg.updateTime(time + SimulationParameters.transmissionTime);
 			dispatcher.pushEvent(tcMsg);
 		}
 	}
@@ -198,6 +199,7 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 			return;
 		}
 		
+		String localSrc = tcMsg.getLocalSrc();
 		String globalSrc = tcMsg.getGlobalSrc();
 		
 		/*
@@ -207,7 +209,7 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 		
 		if (receivedMsgInfo.getReceivedSet().containsKey(globalSrc)){
 			// each address is mapped to a list of messages it sent
-			ArrayList<ReceivedSetData> receviedMsgList = receivedMsgInfo.getReceivedSet().values().iterator().next();
+			ArrayList<ReceivedSetData> receviedMsgList = receivedMsgInfo.getReceivedSet().get(globalSrc);
 			for (ReceivedSetData receivedMsg : receviedMsgList) {
 				if (MessegeTypes.TC == receivedMsg.getType() && receivedMsg.getMsgHashCode() == tcMsg.hashCode()){
 					// if we found that the massage was already received we shouldn't process it
@@ -266,7 +268,7 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 		
 		// 3. Forward the tcMsg to all my MPRs unless it was already forwarded
 		if (!receivedMsgInfo.getForwardSet().containsKey(globalSrc)){
-			floodTCMsg(tcMsg);// flood message
+			floodTCMsg(tcMsg, tcMsg.getTime());// flood message
 			
 			// add new entry for the originator the Forward set
 			// because this is the first time we forward a message from
@@ -277,7 +279,7 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 			receivedMsgInfo.getForwardSet().put(globalSrc, msgList);
 		}
 		else{
-			ArrayList<ReceivedSetData> forwardMsgList = receivedMsgInfo.getForwardSet().values().iterator().next();
+			ArrayList<ReceivedSetData> forwardMsgList = receivedMsgInfo.getForwardSet().get(globalSrc);
 			boolean floodMsg = true;
 			for (ReceivedSetData receivedMsg : forwardMsgList) {
 				if (MessegeTypes.TC == receivedMsg.getType() && receivedMsg.getMsgHashCode() == tcMsg.hashCode()){
@@ -290,7 +292,7 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 			// list of the originator we must flood the TC message,
 			// and add it to the list.
 			if (floodMsg){
-				floodTCMsg(tcMsg);// flood message
+				floodTCMsg(tcMsg, tcMsg.getTime());// flood message
 				
 				// add to the list
 				forwardMsgList.add(new ReceivedSetData(MessegeTypes.TC, tcMsg.hashCode(), tcMsg.getTime() + SimulationParameters.entryValidPeriod));

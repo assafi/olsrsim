@@ -122,7 +122,7 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 			return;
 		}
 		dispacher.pushEvent(newHelloMsg);
-		timeUntillBusy = helloTrigerMsg.getTime();
+		timeUntillBusy = helloTrigerMsg.getTime() + SimulationParameters.transmissionTime;
 		
 	}
 
@@ -146,6 +146,8 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 			}
 			
 			timeUntillBusy = msg.getTime(); // update the last receive time
+			
+			cleanExpiredSetEntries();
 			
 			logEvent(SimEvents.DATA_REACHED_2_RELAY.name(), 
 					msg.getGlobalSrc(), msg.getGlobalDst(), 
@@ -294,7 +296,7 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		}
 		
 		dispacher.pushEvent(newTCMsg);
-		timeUntillBusy = tcTrigerMsg.getTime();
+		timeUntillBusy = tcTrigerMsg.getTime() + SimulationParameters.transmissionTime;
 	}
 	
 	private void sendMsgOnRoute(DataMessage msg, boolean isGlobalSource){
@@ -319,7 +321,7 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 			msg.setLocalSrc(stationID);
 			msg.setLocalDst(msg.getGlobalDst());
 			msg.updateTime(dispatcher.getCurrentVirtualTime() + SimulationParameters.transmissionTime);
-			timeUntillBusy = dispatcher.getCurrentVirtualTime();
+			timeUntillBusy = dispatcher.getCurrentVirtualTime() + SimulationParameters.transmissionTime;
 			dispatcher.pushEvent(msg);
 		}
 		else{
@@ -350,7 +352,7 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 			 * Found destination routing set
 			 */
 			RoutingSetData entryData = routingSet.get(msg.getGlobalDst());
-			msg.setSource(stationID);
+			msg.setLocalSrc(stationID);
 			msg.setLocalDst(entryData.getNextHop());
 			msg.updateTime(dispatcher.getCurrentVirtualTime() + SimulationParameters.transmissionTime);
 			if(isGlobalSource){
@@ -365,7 +367,7 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 						msg.getLocalSrc(), msg.getLocalDst() ,
 						false, "Data sent to the next station on the route",false);
 			}
-			timeUntillBusy = dispatcher.getCurrentVirtualTime();
+			timeUntillBusy = dispatcher.getCurrentVirtualTime() + SimulationParameters.transmissionTime;
 			dispatcher.pushEvent(msg);
 		}
 	}

@@ -60,7 +60,7 @@ public class NHDPLayer implements INHDPLayer {
 		this.olsrLayer = olsrLayer;
 		
 		// calculate jitter for the first Hello Interval event
-		int jitter = new Random().nextInt(SimulationParameters.HelloInterval);
+		long jitter = new Random().nextInt(SimulationParameters.HelloInterval);
 		
 		dispatcher.pushEvent(generateHelloMessage(dispatcher.getCurrentVirtualTime() + jitter));
 		dispatcher.pushEvent(new HelloIntervalEndEvent(stationID, dispatcher.getCurrentVirtualTime() + SimulationParameters.HelloInterval + jitter));
