@@ -110,12 +110,20 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		
 		// Send them to the dispatcher
 		Dispatcher dispacher = Dispatcher.getInstance();
-		// if we are not transmitting or receiving we can send the data
-		if (timeUntillBusy != -1 &&
-			helloTrigerMsg.getTime() > timeUntillBusy + SimulationParameters.transmissionTime){
-			dispacher.pushEvent(newHelloMsg);
-		}
+			
 		dispacher.pushEvent(nexTriger);
+		
+		// if we are not transmitting or receiving we can send the data	
+		if (timeUntillBusy != -1 &&
+			helloTrigerMsg.getTime() <= timeUntillBusy + SimulationParameters.transmissionTime){
+			logEvent(SimEvents.BUSSY_MSG_IGNORED.name(), 
+					null, null,newHelloMsg.getSource(), null ,
+					false, "Cannot send Hello message", true);
+			return;
+		}
+		dispacher.pushEvent(newHelloMsg);
+		timeUntillBusy = helloTrigerMsg.getTime();
+		
 	}
 
 	/* (non-Javadoc)
@@ -275,12 +283,20 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		
 		// Send them to the dispatcher
 		Dispatcher dispacher = Dispatcher.getInstance();
+		
+		dispacher.pushEvent(nexTriger);
+		
 		// if we are not transmitting or receiving we can send the data
 		if (timeUntillBusy != -1 &&
-			tcTrigerMsg.getTime() > timeUntillBusy + SimulationParameters.transmissionTime){
-			dispacher.pushEvent(newTCMsg);
+			tcTrigerMsg.getTime() <= timeUntillBusy + SimulationParameters.transmissionTime){
+			logEvent(SimEvents.BUSSY_MSG_IGNORED.name(), 
+					newTCMsg.getGlobalSrc(), null, newTCMsg.getLocalSrc(), null ,
+					false, "Cannot send TC message", true);
+			return;
 		}
-		dispacher.pushEvent(nexTriger);
+		
+		dispacher.pushEvent(newTCMsg);
+		timeUntillBusy = tcTrigerMsg.getTime();
 	}
 	
 	private void sendMsgOnRoute(DataMessage msg, boolean isGlobalSource){
