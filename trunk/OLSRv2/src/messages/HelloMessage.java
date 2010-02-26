@@ -77,9 +77,10 @@ public class HelloMessage extends MessageEvent {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void execute(Object nodes) {
-		logEvent(null, null, null);
+		logEvent(getSource(), null,null, null, null);
 		Collection<IStation> stations = (Collection<IStation>)nodes;
 		for (IStation station : stations) {
+			logEvent(station.getID(), SimEvents.HELLO_REACHED.name(),station.getID(), null, null);
 			IOLSRv2Protocol olsrProtocol = station.getOLSRv2Protocol();
 			olsrProtocol.reciveHelloMessage(this);
 		}
