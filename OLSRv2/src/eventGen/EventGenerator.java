@@ -246,7 +246,7 @@ public class EventGenerator {
 				do {
 					/* Will not send data to itself */
 					trgID = topologyManager.getRandomStation();
-				} while (trgID == station.getID());
+				} while (trgID.equals(station.getID()));
 				dataEvent.setDstName(trgID);
 				dispatcher.pushEvent(dataEvent);
 			}
