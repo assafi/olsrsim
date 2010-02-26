@@ -42,7 +42,7 @@ public class Automation {
 	private static String dbUsername = SqlProxyDefinitions.user;
 	private static String dbPassword = SqlProxyDefinitions.password;
 
-	private static String fileName = "logs/Record_23022010";
+	private static String fileName = "logs/Record_26022010";
 
 	/**
 	 * @param args
@@ -118,7 +118,7 @@ public class Automation {
 		double topologyPoissonicRate = 0.2;
 		double dataEventsPoissonicRate = gamma;
 		int maxStations = 40;
-		int stationHopDistance = 3;
+		int stationHopDistance = 2;
 
 		command += validPeriod + " " + tcInterval + " " + helloInterval + " ";
 		command += transmitionTime + " " + protocolMode.name() + " " + protocolDataSendMode.name() + " ";
@@ -205,13 +205,13 @@ public class Automation {
 			}
 		}
 
-		try {
-			dropTable(table);
-		} catch (SqlProxyException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			dropTable(table);
+//		} catch (SqlProxyException e) {
+//			e.printStackTrace();
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
 	}
 
 	/**

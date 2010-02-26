@@ -348,7 +348,6 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 		 *    (see OLSR rfc section 13.5 and 14)
 		 */    
 		//TODO Use the willingness of a station to be a MPR when calculating the MPR set
-		//TODO enhance the algorithm to select minimal MPR set
 		
 		switch (mprMode) {
 		case NORMAL:

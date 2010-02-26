@@ -10,11 +10,6 @@
  */
 package events;
 
-import java.util.HashMap;
-
-import log.Log;
-import log.LogException;
-import data.SimLabels;
 import topology.IStation;
 
 /**

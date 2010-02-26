@@ -32,7 +32,7 @@ public class SimulationParameters {
 	 * The Interval that the Hello messages should be generated
 	 * periodically. 
 	 */
-	static public int TCInterval = 50; //TODO see that this is a correct interval
+	static public int TCInterval = 20; //TODO see that this is a correct interval
 	
 	/**
 	 * The Interval that the Hello messages should be generated
@@ -114,15 +114,15 @@ public class SimulationParameters {
 	
 	static public int receptionRadius = 300;
 	
-	static public int simulationEndTime = 2500;
+	static public int simulationEndTime = 1000;
 	
 	static public float topologyPoissonicRate = (float) 0.011; /* This topologyPoissonicRate is taken into account when creating
 												topology event. */
 	
-	static public float dataEventsPoissonicRate = (float) 0.2; /* This dataEventsPoissonicRate is taken into account when creating
+	static public float dataEventsPoissonicRate = (float) 0.1; /* This dataEventsPoissonicRate is taken into account when creating
 												Send data events. */
 	
-	static public int maxStations = 2;
+	static public int maxStations = 7;
 		
 	public enum StationsSpeed {
 		LOW,
