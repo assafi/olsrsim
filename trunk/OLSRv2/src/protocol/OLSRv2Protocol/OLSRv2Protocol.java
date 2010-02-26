@@ -115,7 +115,7 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		
 		// if we are not transmitting or receiving we can send the data	
 		if (timeUntillBusy != -1 &&
-			helloTrigerMsg.getTime() <= timeUntillBusy + SimulationParameters.transmissionTime){
+			helloTrigerMsg.getTime() < timeUntillBusy + SimulationParameters.transmissionTime){
 			logEvent(SimEvents.BUSSY_MSG_IGNORED.name(), 
 					null, null,newHelloMsg.getSource(), null ,
 					false, "Cannot send Hello message", true);
@@ -139,7 +139,7 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 			
 			// if we are transmitting or receiving then we should drop this message
 			if (timeUntillBusy != -1 &&
-				msg.getTime() <= timeUntillBusy + SimulationParameters.transmissionTime){
+				msg.getTime() < timeUntillBusy + SimulationParameters.transmissionTime){
 				logEvent(SimEvents.BUSSY_MSG_IGNORED.name(), 
 						msg.getGlobalSrc(), msg.getGlobalDst(), 
 						msg.getLocalSrc(), msg.getLocalDst() ,
@@ -182,7 +182,7 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		
 		// if we are transmitting or receiving then we should drop this message
 		if (timeUntillBusy != -1 &&
-				dipatcher.getCurrentVirtualTime() <= 
+				dipatcher.getCurrentVirtualTime() < 
 							timeUntillBusy + SimulationParameters.transmissionTime){
 			
 			logEvent(SimEvents.BUSSY_MSG_IGNORED.name(), stationID, 
@@ -208,7 +208,7 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		
 		// if we are transmitting or receiving then we should drop this message
 		if (timeUntillBusy != -1 &&
-			helloMsg.getTime() <= timeUntillBusy + SimulationParameters.transmissionTime){
+			helloMsg.getTime() < timeUntillBusy + SimulationParameters.transmissionTime){
 			logEvent(SimEvents.BUSSY_MSG_IGNORED.name(), null, null, helloMsg.getSource(), 
 					stationID ,false, "Cannot proccess Hello message cause bussy",true);
 			return;
@@ -242,7 +242,7 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		
 		// if we are transmitting or receiving then we should drop this message
 		if (timeUntillBusy != -1 &&
-			tcMsg.getTime() <= timeUntillBusy + SimulationParameters.transmissionTime){
+			tcMsg.getTime() < timeUntillBusy + SimulationParameters.transmissionTime){
 			logEvent(SimEvents.BUSSY_MSG_IGNORED.name(), ((TCMessage)tcMsg).getGlobalSrc(), null, tcMsg.getSource(), stationID ,
 					false, "Cann't proccess TC message cause bussy",true);
 			return;
@@ -288,7 +288,7 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		
 		// if we are not transmitting or receiving we can send the data
 		if (timeUntillBusy != -1 &&
-			tcTrigerMsg.getTime() <= timeUntillBusy + SimulationParameters.transmissionTime){
+			tcTrigerMsg.getTime() < timeUntillBusy + SimulationParameters.transmissionTime){
 			logEvent(SimEvents.BUSSY_MSG_IGNORED.name(), 
 					newTCMsg.getGlobalSrc(), null, newTCMsg.getLocalSrc(), null ,
 					false, "Cannot send TC message", true);
