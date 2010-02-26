@@ -112,7 +112,7 @@ public class SimulationParameters {
 	// Simulation Definitions
 	///////////////////////////////////////////////////////////////////////////
 	
-	static public int receptionRadius = 80;
+	static public int receptionRadius = 300;
 	
 	static public int simulationEndTime = 2500;
 	
@@ -122,7 +122,7 @@ public class SimulationParameters {
 	static public float dataEventsPoissonicRate = (float) 0.2; /* This dataEventsPoissonicRate is taken into account when creating
 												Send data events. */
 	
-	static public int maxStations = 50;
+	static public int maxStations = 2;
 		
 	public enum StationsSpeed {
 		LOW,

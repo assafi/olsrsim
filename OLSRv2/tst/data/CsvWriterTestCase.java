@@ -138,7 +138,7 @@ public class CsvWriterTestCase {
 			data.clear();
 			data.put(SimLabels.VIRTUAL_TIME.name(), "3");
 			data.put(SimLabels.NODE_ID.name(), "node-1");
-			data.put(SimLabels.EVENT_TYPE.name(), SimEvents.HELLO_REACH.name());
+			data.put(SimLabels.EVENT_TYPE.name(), SimEvents.HELLO_REACHED.name());
 			data.put(SimLabels.GLOBAL_SOURCE.name(), "node-2");
 			data.put(SimLabels.GLOBAL_TARGET.name(), "All neighbors");
 			data.put(SimLabels.LOST.name(), "false");
