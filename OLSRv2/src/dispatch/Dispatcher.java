@@ -298,13 +298,13 @@ public class Dispatcher implements IDispatcher {
 	 * @param relevantNodesList 
 	 */
 	private void checkDataPhysibility(MessageEvent me, List<IStation> relevantNodesList) {
-		if (!DataMessage.class.isAssignableFrom(me.getClass())) {
+		if (!me.getClass().equals(DataMessage.class)) {
 			return;
 		}
 		
 		DataMessage dm = (DataMessage)me;
 		if (null != relevantNodesList &&
-				!relevantNodesList.contains(dm.getLocalDst())) {
+				!relevantNodesList.contains(topologyManager.getStationById(dm.getLocalDst()))) {
 			logTargetNotPhysible(dm);
 		}
 	}
@@ -375,8 +375,9 @@ public class Dispatcher implements IDispatcher {
 		data.put(SimLabels.GLOBAL_SOURCE.name(), dm.getGlobalSrc());
 		data.put(SimLabels.GLOBAL_TARGET.name(),dm.getGlobalDst());
 		data.put(SimLabels.LOST.name(), "1");
-		data.put(SimLabels.DETAILS.name(), "Local target is not physible. probably because local source" +
-				" databases do not match actual topology.");
+		data.put(SimLabels.DETAILS.name(), "Local source location: " + dm.getEventSourceLocation() + 
+				", Local target location: " + dm.getLocalDestinationLocation() + 
+				", distance: " + dm.getLocalDestinationLocation().distance(dm.getEventSourceLocation()));
 		try {
 			log.writeDown(data);
 		} catch (LogException le) {
