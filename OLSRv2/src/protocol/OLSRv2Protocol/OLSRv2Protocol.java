@@ -133,8 +133,6 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 	public void reciveDataMessage(MessageEvent dataMsg) {
 		DataMessage msg  = (DataMessage)dataMsg;
 		
-		Dispatcher dispatcher = Dispatcher.getInstance();
-		
 		if (msg.getLocalDst().equals(stationID)){// check if this message is for me
 			
 			// if we are transmitting or receiving then we should drop this message
