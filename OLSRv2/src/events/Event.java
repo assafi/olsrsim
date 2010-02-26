@@ -10,18 +10,22 @@
  */
 package events;
 
+import java.util.UUID;
+
 /**
  * @author Assaf
  *
  */
 public abstract class Event {
 	private long time;
+	private UUID id;
 	
 	/**
 	 * @param time
 	 */
 	public Event(long time){
 		this.time = time;
+		this.id = UUID.randomUUID();
 	}
 
 	/**
@@ -31,6 +35,15 @@ public abstract class Event {
 		return time;
 	}
 	
+	public UUID getID() {
+		return id;
+	}
+	/**
+	 * @param time set the event time
+	 */
+	public void setTime(long time) {
+		this.time = time;
+	}
 	/**
 	 *
 	 */

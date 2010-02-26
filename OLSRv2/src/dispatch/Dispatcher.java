@@ -10,10 +10,13 @@
  */
 package dispatch;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.PriorityQueue;
+import java.util.UUID;
 
 import layout.ClustersLayout;
 import layout.Layout;
@@ -52,6 +55,7 @@ public class Dispatcher implements IDispatcher {
 	private EventGenerator eventGen = null;
 	private ITopologyManager topologyManager = null;
 	private Log log = null;
+	private Map<UUID,List<Long>> checkList = new HashMap<UUID, List<Long>>();
 	/*
 	 * The events priority queue, sorted by the virtual time.
 	 */
@@ -175,17 +179,27 @@ public class Dispatcher implements IDispatcher {
 				continue;
 			}
 
+			currentEvent = dequeue();
+			if (checkList.containsKey(currentEvent.getID()) && 
+					checkList.get(currentEvent.getID()).contains(new Long(nextEventTime))) {
+				System.out.println("Event already handled before");
+				logDispError(currentEvent,new DispatcherException("Event already handled - event time: " + 
+						nextEventTime + ", sim time: " + currentVirtualTime + "."));
+			} else {
+				if (!checkList.containsKey(currentEvent.getID())) {
+					checkList.put(currentEvent.getID(), new ArrayList<Long>());
+				}
+				checkList.get(currentEvent.getID()).add(new Long(nextEventTime));
+			}
 			/*
 			 * Error handling
 			 */
 			if (nextEventTime < currentVirtualTime){
-				logDispError(dequeue(),new DispatcherException("Simulation internal error - event time: " + 
+				logDispError(currentEvent,new DispatcherException("Simulation internal error - event time: " + 
 						nextEventTime + ", sim time: " + currentVirtualTime + "."));
 				continue;
 			}
 
-			currentEvent = dequeue();
-			
 			// This will provide the gui the info it needs to display a data message
 			if(currentEvent.getClass().equals(DataMessage.class)) {
 				DataMessage dataMessageEvent = (DataMessage)currentEvent;
