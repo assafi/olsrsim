@@ -77,6 +77,11 @@ public class Station implements IStation {
 	public void start() {
 		protocolObject.start(SimulationParameters.protocolMode);
 	}
+	
+	public int hashCode()
+	{
+		return getID().hashCode();
+	}
 }
 
 

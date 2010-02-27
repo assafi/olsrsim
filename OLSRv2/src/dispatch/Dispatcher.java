@@ -55,11 +55,12 @@ public class Dispatcher implements IDispatcher {
 	private EventGenerator eventGen = null;
 	private ITopologyManager topologyManager = null;
 	private Log log = null;
-	private Map<UUID,List<Long>> checkList = new HashMap<UUID, List<Long>>();
+//	private Map<UUID,List<Long>> checkList = new HashMap<UUID, List<Long>>();
 	/*
 	 * The events priority queue, sorted by the virtual time.
 	 */
 	private PriorityQueue<Event> tasksQueue = null;
+	private Map<Long, List<Event>> events = null;
 
 	/**
 	 * 
@@ -72,6 +73,8 @@ public class Dispatcher implements IDispatcher {
 				return (int) (ev1.getTime() - ev2.getTime());
 			}
 		});
+		
+		this.events = new HashMap<Long, List<Event>>();
 
 		this.currentVirtualTime = 0;
 		this.topologyManager = new TopologyManager(); 
@@ -99,7 +102,11 @@ public class Dispatcher implements IDispatcher {
 	 */
 	public synchronized void pushEvent(Event event) {
 
-		this.tasksQueue.add(event);
+//		this.tasksQueue.add(event);
+		if (!this.events.containsKey(event.getTime())) {
+			this.events.put(new Long(event.getTime()), new ArrayList<Event>());
+		}
+		this.events.get(event.getTime()).add(event);
 	}
 
 	/**
@@ -114,7 +121,10 @@ public class Dispatcher implements IDispatcher {
 		}
 
 		for (Event event : events) {
-			this.tasksQueue.add(event);
+			if (!this.events.containsKey(event.getTime())) {
+				this.events.put(new Long(event.getTime()), new ArrayList<Event>());
+			}
+			this.events.get(event.getTime()).add(event);
 		}
 	}
 
@@ -172,14 +182,23 @@ public class Dispatcher implements IDispatcher {
 
 			long nextEventTime;
 
-			if (tasksQueue.isEmpty() || 
-					(nextEventTime = peek().getTime()) > currentVirtualTime){
+//			if (tasksQueue.isEmpty() || 
+//					(nextEventTime = peek().getTime()) > currentVirtualTime){
+//				this.currentVirtualTime++;
+//				this.eventGen.tick();
+//				continue;
+//			}
+			
+			if (events.isEmpty() ||
+					(nextEventTime = findNextEventTime()) > currentVirtualTime){
 				this.currentVirtualTime++;
 				this.eventGen.tick();
 				continue;
 			}
+			
+			currentEvent = getNextEvent();
 
-			currentEvent = dequeue();
+//			currentEvent = dequeue();
 //			if (checkList.containsKey(currentEvent.getID()) && 
 //					checkList.get(currentEvent.getID()).contains(new Long(nextEventTime))) {
 //				System.out.println("Event already handled before");
@@ -235,6 +254,7 @@ public class Dispatcher implements IDispatcher {
 				try {
 					List<IStation> relevantNodesList = 
 						this.topologyManager.getStationNeighbors(me.getSource());
+					checkDataPhysibility(me, relevantNodesList);
 					me.execute(relevantNodesList);
 					
 					/*
@@ -244,7 +264,6 @@ public class Dispatcher implements IDispatcher {
 					 * databases has not converged with the physical world) we would 
 					 * like to register that in the log. (the message will get lost)
 					 */
-					checkDataPhysibility(me, relevantNodesList);
 				} catch (Exception e) {
 					logDispError(currentEvent,e);
 				}
@@ -308,6 +327,31 @@ public class Dispatcher implements IDispatcher {
 	}
 
 	/**
+	 * @return
+	 */
+	private Event getNextEvent() {
+		long nextEventTime = findNextEventTime();
+		Event event = events.get(nextEventTime).remove(0);
+		if (events.get(nextEventTime).isEmpty()) {
+			events.remove(nextEventTime);
+		}
+		return event;
+	}
+
+	/**
+	 * @return
+	 */
+	private long findNextEventTime() {
+		long min = Long.MAX_VALUE;
+		for (Long time : events.keySet()) {
+			if (min > time) {
+				min = time;
+			}
+		}
+		return min;
+	}
+
+	/**
 	 * @param me
 	 * @param relevantNodesList 
 	 */
@@ -315,46 +359,13 @@ public class Dispatcher implements IDispatcher {
 		if (!me.getClass().equals(DataMessage.class)) {
 			return;
 		}
-		
 		DataMessage dm = (DataMessage)me;
-		if (null != relevantNodesList && /*!isInList(dm.getLocalDst(),relevantNodesList)){*/
+		if (null != relevantNodesList && 
 				!relevantNodesList.contains(topologyManager.getStationById(dm.getLocalDst()))) {
 			logTargetNotPhysible(dm);
-			
-			try {
-				System.out.println("start : src" + dm.getLocalSrc() +" dest:" + dm.getLocalDst());
-				for (IStation iStation : relevantNodesList) {
-					System.out.println(iStation.getID());
-				}
-				System.out.println("###################");
-				List<IStation> sNeigbors1 = topologyManager.getNeighborsInReceptionArea(topologyManager.getStationPosition(dm.getSource()), 300);
-				for (IStation iStation : sNeigbors1) {
-					System.out.println(iStation.getID());
-				}
-				System.out.println("###################");
-				List<IStation> sNeigbors2 = topologyManager.getStationNeighbors(dm.getSource()); 
-				for (IStation iStation : sNeigbors2) {
-					System.out.println(iStation.getID());
-				}
-				
-				System.out.println("end");
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
 		}
 	}
 	
-	private boolean isInList(String station ,List<IStation> relevantNodesList){
-	
-		for (IStation iStation : relevantNodesList) {
-			if(station.equals(iStation.getID())){
-				return true;
-			}
-		}
-		
-		return false;
-	}
-
 	private synchronized Event dequeue() {
 		return this.tasksQueue.poll();
 	}
@@ -410,7 +421,7 @@ public class Dispatcher implements IDispatcher {
 		}
 	}
 	
-	public void logTargetNotPhysible(DataMessage dm) {
+	private void logTargetNotPhysible(DataMessage dm) {
 		Log log = Log.getInstance();
 		HashMap<String, String> data = new HashMap<String, String>();
 		data.put(SimLabels.VIRTUAL_TIME.name(), Long.toString(Dispatcher.getInstance().getCurrentVirtualTime()));

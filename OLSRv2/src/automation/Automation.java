@@ -42,7 +42,7 @@ public class Automation {
 	private static String dbUsername = SqlProxyDefinitions.user;
 	private static String dbPassword = SqlProxyDefinitions.password;
 
-	private static String fileName = "logs/Record_26022010";
+	private static String fileName = "logs/Record_27022010_b";
 
 	/**
 	 * @param args
@@ -59,24 +59,27 @@ public class Automation {
 			System.exit(1);
 		}
 
-		for (ProtocolMprMode protocolMode : ProtocolMprMode.values()) {
-			for (ProtocolDataSendMode protocolDataSendMode : ProtocolDataSendMode.values()) {
-				for (LayoutMode layoutMode : LayoutMode.values()) {
-					for (double gamma = 0.1 ; gamma <= 0.6 ; gamma += 0.1) {
+		ProtocolMprMode protocolMode = ProtocolMprMode.ALL_MPRS;
+//		for (ProtocolMprMode protocolMode : ProtocolMprMode.values()) {
+			ProtocolDataSendMode protocolDataSendMode = ProtocolDataSendMode.MPRS;
+//			for (ProtocolDataSendMode protocolDataSendMode : ProtocolDataSendMode.values()) {
+				LayoutMode layoutMode = LayoutMode.CLUSTER;
+//				for (LayoutMode layoutMode : LayoutMode.values()) {
+					for (double gamma = 0.6 ; gamma <= 0.6 ; gamma += 0.1) {
 						StationsMode stationsMode = StationsMode.STATIC;
 						StationsSpeed stationSpeed = StationsSpeed.LOW;
-						recordSim(protocolMode, protocolDataSendMode, layoutMode, gamma, stationsMode, stationSpeed, fileName);
+//						recordSim(protocolMode, protocolDataSendMode, layoutMode, gamma, stationsMode, stationSpeed, fileName);
 
 						stationsMode = StationsMode.DYNAMIC;
-						recordSim(protocolMode, protocolDataSendMode, layoutMode, gamma, stationsMode, stationSpeed, fileName);
+//						recordSim(protocolMode, protocolDataSendMode, layoutMode, gamma, stationsMode, stationSpeed, fileName);
 						stationSpeed = StationsSpeed.MEDIUM;
 						recordSim(protocolMode, protocolDataSendMode, layoutMode, gamma, stationsMode, stationSpeed, fileName);
 						stationSpeed = StationsSpeed.HIGH;
 						recordSim(protocolMode, protocolDataSendMode, layoutMode, gamma, stationsMode, stationSpeed, fileName);
 					}
-				}
-			}
-		}
+//				}
+//			}
+//		}
 	}
 
 	/**
@@ -106,18 +109,18 @@ public class Automation {
 		String command = "java -jar OLSRv2.jar ";
 
 		int validPeriod = 300;
-		int tcInterval = 100;
+		int tcInterval = 60;
 		int helloInterval = 30;
 		int transmitionTime = 1;
 		int clusterRadius = 150;
 		int clusterNum = 15;
 		int xBoundry = 500;
 		int yBoundry = 500;
-		int receptionRadius = 85;
+		int receptionRadius = 100;
 		int simulationEndTime = 2500;
 		double topologyPoissonicRate = 0.2;
 		double dataEventsPoissonicRate = gamma;
-		int maxStations = 40;
+		int maxStations = 30;
 		int stationHopDistance = 2;
 
 		command += validPeriod + " " + tcInterval + " " + helloInterval + " ";
@@ -205,13 +208,13 @@ public class Automation {
 			}
 		}
 
-//		try {
-//			dropTable(table);
-//		} catch (SqlProxyException e) {
-//			e.printStackTrace();
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
+		try {
+			dropTable(table);
+		} catch (SqlProxyException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
