@@ -180,17 +180,17 @@ public class Dispatcher implements IDispatcher {
 			}
 
 			currentEvent = dequeue();
-			if (checkList.containsKey(currentEvent.getID()) && 
-					checkList.get(currentEvent.getID()).contains(new Long(nextEventTime))) {
-				System.out.println("Event already handled before");
-				logDispError(currentEvent,new DispatcherException("Event already handled - event time: " + 
-						nextEventTime + ", sim time: " + currentVirtualTime + "."));
-			} else {
-				if (!checkList.containsKey(currentEvent.getID())) {
-					checkList.put(currentEvent.getID(), new ArrayList<Long>());
-				}
-				checkList.get(currentEvent.getID()).add(new Long(nextEventTime));
-			}
+//			if (checkList.containsKey(currentEvent.getID()) && 
+//					checkList.get(currentEvent.getID()).contains(new Long(nextEventTime))) {
+//				System.out.println("Event already handled before");
+//				logDispError(currentEvent,new DispatcherException("Event already handled - event time: " + 
+//						nextEventTime + ", sim time: " + currentVirtualTime + "."));
+//			} else {
+//				if (!checkList.containsKey(currentEvent.getID())) {
+//					checkList.put(currentEvent.getID(), new ArrayList<Long>());
+//				}
+//				checkList.get(currentEvent.getID()).add(new Long(nextEventTime));
+//			}
 			/*
 			 * Error handling
 			 */
@@ -317,10 +317,42 @@ public class Dispatcher implements IDispatcher {
 		}
 		
 		DataMessage dm = (DataMessage)me;
-		if (null != relevantNodesList &&
+		if (null != relevantNodesList && /*!isInList(dm.getLocalDst(),relevantNodesList)){*/
 				!relevantNodesList.contains(topologyManager.getStationById(dm.getLocalDst()))) {
 			logTargetNotPhysible(dm);
+			
+			try {
+				System.out.println("start : src" + dm.getLocalSrc() +" dest:" + dm.getLocalDst());
+				for (IStation iStation : relevantNodesList) {
+					System.out.println(iStation.getID());
+				}
+				System.out.println("###################");
+				List<IStation> sNeigbors1 = topologyManager.getNeighborsInReceptionArea(topologyManager.getStationPosition(dm.getSource()), 300);
+				for (IStation iStation : sNeigbors1) {
+					System.out.println(iStation.getID());
+				}
+				System.out.println("###################");
+				List<IStation> sNeigbors2 = topologyManager.getStationNeighbors(dm.getSource()); 
+				for (IStation iStation : sNeigbors2) {
+					System.out.println(iStation.getID());
+				}
+				
+				System.out.println("end");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
+	}
+	
+	private boolean isInList(String station ,List<IStation> relevantNodesList){
+	
+		for (IStation iStation : relevantNodesList) {
+			if(station.equals(iStation.getID())){
+				return true;
+			}
+		}
+		
+		return false;
 	}
 
 	private synchronized Event dequeue() {
