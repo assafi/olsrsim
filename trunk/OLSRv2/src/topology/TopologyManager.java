@@ -38,6 +38,17 @@ public class TopologyManager implements ITopologyManager {
 		rand = new Random(System.currentTimeMillis());
 	}
 	
+	
+	
+	/**
+	 * @return the stationNeigbors
+	 */
+	public Map<IStation, List<IStation>> getStationNeigbors() {
+		return stationNeigbors;
+	}
+
+
+
 	public IStation createNewStation(String stationID, Point stationLocation) throws Exception {
 		if(Station.defaultReceptionRadius <= 0) {
 			throw new Exception("Can't create a new station with a negative " +
