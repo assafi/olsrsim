@@ -47,8 +47,8 @@ public class UniformLayout extends Layout {
 	@Override
 	public Point getRandomPoint() throws LayoutException {
 		
-		int xCoor = new Random().nextInt() % xBoundry;
-		int yCoor = new Random().nextInt() % yBoundry;
+		int xCoor = new Random().nextInt(xBoundry);
+		int yCoor = new Random().nextInt(yBoundry);
 		return new Point(Math.abs(xCoor), Math.abs(yCoor));
 	}
 

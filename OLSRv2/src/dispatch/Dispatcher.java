@@ -227,6 +227,9 @@ public class Dispatcher implements IDispatcher {
 					IStation srcStation = topologyManager.getStationById(dataMessageEvent.getLocalSrc());
 					IStation dstStation = topologyManager.getStationById(dataMessageEvent.getLocalDst());
 					if(srcStation.isInRange(dstStation)) {
+						if (srcStation.getLocation() == null) {
+							System.out.println("Null location");
+						}
 						dataMessageEvent.setEventSourceLocation(srcStation.getLocation());
 						dataMessageEvent.setLocalDestinationLocation(dstStation.getLocation());
 						GuiEventsQueue.getInstance().addEvent(currentEvent);
@@ -414,6 +417,7 @@ public class Dispatcher implements IDispatcher {
 
 		data.put(SimLabels.ERROR.name(), "true");
 		data.put(SimLabels.DETAILS.name(), e.getMessage());
+		e.printStackTrace();
 		try {
 			log.writeDown(data);
 		} catch (LogException le) {
@@ -432,9 +436,9 @@ public class Dispatcher implements IDispatcher {
 		data.put(SimLabels.GLOBAL_SOURCE.name(), dm.getGlobalSrc());
 		data.put(SimLabels.GLOBAL_TARGET.name(),dm.getGlobalDst());
 		data.put(SimLabels.LOST.name(), "1");
-		data.put(SimLabels.DETAILS.name(), "Local source location: " + dm.getEventSourceLocation() + 
-				", Local target location: " + dm.getLocalDestinationLocation() + 
-				", distance: " + dm.getLocalDestinationLocation().distance(dm.getEventSourceLocation()));
+//		data.put(SimLabels.DETAILS.name(), "Local source location: " + dm.getEventSourceLocation() + 
+//				", Local target location: " + dm.getLocalDestinationLocation() + 
+//				", distance: " + dm.getLocalDestinationLocation().distance(dm.getEventSourceLocation()));
 		try {
 			log.writeDown(data);
 		} catch (LogException le) {

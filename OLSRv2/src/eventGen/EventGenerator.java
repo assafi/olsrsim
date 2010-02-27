@@ -413,8 +413,8 @@ public class EventGenerator {
 		/*
 		 * hops Cartesian movement
 		 */
-		double xMovement = (newStationLocation.getX() - station.getLocation().getX()) / numHops;
-		double yMovement = (newStationLocation.getY() - station.getLocation().getY()) / numHops;
+		double xMovement = (newStationLocation.getX() - station.getLocation().getX()) / (numHops);
+		double yMovement = (newStationLocation.getY() - station.getLocation().getY()) / (numHops);
 
 		TopologyEvent[] hops = new TopologyEvent[numHops];
 
@@ -424,7 +424,7 @@ public class EventGenerator {
 		long hopTime = currentTime + 1;
 		int hopXCoor = (int)(station.getLocation().getX() + xMovement);
 		int hopYCoor = (int)(station.getLocation().getY() + yMovement);
-
+		
 		IStation midStation = null;
 		for (int i = 0; i < numHops; i++) {
 			if (i == numHops - 1) {
@@ -438,8 +438,14 @@ public class EventGenerator {
 				 * non-final hops locations
 				 */
 				midStation = new Station(station.getID(), new Point(hopXCoor,hopYCoor));
-				hopXCoor += xMovement;
-				hopYCoor += yMovement;
+				if ((xMovement < 0 && hopXCoor > newStationLocation.getX())
+						|| (xMovement > 0 && hopXCoor < newStationLocation.getX())) {
+					hopXCoor += xMovement;
+				}
+				if ((yMovement < 0 && hopYCoor > newStationLocation.getY())
+						|| (yMovement > 0 && hopYCoor < newStationLocation.getY())) {
+					hopYCoor += yMovement;
+				}
 				hops[i] = new TopologyEvent(hopTime, TopologyEventType.NODE_MOVE, midStation);
 			}
 			hopTime += HOP_TIME_INTERVAL;
