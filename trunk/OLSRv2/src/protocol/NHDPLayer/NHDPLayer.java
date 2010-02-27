@@ -129,7 +129,7 @@ public class NHDPLayer implements INHDPLayer {
 		
 		//if this was a symmetric neighbor must sent HELLO message
 		if (sendHelloMsg){
-			HelloMessage msg = generateHelloMessage(simTime);
+			HelloMessage msg = generateHelloMessage(Dispatcher.getInstance().getCurrentVirtualTime());
 			Dispatcher.getInstance().pushEvent(msg);
 			newSymetricOr2hop = true;
 		}

@@ -105,8 +105,8 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		cleanExpiredSetEntries();
 		
 		//Create the messages
-		HelloIntervalEndEvent nexTriger = new HelloIntervalEndEvent(stationID, helloTrigerMsg.getTime() + SimulationParameters.HelloInterval);
-		HelloMessage newHelloMsg = nhdpLayer.generateHelloMessage(helloTrigerMsg.getTime());
+		HelloIntervalEndEvent nexTriger = new HelloIntervalEndEvent(stationID, Dispatcher.getInstance().getCurrentVirtualTime() + SimulationParameters.HelloInterval);
+		HelloMessage newHelloMsg = nhdpLayer.generateHelloMessage(Dispatcher.getInstance().getCurrentVirtualTime());
 		
 		// Send them to the dispatcher
 		Dispatcher dispacher = Dispatcher.getInstance();
@@ -122,7 +122,7 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 			return;
 		}
 		dispacher.pushEvent(newHelloMsg);
-		timeUntillBusy = helloTrigerMsg.getTime() + SimulationParameters.transmissionTime;
+		timeUntillBusy = Dispatcher.getInstance().getCurrentVirtualTime() + SimulationParameters.transmissionTime;
 		
 	}
 
@@ -145,7 +145,7 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 				return;
 			}
 			
-			timeUntillBusy = msg.getTime(); // update the last receive time
+			timeUntillBusy = Dispatcher.getInstance().getCurrentVirtualTime(); // update the last receive time
 			
 			cleanExpiredSetEntries();
 			
@@ -157,7 +157,7 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 			if(msg.getGlobalDst().equals(stationID)){
 				//we got the message!!!
 				logEvent(SimEvents.DATA_REACHED_2_TARGET.name(), 
-						null, msg.getLocalDst(), null, null ,false, 
+						msg.getGlobalSrc(), msg.getGlobalDst(), null, null ,false, 
 						"The message reached global destination",false);
 			}
 			else{
@@ -192,7 +192,7 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		}
 		
 		//Create new data message and send on the calculated route
-		DataMessage dataMsg = new DataMessage(stationID, stationID, stationID, dst, Dispatcher.getInstance().getCurrentVirtualTime() + SimulationParameters.transmissionTime);
+		DataMessage dataMsg = new DataMessage(null, null, stationID, dst, Dispatcher.getInstance().getCurrentVirtualTime() + SimulationParameters.transmissionTime);
 		
 		sendMsgOnRoute(dataMsg, true);
 	}
@@ -214,7 +214,7 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 			return;
 		}
 		
-		timeUntillBusy = helloMsg.getTime();
+		timeUntillBusy = Dispatcher.getInstance().getCurrentVirtualTime();
 		
 		//clear the sets of invalid entries
 		cleanExpiredSetEntries();
@@ -248,7 +248,7 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 			return;
 		}
 		
-		timeUntillBusy = tcMsg.getTime();
+		timeUntillBusy = Dispatcher.getInstance().getCurrentVirtualTime();
 		
 		//clear the sets of invalid entries
 		cleanExpiredSetEntries();
@@ -277,9 +277,9 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		cleanExpiredSetEntries();
 		
 		//Create the messages
-		TCIntervalEndEvent nexTriger = new TCIntervalEndEvent(stationID, tcTrigerMsg.getTime() + SimulationParameters.TCInterval);
+		TCIntervalEndEvent nexTriger = new TCIntervalEndEvent(stationID, Dispatcher.getInstance().getCurrentVirtualTime() + SimulationParameters.TCInterval);
 		// This call already pushes the event in to the dispatcher
-		TCMessage newTCMsg = olsrLayer.generateTCMessage(tcTrigerMsg.getTime());
+		TCMessage newTCMsg = olsrLayer.generateTCMessage(Dispatcher.getInstance().getCurrentVirtualTime());
 		
 		// Send them to the dispatcher
 		Dispatcher dispacher = Dispatcher.getInstance();
@@ -296,7 +296,7 @@ public class OLSRv2Protocol implements IOLSRv2Protocol {
 		}
 		
 		dispacher.pushEvent(newTCMsg);
-		timeUntillBusy = tcTrigerMsg.getTime() + SimulationParameters.transmissionTime;
+		timeUntillBusy = Dispatcher.getInstance().getCurrentVirtualTime() + SimulationParameters.transmissionTime;
 	}
 	
 	private void sendMsgOnRoute(DataMessage msg, boolean isGlobalSource){
