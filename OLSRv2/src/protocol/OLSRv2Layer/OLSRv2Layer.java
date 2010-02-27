@@ -161,7 +161,7 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 			Dispatcher dispatcher = Dispatcher.getInstance();
 			//send the message after Delta time
 			tcMsg.setLocalSrc(stationID); // set the local source to be me the global source doesn't change
-			tcMsg.updateTime(time + SimulationParameters.transmissionTime);
+			tcMsg.updateTime(Dispatcher.getInstance().getCurrentVirtualTime() + SimulationParameters.transmissionTime);
 			dispatcher.pushEvent(tcMsg);
 		}
 	}
@@ -318,7 +318,7 @@ public class OLSRv2Layer implements IOLSRv2Layer {
 			//because the MPR selector set is changed we must send a TC message
 			//TODO see how this settels with minimum time before trunsmition
 			//     and if the interval of TC is passed or near to finish
-			TCMessage tcMsg  = generateTCMessage(helloMsg.getTime());
+			TCMessage tcMsg  = generateTCMessage(Dispatcher.getInstance().getCurrentVirtualTime());
 			Dispatcher dispatcher = Dispatcher.getInstance();
 			dispatcher.pushEvent(tcMsg);
 		}
