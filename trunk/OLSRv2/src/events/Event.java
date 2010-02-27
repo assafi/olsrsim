@@ -16,7 +16,7 @@ import java.util.UUID;
  * @author Assaf
  *
  */
-public abstract class Event {
+public abstract class Event{
 	private long time;
 	private UUID id;
 	

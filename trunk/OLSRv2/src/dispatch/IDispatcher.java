@@ -15,5 +15,5 @@ package dispatch;
  *
  */
 public interface IDispatcher {
-	final static int INITIAL_QUEUE_SIZE = 100;
+	final static int INITIAL_QUEUE_SIZE = 100000;
 }

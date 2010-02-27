@@ -40,8 +40,10 @@ public class TCMessage extends MessageEvent {
 	private Map<String, NeighborProperty> mprSelectors = null;
 	
 	/**
-	 * @param src
+	 * @param localSrc 
+	 * @param globalSrc 
 	 * @param time
+	 * @param neighborSet 
 	 */
 	public TCMessage(String localSrc, String globalSrc, long time,
 					 Map<String, NeighborProperty> neighborSet){
