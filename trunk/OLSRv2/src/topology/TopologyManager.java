@@ -124,8 +124,8 @@ public class TopologyManager implements ITopologyManager {
 	}
 	
 	public IStation changeStationPosition(String stationID, Point position) throws Exception {
-		if(doesStationExist(position)) {
-			throw new Exception("New position already in use");
+		while(doesStationExist(position)) {
+			position.x++;
 		}
 		
 		Point newPosition = new Point(position);
