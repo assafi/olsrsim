@@ -59,27 +59,27 @@ public class Automation {
 			System.exit(1);
 		}
 
-		ProtocolMprMode protocolMode = ProtocolMprMode.ALL_MPRS;
-//		for (ProtocolMprMode protocolMode : ProtocolMprMode.values()) {
+//		ProtocolMprMode protocolMode = ProtocolMprMode.ALL_MPRS;
+		for (ProtocolMprMode protocolMode : ProtocolMprMode.values()) {
 			ProtocolDataSendMode protocolDataSendMode = ProtocolDataSendMode.MPRS;
 //			for (ProtocolDataSendMode protocolDataSendMode : ProtocolDataSendMode.values()) {
-				LayoutMode layoutMode = LayoutMode.CLUSTER;
-//				for (LayoutMode layoutMode : LayoutMode.values()) {
-					for (double gamma = 0.6 ; gamma <= 0.6 ; gamma += 0.1) {
+//				LayoutMode layoutMode = LayoutMode.CLUSTER;
+				for (LayoutMode layoutMode : LayoutMode.values()) {
+					for (double gamma = 0.1 ; gamma <= 0.6 ; gamma += 0.1) {
 						StationsMode stationsMode = StationsMode.STATIC;
 						StationsSpeed stationSpeed = StationsSpeed.LOW;
-//						recordSim(protocolMode, protocolDataSendMode, layoutMode, gamma, stationsMode, stationSpeed, fileName);
+						recordSim(protocolMode, protocolDataSendMode, layoutMode, gamma, stationsMode, stationSpeed, fileName);
 
 						stationsMode = StationsMode.DYNAMIC;
-//						recordSim(protocolMode, protocolDataSendMode, layoutMode, gamma, stationsMode, stationSpeed, fileName);
+						recordSim(protocolMode, protocolDataSendMode, layoutMode, gamma, stationsMode, stationSpeed, fileName);
 						stationSpeed = StationsSpeed.MEDIUM;
 						recordSim(protocolMode, protocolDataSendMode, layoutMode, gamma, stationsMode, stationSpeed, fileName);
 						stationSpeed = StationsSpeed.HIGH;
 						recordSim(protocolMode, protocolDataSendMode, layoutMode, gamma, stationsMode, stationSpeed, fileName);
 					}
-//				}
+				}
 //			}
-//		}
+		}
 	}
 
 	/**
@@ -108,8 +108,8 @@ public class Automation {
 
 		String command = "java -jar OLSRv2.jar ";
 
-		int validPeriod = 300;
-		int tcInterval = 60;
+		int validPeriod = 200;
+		int tcInterval = 90;
 		int helloInterval = 30;
 		int transmitionTime = 1;
 		int clusterRadius = 150;
@@ -121,7 +121,7 @@ public class Automation {
 		double topologyPoissonicRate = 0.2;
 		double dataEventsPoissonicRate = gamma;
 		int maxStations = 30;
-		int stationHopDistance = 2;
+		int stationHopDistance = 1;
 
 		command += validPeriod + " " + tcInterval + " " + helloInterval + " ";
 		command += transmitionTime + " " + protocolMode.name() + " " + protocolDataSendMode.name() + " ";
