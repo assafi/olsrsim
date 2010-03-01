@@ -42,7 +42,7 @@ public class Automation {
 	private static String dbUsername = SqlProxyDefinitions.user;
 	private static String dbPassword = SqlProxyDefinitions.password;
 
-	private static String fileName = "logs/Record_27022010_b";
+	private static String fileName = "logs/Record_010310";
 
 	/**
 	 * @param args
@@ -59,16 +59,16 @@ public class Automation {
 			System.exit(1);
 		}
 
-//		ProtocolMprMode protocolMode = ProtocolMprMode.ALL_MPRS;
-		for (ProtocolMprMode protocolMode : ProtocolMprMode.values()) {
-			ProtocolDataSendMode protocolDataSendMode = ProtocolDataSendMode.MPRS;
+		ProtocolMprMode protocolMode = ProtocolMprMode.NORMAL;
+//		for (ProtocolMprMode protocolMode : ProtocolMprMode.values()) {
+			ProtocolDataSendMode protocolDataSendMode = ProtocolDataSendMode.NORMAL;
 //			for (ProtocolDataSendMode protocolDataSendMode : ProtocolDataSendMode.values()) {
-//				LayoutMode layoutMode = LayoutMode.CLUSTER;
-				for (LayoutMode layoutMode : LayoutMode.values()) {
-					for (double gamma = 0.1 ; gamma <= 0.6 ; gamma += 0.1) {
+				LayoutMode layoutMode = LayoutMode.UNIFORM;
+//				for (LayoutMode layoutMode : LayoutMode.values()) {
+					for (double gamma = 0.8 ; gamma <= 0.8 ; gamma += 0.1) {
 						StationsMode stationsMode = StationsMode.STATIC;
 						StationsSpeed stationSpeed = StationsSpeed.LOW;
-						recordSim(protocolMode, protocolDataSendMode, layoutMode, gamma, stationsMode, stationSpeed, fileName);
+//						recordSim(protocolMode, protocolDataSendMode, layoutMode, gamma, stationsMode, stationSpeed, fileName);
 
 						stationsMode = StationsMode.DYNAMIC;
 						recordSim(protocolMode, protocolDataSendMode, layoutMode, gamma, stationsMode, stationSpeed, fileName);
@@ -77,9 +77,9 @@ public class Automation {
 						stationSpeed = StationsSpeed.HIGH;
 						recordSim(protocolMode, protocolDataSendMode, layoutMode, gamma, stationsMode, stationSpeed, fileName);
 					}
-				}
+//				}
 //			}
-		}
+//		}
 	}
 
 	/**
@@ -106,18 +106,18 @@ public class Automation {
 			}
 		}
 
-		String command = "java -jar OLSRv2.jar ";
+		String command = "java -Xmx512m -jar OLSRv2.jar ";
 
-		int validPeriod = 200;
-		int tcInterval = 90;
-		int helloInterval = 30;
+		int validPeriod = 2500;
+		int tcInterval = 900;
+		int helloInterval = 300;
 		int transmitionTime = 1;
 		int clusterRadius = 150;
 		int clusterNum = 15;
 		int xBoundry = 500;
 		int yBoundry = 500;
 		int receptionRadius = 100;
-		int simulationEndTime = 2500;
+		int simulationEndTime = 20000;
 		double topologyPoissonicRate = 0.2;
 		double dataEventsPoissonicRate = gamma;
 		int maxStations = 30;
